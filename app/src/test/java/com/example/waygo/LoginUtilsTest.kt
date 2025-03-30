@@ -1,6 +1,6 @@
-package com.example.testing
+package com.example.waygo
 
-import com.example.testing.utils.LoginUtils
+import com.example.waygo.utils.LoginUtils
 import org.junit.Test
 
 import org.junit.Assert.*

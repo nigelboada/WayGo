@@ -1,6 +1,8 @@
-package com.example.testing.ui.screens
+package com.example.waygo.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,10 +11,17 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun ItineraryScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Login") })
+            TopAppBar(
+                title = { Text("Itinerary") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         Column(
@@ -22,10 +31,7 @@ fun LoginScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Login Screen")
-            Button(onClick = { navController.navigate("home") }) {
-                Text("Login")
-            }
+            Text("Itinerary Screen")
         }
     }
 }

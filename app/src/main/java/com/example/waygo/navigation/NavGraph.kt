@@ -1,11 +1,10 @@
-package com.example.testing.navigation
+package com.example.waygo.navigation
 
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.testing.ui.screens.*
+import com.example.waygo.ui.screens.*
 
 @Composable
 fun NavGraph(navController: NavHostController) {

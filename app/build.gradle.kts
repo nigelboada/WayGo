@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.testing"
+    namespace = "com.example.waygo"
     compileSdk = 35
 
     defaultConfig {

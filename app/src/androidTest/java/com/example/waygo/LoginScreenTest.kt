@@ -1,11 +1,10 @@
-package com.example.testing
+package com.example.waygo
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.testing.ui.screens.LoginScreen
+import com.example.waygo.ui.screens.LoginScreen
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

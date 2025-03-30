@@ -1,4 +1,4 @@
-package com.example.testing.ui.screens
+package com.example.waygo.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
