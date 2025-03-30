@@ -11,11 +11,11 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VersionScreen(navController: NavController) {
+fun ItineraryScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Version") },
+                title = { Text("Itinerary") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -31,11 +31,7 @@ fun VersionScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Version 1.0.0", style = MaterialTheme.typography.headlineMedium)
-            Text(text = "WayGo Travel App")
-            Text(text = "Built by WayGo Team.")
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "For support, contact: support@waygo.com")
+            Text("Itinerary Screen")
         }
     }
 }
