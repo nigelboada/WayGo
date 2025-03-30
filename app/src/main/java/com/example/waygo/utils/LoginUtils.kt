@@ -1,4 +1,4 @@
-package com.example.testing.utils
+package com.example.waygo.utils
 
 import java.util.regex.Pattern
 
