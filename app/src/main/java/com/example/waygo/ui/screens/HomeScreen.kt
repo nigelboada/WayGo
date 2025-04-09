@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Home Screen") })
+            TopAppBar(title = { Text("WayGo") })
         }
     ) { paddingValues ->
         Column(
