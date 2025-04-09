@@ -1,0 +1,31 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'   # S'executa només quan fas push d'un tag com v1.0.0, v0.1.2, etc.
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 📦 Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 🛠️ Build project (Gradle)
+        run: ./gradlew assembleDebug
+
+      - name: 📝 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
