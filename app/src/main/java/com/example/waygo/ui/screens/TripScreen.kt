@@ -1,8 +1,6 @@
 package com.example.waygo.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,14 +12,7 @@ import androidx.navigation.NavController
 fun TripScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Trip Details") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
+            TopAppBar(title = { Text("Trip Screen") })
         }
     ) { paddingValues ->
         Column(
@@ -31,14 +22,7 @@ fun TripScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Trip to Paris", style = MaterialTheme.typography.headlineMedium)
-            Text(text = "Start Date: 2025-05-01")
-            Text(text = "End Date: 2025-05-07")
-            Text(text = "Destination: Paris, France")
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = { /* Handle action like booking or adding to favorites */ }) {
-                Text("Book Now")
-            }
+            Text("Trip Screen")
         }
     }
 }

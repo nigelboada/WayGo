@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Home") })
+            TopAppBar(title = { Text("Home Screen") })
         }
     ) { paddingValues ->
         Column(
@@ -22,15 +22,16 @@ fun HomeScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Welcome to WayGo!", style = MaterialTheme.typography.headlineMedium)
-            Button(onClick = { navController.navigate("about") }) {
-                Text("About")
+            Text("Welcome to Home Screen")
+            // Botons per navegar
+            Button(onClick = { navController.navigate("settings") }) {
+                Text("Go to Settings")
             }
             Button(onClick = { navController.navigate("itinerary") }) {
-                Text("Itinerary")
+                Text("Go to Itinerary")
             }
             Button(onClick = { navController.navigate("profile") }) {
-                Text("Profile")
+                Text("Go to Profile")
             }
         }
     }
