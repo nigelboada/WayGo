@@ -31,5 +31,8 @@ fun NavGraph(navController: NavHostController) {
         composable("profile") { ProfileScreen(navController) }
         composable("settings") { SettingsScreen(navController) }
         composable("trip") { TripScreen(navController) }
+
+        composable("terms") { TermsScreen(navController) }
+
     }
 }
