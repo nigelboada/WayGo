@@ -30,12 +30,14 @@ fun NavGraph(navController: NavHostController) {
 
         composable("profile") { ProfileScreen(navController) }
         composable("settings") { SettingsScreen(navController) }
-        composable("trip") { TripListScreen(navController) }
-
         composable("terms") { TermsScreen(navController) }
 
-        composable("trip_list") { TripScreen(navController) }
+        composable("trip") { TripListScreen(navController) }
         composable("add_trip") { AddTripScreen(navController) }
+        composable("edit_trip/{tripId}") { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+            EditTripScreen(navController, tripId)
+        }
 
 
 

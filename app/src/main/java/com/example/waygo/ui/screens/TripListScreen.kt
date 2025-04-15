@@ -1,6 +1,5 @@
 package com.example.waygo.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -60,10 +59,7 @@ fun TripListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .clickable {
-                                // Navegar a pantalla de detall si es vol
-                                // navController.navigate("trip_detail/${trip.id}")
-                            }
+
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(trip.title, style = MaterialTheme.typography.titleLarge)
@@ -71,6 +67,34 @@ fun TripListScreen(
                             Spacer(modifier = Modifier.height(4.dp))
                             Text("📍 ${trip.location}")
                             Text("🗓️ ${trip.startDate} - ${trip.endDate}")
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            Row {
+                                Button(
+                                    onClick = {
+                                        navController.navigate("edit_trip/${trip.id}")
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text("Edita")
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Button(
+                                    onClick = {
+                                        viewModel.deleteTrip(trip.id)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text("Elimina")
+                                }
+                            }
+
+
+
                         }
                     }
                 }
