@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 object TripRepository {
 
-    // Llista de viatges en memòria (fil segura per a threads)
+    // Llista segura per a múltiples fils
     private val trips = CopyOnWriteArrayList<Trip>()
 
     fun getAllTrips(): List<Trip> = trips.toList()

@@ -21,27 +21,19 @@ class TripViewModel : ViewModel() {
         _trips.value = TripRepository.getAllTrips()
     }
 
-    fun addTrip(
-        title: String,
-        description: String,
-        startDate: String,
-        endDate: String,
-        location: String
-    ) {
+    fun addTrip(title: String, description: String, startDate: String, endDate: String, location: String) {
+        val newTrip = Trip(
+            title = title,
+            description = description,
+            startDate = startDate,
+            endDate = endDate,
+            location = location
+        )
         viewModelScope.launch {
-            val newTrip = Trip(
-                title = title,
-                description = description,
-                startDate = startDate,
-                endDate = endDate,
-                location = location
-            )
             TripRepository.addTrip(newTrip)
             loadTrips()
         }
     }
-
-
 
     fun updateTrip(trip: Trip) {
         viewModelScope.launch {

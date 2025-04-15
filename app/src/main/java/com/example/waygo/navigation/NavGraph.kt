@@ -30,13 +30,13 @@ fun NavGraph(navController: NavHostController) {
 
         composable("profile") { ProfileScreen(navController) }
         composable("settings") { SettingsScreen(navController) }
-        composable("trip") { TripScreen(navController) }
+        composable("trip") { TripListScreen(navController) }
 
         composable("terms") { TermsScreen(navController) }
 
-        composable("tripList") { TripListScreen(navController) }
+        composable("trip_list") { TripScreen(navController) }
+        composable("add_trip") { AddTripScreen(navController) }
 
-        composable("addTrip") { AddTripScreen(navController) }
 
 
 
