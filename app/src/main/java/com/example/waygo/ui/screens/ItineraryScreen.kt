@@ -14,7 +14,8 @@ import androidx.navigation.NavController
 import com.example.waygo.models.ItineraryItem
 import com.example.waygo.viewmodel.ItineraryViewModel
 import com.example.waygo.viewmodel.ItineraryViewModelFactory
-import java.util.UUID
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +37,7 @@ fun ItineraryScreen(
             TopAppBar(title = { Text("Itinerari") })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showDialog = true }) {
+            FloatingActionButton(onClick = { navController.navigate("add_itinerary/$tripId") }) {
                 Icon(Icons.Default.Add, contentDescription = "Afegir activitat")
             }
         }

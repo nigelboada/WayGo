@@ -45,6 +45,12 @@ fun NavGraph(navController: NavHostController) {
             ItineraryScreen(navController, tripId)
         }
 
+        composable("add_itinerary/{tripId}") { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+            AddItineraryItemScreen(navController, tripId)
+        }
+
+
 
 
 
