@@ -13,9 +13,7 @@ fun NavGraph(navController: NavHostController) {
     val context = LocalContext.current  // Obtenim el context actual
 
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController) }
-        composable("about") { AboutScreen(navController) }
-        composable("itinerary") { ItineraryScreen(navController) }
+
 
         composable("login") {
             LoginScreen(
@@ -28,6 +26,9 @@ fun NavGraph(navController: NavHostController) {
             )
         }
 
+        composable("home") { HomeScreen(navController) }
+        composable("about") { AboutScreen(navController) }
+
         composable("profile") { ProfileScreen(navController) }
         composable("settings") { SettingsScreen(navController) }
         composable("terms") { TermsScreen(navController) }
@@ -37,6 +38,11 @@ fun NavGraph(navController: NavHostController) {
         composable("edit_trip/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             EditTripScreen(navController, tripId)
+        }
+
+        composable("itinerary/{tripId}") { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+            ItineraryScreen(navController, tripId)
         }
 
 

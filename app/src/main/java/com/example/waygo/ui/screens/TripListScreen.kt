@@ -1,5 +1,6 @@
 package com.example.waygo.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,6 +60,9 @@ fun TripListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                            .clickable {
+                                navController.navigate("itinerary/${trip.id}")
+                            }
 
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
