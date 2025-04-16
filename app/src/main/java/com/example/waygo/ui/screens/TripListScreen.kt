@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -28,6 +29,12 @@ fun TripListScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Els meus viatges") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tornar enrere")
+                    }
+                },
+
                 actions = {
                     IconButton(onClick = {
                         navController.navigate("add_trip")
@@ -61,7 +68,7 @@ fun TripListScreen(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .clickable {
-                                //navController.navigate("itinerary_list/${trip.id}")
+                                navController.navigate("itinerary_list/${trip.id}")
                             }
 
                     ) {
