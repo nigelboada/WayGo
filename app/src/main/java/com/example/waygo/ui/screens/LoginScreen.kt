@@ -1,45 +1,81 @@
 package com.example.waygo.ui.screens
 
-import android.content.Intent
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.waygo.utils.SessionManager
-import androidx.compose.ui.platform.LocalContext
 
-@OptIn(ExperimentalMaterial3Api::class)
+import androidx.compose.runtime.*
+
+
+
+
 @Composable
 fun LoginScreen(
     navController: NavController,
-    onLoginSuccess: () -> Unit  // Afegeix el paràmetre per gestionar l'inici de sessió correcte
+    onLoginSuccess: () -> Unit
 ) {
-    val context = LocalContext.current  // Obtenim el context aquí
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Login") })
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Inici de sessió", style = MaterialTheme.typography.headlineSmall)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = username,
+            onValueChange = {
+                username = it
+                showError = false
+            },
+            label = { Text("Usuari") },
+            isError = showError && username.isBlank(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = {
+                password = it
+                showError = false
+            },
+            label = { Text("Contrasenya") },
+            isError = showError && password.isBlank(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        if (showError && (username.isBlank() || password.isBlank())) {
+            Text(
+                text = "Tots els camps són obligatoris.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = {
+                if (username.isNotBlank() && password.isNotBlank()) {
+                    onLoginSuccess()
+                } else {
+                    showError = true
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Login Screen")
-            // Afegir lògica de Login (simulada en aquest cas)
-            Button(onClick = {
-                // Aquí normalment faries la verificació d'usuaris, però per simular-ho:
-                SessionManager.setLoggedIn(context, true)  // Marquem que l'usuari s'ha loguejat
-                onLoginSuccess()  // Truquem a l'acció de Login exitós
-                navController.navigate("home")  // A continuació, anem a la pantalla principal
-            }) {
-                Text("Login")
-            }
+            Text("Iniciar sessió")
         }
     }
 }

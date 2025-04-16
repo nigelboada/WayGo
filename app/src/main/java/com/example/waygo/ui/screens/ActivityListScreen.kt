@@ -90,7 +90,7 @@ fun ActivityListScreen(
                                 onClick = {
                                     navController.navigate("edit_activity/${activity.id}/${tripId}")
                                 },
-                                modifier = Modifier.fillMaxWidth()
+//                                modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text("Editar")
                             }
