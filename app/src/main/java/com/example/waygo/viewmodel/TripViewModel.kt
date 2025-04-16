@@ -2,6 +2,7 @@ package com.example.waygo.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.waygo.models.ItineraryItem
 import com.example.waygo.models.Trip
 import com.example.waygo.repository.TripRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,4 +53,28 @@ class TripViewModel : ViewModel() {
     fun getTripById(id: String): Trip? {
         return TripRepository.getTripById(id)
     }
+
+    fun addActivityToTrip(tripId: String, activity: ItineraryItem) {
+        viewModelScope.launch {
+            TripRepository.addActivityToTrip(tripId, activity)
+            loadTrips()
+        }
+    }
+
+    fun updateActivityInTrip(tripId: String, activity: ItineraryItem) {
+        viewModelScope.launch {
+            TripRepository.updateActivityInTrip(tripId, activity)
+            loadTrips()
+        }
+    }
+
+    fun deleteActivityFromTrip(tripId: String, activityId: String) {
+        viewModelScope.launch {
+            TripRepository.deleteActivityFromTrip(tripId, activityId)
+            loadTrips()
+        }
+    }
+
+
+
 }

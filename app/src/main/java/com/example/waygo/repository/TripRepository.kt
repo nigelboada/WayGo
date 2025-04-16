@@ -1,5 +1,6 @@
 package com.example.waygo.repository
 
+import com.example.waygo.models.ItineraryItem
 import com.example.waygo.models.Trip
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -27,7 +28,38 @@ object TripRepository {
         trips.removeIf { it.id == id }
     }
 
-    fun clearAllTrips() {
-        trips.clear()
+
+    fun addActivityToTrip(tripId: String, activity: ItineraryItem) {
+        val trip = getTripById(tripId)
+        trip?.let {
+            val updatedTrip = it.copy(itinerary = it.itinerary + activity)
+            updateTrip(updatedTrip)
+        }
     }
+
+    fun updateActivityInTrip(tripId: String, activity: ItineraryItem) {
+        val trip = getTripById(tripId)
+        trip?.let {
+            val updatedItinerary = it.itinerary.map { item ->
+                if (item.id == activity.id) activity else item
+            }
+            val updatedTrip = it.copy(itinerary = updatedItinerary)
+            updateTrip(updatedTrip)
+        }
+    }
+
+    fun deleteActivityFromTrip(tripId: String, activityId: String) {
+        val trip = getTripById(tripId)
+        trip?.let {
+            val updatedItinerary = it.itinerary.filterNot { item ->
+                item.id == activityId
+            }
+            val updatedTrip = it.copy(itinerary = updatedItinerary)
+            updateTrip(updatedTrip)
+        }
+    }
+
+
+
+
 }
