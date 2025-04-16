@@ -5,15 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.waygo.models.Trip
 import com.example.waygo.viewmodel.TripViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,74 +22,86 @@ fun TripListScreen(
     navController: NavController,
     viewModel: TripViewModel = viewModel()
 ) {
-    val trips by viewModel.trips.collectAsState()
+    val trips = viewModel.trips.collectAsState().value
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Els meus viatges") }
+                title = { Text("Els meus viatges") },
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate("add_trip")
+                    }) {
+                        Icon(Icons.Default.Add, contentDescription = "Afegir viatge")
+                    }
+                }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate("addTrip")
-            }) {
-                Text("+") // O pots posar un icona amb Icon(Icons.Default.Add, contentDescription = null)
-            }
         }
-
     ) { paddingValues ->
         if (trips.isEmpty()) {
-            Box(modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+            Box(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
             ) {
-                Text("Encara no tens cap viatge.")
+                Text(
+                    text = "No hi ha viatges afegits.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(16.dp)
+                contentPadding = paddingValues,
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(trips) { trip ->
-                    TripItem(
-                        trip = trip,
-                        onDelete = { viewModel.deleteTrip(trip.id) },
-                        onClick = {
-                            // En un futur, pots navegar a la pantalla de detall
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .clickable {
+                                navController.navigate("itinerary/${trip.id}")
+                            }
 
-@Composable
-fun TripItem(
-    trip: Trip,
-    onDelete: () -> Unit,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = trip.title, style = MaterialTheme.typography.titleMedium)
-                Text(text = trip.description, style = MaterialTheme.typography.bodySmall)
-            }
-            IconButton(onClick = onDelete) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Elimina")
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(trip.title, style = MaterialTheme.typography.titleLarge)
+                            Text(trip.description, style = MaterialTheme.typography.bodyMedium)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("📍 ${trip.location}")
+                            Text("🗓️ ${trip.startDate} - ${trip.endDate}")
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            Row {
+                                Button(
+                                    onClick = {
+                                        navController.navigate("edit_trip/${trip.id}")
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text("Edita")
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Button(
+                                    onClick = {
+                                        viewModel.deleteTrip(trip.id)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text("Elimina")
+                                }
+                            }
+
+
+
+                        }
+                    }
+                }
             }
         }
     }

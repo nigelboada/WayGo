@@ -6,6 +6,5 @@ data class ItineraryItem(
     val id: String = UUID.randomUUID().toString(),
     val title: String,
     val description: String,
-    val time: String, // També es pot fer servir LocalTime o Date
-    val location: String
+    val time: String // O usa un tipus Date més endavant
 )
