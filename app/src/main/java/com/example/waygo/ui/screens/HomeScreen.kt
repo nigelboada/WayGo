@@ -27,9 +27,7 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate("settings") }) {
                 Text("Go to Settings")
             }
-            Button(onClick = { navController.navigate("itinerary") }) {
-                Text("Go to Itinerary")
-            }
+
             Button(onClick = { navController.navigate("profile") }) {
                 Text("Go to Profile")
             }
