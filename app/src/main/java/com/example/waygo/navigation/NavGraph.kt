@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.waygo.ui.screens.*
 import com.example.waygo.utils.SessionManager
 
+
 @Composable
 fun NavGraph(navController: NavHostController) {
     val context = LocalContext.current  // Obtenim el context actual
@@ -28,10 +29,11 @@ fun NavGraph(navController: NavHostController) {
 
         composable("home") { HomeScreen(navController) }
         composable("about") { AboutScreen(navController) }
-
         composable("profile") { ProfileScreen(navController) }
         composable("settings") { SettingsScreen(navController) }
         composable("terms") { TermsScreen(navController) }
+
+
 
         composable("trip") { TripListScreen(navController) }
         composable("add_trip") { AddTripScreen(navController) }
@@ -40,21 +42,6 @@ fun NavGraph(navController: NavHostController) {
             EditTripScreen(navController, tripId)
         }
 
-        composable("itinerary/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            ItineraryScreen(navController, tripId)
-        }
-
-        composable("add_itinerary/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            AddItineraryItemScreen(navController, tripId)
-        }
-
-        composable("edit_activity/{tripId}/{activityId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            val activityId = backStackEntry.arguments?.getString("activityId") ?: ""
-            EditItineraryItemScreen(navController, tripId, activityId)
-        }
 
 
 

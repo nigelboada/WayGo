@@ -61,7 +61,7 @@ fun TripListScreen(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .clickable {
-                                navController.navigate("itinerary/${trip.id}")
+                                //navController.navigate("itinerary_list/${trip.id}")
                             }
 
                     ) {
