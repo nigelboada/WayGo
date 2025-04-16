@@ -9,10 +9,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 
-
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -20,62 +20,55 @@ fun LoginScreen(
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Inici de sessió", style = MaterialTheme.typography.headlineSmall)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = username,
-            onValueChange = {
-                username = it
-                showError = false
-            },
-            label = { Text("Usuari") },
-            isError = showError && username.isBlank(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-                showError = false
-            },
-            label = { Text("Contrasenya") },
-            isError = showError && password.isBlank(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        if (showError && (username.isBlank() || password.isBlank())) {
-            Text(
-                text = "Tots els camps són obligatoris.",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Inici de sessió") })
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                if (username.isNotBlank() && password.isNotBlank()) {
-                    onLoginSuccess()
-                } else {
-                    showError = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Iniciar sessió")
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Usuari") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contrasenya") },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (username == "admin" && password == "1234") {
+                        onLoginSuccess()
+                    } else {
+                        errorMessage = "Usuari o contrasenya incorrectes"
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Iniciar sessió")
+            }
         }
     }
 }
