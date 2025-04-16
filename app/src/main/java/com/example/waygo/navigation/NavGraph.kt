@@ -47,7 +47,7 @@ fun NavGraph(navController: NavHostController) {
         composable("add_trip") { AddTripScreen(navController) }
         composable("edit_trip/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            EditTripScreen(navController, tripId)
+            EditTripScreen(navController = navController, tripId = tripId)
         }
 
 
