@@ -43,4 +43,9 @@ class ItineraryViewModel(private val tripId: String) : ViewModel() {
             loadItinerary()
         }
     }
+
+    fun getActivityById(activityId: String): ItineraryItem? {
+        return _itinerary.value.find { it.id == activityId }
+    }
+
 }
