@@ -7,9 +7,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.waygo.viewmodel.ActivityViewModel
-import com.example.waygo.models.ItineraryItem
+import com.example.waygo.models.Activity
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,23 +20,28 @@ import java.util.*
 fun AddActivityScreen(
     navController: NavController,
     tripId: String,
-    viewModel: ActivityViewModel
+    activityViewModel: ActivityViewModel = viewModel()  // Utilitzem ActivityViewModel aquí
 ) {
-    var title by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var time by remember { mutableStateOf("") }
+//    var location by remember { mutableStateOf("") }
+    var activityDate by remember { mutableStateOf("") }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Afegir activitat") },
+                title = { Text("Afegir Activitat") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tornar")
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -42,9 +50,9 @@ fun AddActivityScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                label = { Text("Títol") },
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Nom de l'activitat") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -55,28 +63,69 @@ fun AddActivityScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+//            OutlinedTextField(
+//                value = location,
+//                onValueChange = { location = it },
+//                label = { Text("Ubicació") },
+//                modifier = Modifier.fillMaxWidth()
+//            )
+
             OutlinedTextField(
-                value = time,
-                onValueChange = { time = it },
-                label = { Text("Hora (ex: 10:00)") },
+                value = activityDate,
+                onValueChange = { activityDate = it },
+                label = { Text("Data de l'activitat (dd/MM/yyyy)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Button(
                 onClick = {
-                    val newActivity = ItineraryItem(
-                        id = UUID.randomUUID().toString(),
-                        tripId = tripId,
-                        title = title,
-                        description = description,
-                        time = time
-                    )
-                    viewModel.addActivity(newActivity)
-                    navController.popBackStack() // Tornem a la llista
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val today = Calendar.getInstance().time
+
+                    try {
+                        val activityDateParsed = dateFormat.parse(activityDate)
+
+                        when {
+                            name.isBlank() || description.isBlank() || activityDate.isBlank() -> {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("Tots els camps són obligatoris")
+                                }
+                            }
+                            activityDateParsed == null -> {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("La data de l'activitat és incorrecta")
+                                }
+                            }
+                            activityDateParsed.before(today) -> {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("La data de l'activitat ha de ser avui o més endavant")
+                                }
+                            }
+                            else -> {
+                                // Crear l'activitat
+                                val newActivity = Activity(
+                                    tripId = tripId,
+                                    title = name,
+                                    description = description,
+                                    time = activityDate
+                                )
+
+                                // Afegir l'activitat al ActivityViewModel
+                                activityViewModel.addActivity(newActivity)
+
+                                // Tornar enrere després d'afegir
+                                navController.popBackStack()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar("Format de data incorrecte (usa dd/MM/yyyy)")
+                        }
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Afegir activitat")
+                Text("Afegir Activitat")
             }
         }
     }
