@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.google.services)
+
 }
 
 android {
@@ -58,6 +61,12 @@ dependencies {
     implementation(libs.androidx.navigation.testing)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.cast.framework)
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
+
+    implementation("com.google.firebase:firebase-auth")
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
