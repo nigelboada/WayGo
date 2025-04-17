@@ -7,5 +7,6 @@ data class Activity(
     val tripId: String,  // Relació amb el viatge
     val title: String,
     val description: String,
-    val time: String  // o LocalDateTime si vols treballar amb dates reals
+    val day: String, // "2025-04-17"
+    val hour: String // "15:30")
 )

@@ -26,4 +26,9 @@ object ActivityRepository {
     fun getActivityById(id: String): Activity? {
         return itineraryItems.find { it.id == id }
     }
+
+    fun getAllActivities(): List<Activity> {
+        return itineraryItems
+    }
+
 }
