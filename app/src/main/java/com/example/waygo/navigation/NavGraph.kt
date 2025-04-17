@@ -11,13 +11,14 @@ import androidx.navigation.navArgument
 import com.example.waygo.ui.screens.*
 import com.example.waygo.utils.SessionManager
 import com.example.waygo.viewmodel.ActivityViewModel
+import com.example.waygo.viewmodel.TripViewModel
 
 @Composable
 fun NavGraph(navController: NavHostController) {
     val context = LocalContext.current  // Obtenim el context actual
 
     val itineraryViewModel: ActivityViewModel = viewModel()
-
+    val tripViewModel: TripViewModel = viewModel()
 
 
 
@@ -60,8 +61,8 @@ fun NavGraph(navController: NavHostController) {
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             AddActivityScreen(navController, tripId, itineraryViewModel) // <-- Aquí el compartim
         }
-        composable(
-            route = "edit_activity/{activityId}/{tripId}",
+
+        composable("edit_activity/{activityId}/{tripId}",
             arguments = listOf(
                 navArgument("activityId") { type = NavType.StringType },
                 navArgument("tripId") { type = NavType.StringType }
@@ -69,9 +70,18 @@ fun NavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val activityId = backStackEntry.arguments?.getString("activityId") ?: ""
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            EditActivityScreen(navController, activityId, tripId, itineraryViewModel)
-        }
 
+            // Aquí recuperem la llista de dies del viatge (availableDays) associada al tripId
+            val availableDays = tripViewModel.getDaysForTrip(tripId)  // Aquí has de tenir una funció que retorni la llista de dies per aquest tripId
+
+            EditActivityScreen(
+                navController = navController,
+                activityId = activityId,
+                tripId = tripId,
+                availableDays = availableDays,  // Afegim la llista de dies
+                activityViewModel = itineraryViewModel
+            )
+        }
 
 
 

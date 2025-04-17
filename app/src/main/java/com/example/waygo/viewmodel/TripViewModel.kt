@@ -1,5 +1,6 @@
 package com.example.waygo.viewmodel
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.waygo.models.Trip
@@ -7,6 +8,8 @@ import com.example.waygo.repository.TripRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TripViewModel : ViewModel() {
 
@@ -64,10 +67,28 @@ class TripViewModel : ViewModel() {
 
     fun getTripById(tripId: String) {
         viewModelScope.launch {
-            // Suposant que tens un repositori per buscar el viatge per ID
-            _trip.value = TripRepository.getTripById(tripId) // Aquí necessites la lògica per obtenir el viatge
+
+            _trip.value = TripRepository.getTripById(tripId)
         }
     }
+
+    fun getDaysForTrip(tripId: String): List<String> {
+        val trip = trips.value.find { it.id == tripId } ?: return emptyList()
+
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val start = LocalDate.parse(trip.startDate, formatter)
+        val end = LocalDate.parse(trip.endDate, formatter)
+
+        val days = mutableListOf<String>()
+        var current = start
+        while (!current.isAfter(end)) {
+            days.add(current.format(formatter))
+            current = current.plusDays(1)
+        }
+
+        return days
+    }
+
 
 
 

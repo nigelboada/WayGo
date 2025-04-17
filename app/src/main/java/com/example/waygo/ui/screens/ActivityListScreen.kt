@@ -1,6 +1,5 @@
 package com.example.waygo.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -73,7 +72,9 @@ fun ActivityListScreen(
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(activity.title, style = MaterialTheme.typography.titleLarge)
                             Text(activity.description)
-                            Text("🕒 ${activity.time}")
+                            Text("📅 Dia: ${activity.day}")
+                            Text("🕒 Hora: ${activity.hour}")
+
 
                             Spacer(modifier = Modifier.height(8.dp))
 

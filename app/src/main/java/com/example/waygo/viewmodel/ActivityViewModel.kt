@@ -1,31 +1,31 @@
 package com.example.waygo.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.waygo.models.ItineraryItem
+import com.example.waygo.models.Activity
+import com.example.waygo.repository.ActivityRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-
 class ActivityViewModel : ViewModel() {
-    private val _activities = MutableStateFlow<List<ItineraryItem>>(emptyList())
+    private val _activities = MutableStateFlow(ActivityRepository.getAllActivities())
     val activities = _activities.asStateFlow()
 
-    fun addActivity(activity: ItineraryItem) {
-        _activities.value += activity
+    fun addActivity(activity: Activity) {
+        ActivityRepository.addItem(activity)
+        _activities.value = ActivityRepository.getAllActivities()
     }
 
-    fun updateActivity(updated: ItineraryItem) {
-        _activities.value = _activities.value.map {
-            if (it.id == updated.id) updated else it
-        }
+    fun updateActivity(updated: Activity) {
+        ActivityRepository.updateItem(updated)
+        _activities.value = ActivityRepository.getAllActivities()
     }
 
     fun deleteActivity(id: String) {
-        _activities.value = _activities.value.filter { it.id != id }
+        ActivityRepository.deleteItem(id)
+        _activities.value = ActivityRepository.getAllActivities()
     }
 
-    fun getActivityById(activityId: String): ItineraryItem? {
-        return _activities.value.find { it.id == activityId }
+    fun getActivityById(id: String): Activity? {
+        return ActivityRepository.getActivityById(id)
     }
-
 }
