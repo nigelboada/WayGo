@@ -51,6 +51,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+
+    implementation(platform(libs.firebase.bom))
+
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.core) // Firebase core
+    implementation(libs.firebase.auth.ktx) // Firebase Auth
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -62,9 +69,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.cast.framework)
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
 
-    implementation("com.google.firebase:firebase-auth")
 
 
     testImplementation(libs.junit)

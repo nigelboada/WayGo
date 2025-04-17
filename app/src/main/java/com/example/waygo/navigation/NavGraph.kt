@@ -36,6 +36,7 @@ fun NavGraph(navController: NavHostController) {
             )
         }
 
+
         composable("home") { HomeScreen(navController) }
         composable("about") { AboutScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
@@ -50,6 +51,8 @@ fun NavGraph(navController: NavHostController) {
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             EditTripScreen(navController = navController, tripId = tripId)
         }
+
+
 
 
         composable("itinerary_list/{tripId}") { backStackEntry ->
@@ -83,6 +86,23 @@ fun NavGraph(navController: NavHostController) {
             )
         }
 
+
+
+
+
+
+
+
+        composable("register") {
+            RegisterScreen(
+                navController = navController,
+                onRegisterSuccess = {
+                    navController.navigate("main") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                }
+            )
+        }
 
 
 
