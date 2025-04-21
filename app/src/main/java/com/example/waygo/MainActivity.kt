@@ -8,15 +8,20 @@ import com.example.waygo.navigation.NavGraph
 import com.example.waygo.ui.theme.WayGoTheme
 import com.example.waygo.utils.SessionManager
 import androidx.compose.runtime.LaunchedEffect
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Inicialitzem Firebase
+        FirebaseApp.initializeApp(this)
+
         // Comprovem si l'usuari està logat al iniciar l'activitat
         val context = applicationContext
         val isLoggedIn = SessionManager.isLoggedIn(context)
 
+        // Codi composable
         setContent {
             WayGoTheme {
                 val navController = rememberNavController()
