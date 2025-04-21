@@ -11,4 +11,4 @@ data class Trip(
     val endDate: String,
 
 
-)
+    )

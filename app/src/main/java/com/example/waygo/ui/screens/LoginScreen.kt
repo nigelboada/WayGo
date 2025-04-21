@@ -1,7 +1,6 @@
 package com.example.waygo.ui.screens
 
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -11,7 +10,6 @@ import androidx.navigation.NavController
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import com.google.firebase.auth.FirebaseAuth
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,10 +18,7 @@ fun LoginScreen(
     navController: NavController,
     onLoginSuccess: () -> Unit
 ) {
-
-    val auth = FirebaseAuth.getInstance() // FirebaseAuth instance
-
-    var email by remember { mutableStateOf("") } // Declarem la variable email
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
@@ -40,9 +35,9 @@ fun LoginScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedTextField(
-                value = email,  // Utilitzem 'email' aquí
-                onValueChange = { email = it },
-                label = { Text("Correu electrònic") },
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Usuari") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -64,35 +59,16 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    // Realitzar l'autenticació amb Firebase Auth
-                    if (email.isNotEmpty() && password.isNotEmpty()) {
-                        auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    // Inici de sessió correcte
-                                    onLoginSuccess()
-                                } else {
-                                    // Error en iniciar sessió
-                                    errorMessage = task.exception?.message
-                                    Log.e("Login", "Error: ${task.exception?.message}")
-                                }
-                            }
+                    if (username == "admin" && password == "1234") {
+                        onLoginSuccess()
                     } else {
-                        errorMessage = "Completa tots els camps."
+                        errorMessage = "Usuari o contrasenya incorrectes"
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Iniciar sessió")
             }
-
-            TextButton(
-                onClick = { navController.navigate("register") },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("No tens compte? Registra't")
-            }
-
         }
     }
 }

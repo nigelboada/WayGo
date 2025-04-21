@@ -18,6 +18,7 @@ import com.example.waygo.viewmodel.TripViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun TripListScreen(
     navController: NavController,

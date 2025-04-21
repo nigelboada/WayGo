@@ -165,6 +165,5 @@ fun AddActivityScreen(
                 Text("Afegir Activitat")
             }
         }
-
     }
 }
