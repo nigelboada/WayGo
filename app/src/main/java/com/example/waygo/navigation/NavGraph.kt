@@ -39,7 +39,6 @@ fun NavGraph(navController: NavHostController) {
         composable("home") { HomeScreen(navController) }
         composable("about") { AboutScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
-        composable("settings") { SettingsScreen(navController) }
         composable("terms") { TermsScreen(navController) }
 
 
@@ -84,6 +83,10 @@ fun NavGraph(navController: NavHostController) {
         }
 
 
+
+        composable("settings") {
+            UserSettingsScreen(navController = navController, context = LocalContext.current)
+        }
 
 
 

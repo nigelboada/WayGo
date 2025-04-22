@@ -42,6 +42,10 @@ fun HomeScreen(navController: NavController) {
                 Text("Go to Terms & Conditions")
             }
 
+            Button(onClick = { navController.navigate("settings") }) {
+                Text("Go to Settings")
+            }
+
         }
     }
 }
