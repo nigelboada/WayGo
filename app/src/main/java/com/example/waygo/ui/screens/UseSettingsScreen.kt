@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -15,14 +14,16 @@ import com.example.waygo.utils.UserPreferences
 fun UserSettingsScreen(navController: NavController, context: Context) {
     val userPrefs = remember { UserPreferences(context) }
 
-    var username by remember { mutableStateOf(userPrefs.getUsername() ?: "") }
-    var isDarkMode by remember { mutableStateOf(userPrefs.isDarkModeEnabled()) }
+    val currentUsername = userPrefs.getUsername() ?: "Usuari desconegut"
+    var newPassword by remember { mutableStateOf("") }
+    var selectedLanguage by remember { mutableStateOf(userPrefs.getLanguage()) }
+    val availableLanguages = listOf("Català", "Español", "English")
+
+    var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Configuració d'usuari") }
-            )
+            TopAppBar(title = { Text("Configuració d'usuari") })
         }
     ) { paddingValues ->
         Column(
@@ -32,36 +33,48 @@ fun UserSettingsScreen(navController: NavController, context: Context) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Text("Nom d’usuari: $currentUsername", style = MaterialTheme.typography.titleMedium)
+
             OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Nom d'usuari") },
+                value = newPassword,
+                onValueChange = { newPassword = it },
+                label = { Text("Nova contrasenya") },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Mode fosc", modifier = Modifier.weight(1f))
-                Switch(
-                    checked = isDarkMode,
-                    onCheckedChange = { isDarkMode = it }
-                )
+            // Selecció d’idioma
+            Text("Idioma")
+            Box {
+                Button(onClick = { expanded = true }) {
+                    Text(selectedLanguage)
+                }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    availableLanguages.forEach { lang ->
+                        DropdownMenuItem(
+                            text = { Text(lang) },
+                            onClick = {
+                                selectedLanguage = lang
+                                expanded = false
+                            }
+                        )
+                    }
+                }
             }
 
             Button(
                 onClick = {
-                    userPrefs.setUsername(username)
-                    userPrefs.setDarkModeEnabled(isDarkMode)
+                    if (newPassword.isNotBlank()) {
+                        userPrefs.setPassword(newPassword)
+                    }
+                    userPrefs.setLanguage(selectedLanguage)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Guardar")
+                Text("Guardar canvis")
             }
 
             Button(
                 onClick = {
-                    // Es pot afegir una confirmació aquí
                     userPrefs.clear()
                     navController.navigate("login") {
                         popUpTo("home") { inclusive = true }

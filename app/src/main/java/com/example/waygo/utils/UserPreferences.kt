@@ -22,4 +22,19 @@ class UserPreferences(context: Context) {
     fun clear() {
         prefs.edit { clear() }
     }
+    fun setPassword(password: String) {
+        prefs.edit().putString("password", password).apply()
+    }
+
+    fun getPassword(): String? = prefs.getString("password", null)
+
+    fun setLanguage(language: String) {
+        prefs.edit().putString("language", language).apply()
+    }
+
+    fun getLanguage(): String {
+        return prefs.getString("language", "Català") ?: "Català"
+    }
+
+
 }
