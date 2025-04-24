@@ -1,39 +1,55 @@
 package com.example.waygo
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.rememberNavController
 import com.example.waygo.navigation.NavGraph
 import com.example.waygo.ui.theme.WayGoTheme
 import com.example.waygo.utils.SessionManager
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.example.waygo.utils.LanguageManager
+import com.example.waygo.utils.UserPreferences
 
 class MainActivity : ComponentActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = UserPreferences(newBase)
+        val langCode = prefs.getLanguage() ?: "en"  // default language
+        val context = LanguageManager.setLocale(newBase, langCode)
+        super.attachBaseContext(context)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val prefs = UserPreferences(this)
+        val langCode = prefs.getLanguage() ?: "en"
+        val localizedContext = LanguageManager.setLocale(this, langCode)
+
         super.onCreate(savedInstanceState)
 
-        // Comprovem si l'usuari està logat al iniciar l'activitat
-        val context = applicationContext
-        val isLoggedIn = SessionManager.isLoggedIn(context)
-
         setContent {
-            WayGoTheme {
-                val navController = rememberNavController()
+            // Usa CompositionLocalProvider per aplicar aquest context traduït
+            CompositionLocalProvider(
+                LocalContext provides localizedContext
+            ) {
+                WayGoTheme {
+                    val navController = rememberNavController()
+                    val isLoggedIn = SessionManager.isLoggedIn(localizedContext)
 
-                // Comprovem l'estat de login
-                LaunchedEffect(isLoggedIn) {
-                    if (isLoggedIn) {
-                        // Si l'usuari està logat, navega a la pantalla "home"
-                        navController.navigate("home")
-                    } else {
-                        // Si no està logat, navega a la pantalla "login"
-                        navController.navigate("login")
+                    LaunchedEffect(isLoggedIn) {
+                        if (isLoggedIn) {
+                            navController.navigate("home")
+                        } else {
+                            navController.navigate("login")
+                        }
                     }
-                }
 
-                // Carreguem la NavGraph
-                NavGraph(navController = navController)
+                    NavGraph(navController = navController)
+                }
             }
         }
     }

@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">WayGo</string>
+    <string name="default_user">usuari@udl.cat</string>
+    <string name="default_pass">123456</string>
+
+    <!-- Login -->
+    <string name="login_title">Inicia sessió</string>
+    <string name="username_label">Correu electrònic</string>
+    <string name="password_label">Contrasenya</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_error">Usuari o contrasenya incorrectes</string>
+
+    <!-- Home -->
+    <string name="home_title">WayGo</string>
+    <string name="home_welcome">Benvingut a la pantalla d"inici</string>
+    <string name="go_to_settings">Anar a Configuració</string>
+    <string name="go_to_profile">Anar al Perfil</string>
+    <string name="go_to_trips">Anar als Viatges</string>
+    <string name="go_to_about">Anar a Sobre nosaltres</string>
+    <string name="go_to_terms">Anar a Termes i Condicions</string>
+
+    <!-- TripList -->
+    <string name="trip_list_title">Els meus viatges</string>
+    <string name="add_trip_button">Afegir viatge</string>
+
+    <!-- AddTrip -->
+    <string name="add_trip_title">Nou viatge</string>
+    <string name="trip_name_label">Nom del viatge</string>
+    <string name="trip_location_label">Ubicació</string>
+    <string name="trip_date_label">Data</string>
+    <string name="trip_save_button">Desar</string>
+
+    <!-- User Settings -->
+    <string name="user_settings_title">Configuració d"usuari</string>
+    <string name="new_password_label">Nova contrasenya</string>
+    <string name="language_label">Idioma</string>
+    <string name="save_changes">Guardar canvis</string>
+    <string name="logout">Tancar sessió</string>
+</resources>

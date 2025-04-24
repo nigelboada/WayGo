@@ -2,4 +2,38 @@
     <string name="app_name">WayGo</string>
     <string name="default_user">user@udl.cat</string>
     <string name="default_pass">123456</string>
+
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="username_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="login_button">Log in</string>
+    <string name="login_error">Incorrect username or password</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">WayGo</string>
+    <string name="home_welcome">Welcome to Home Screen</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="go_to_profile">Go to Profile</string>
+    <string name="go_to_trips">Go to Trips</string>
+    <string name="go_to_about">Go to About</string>
+    <string name="go_to_terms">Go to Terms and Conditions</string>
+
+    <!-- TripList -->
+    <string name="trip_list_title">My Trips</string>
+    <string name="add_trip_button">Add Trip</string>
+
+    <!-- AddTrip -->
+    <string name="add_trip_title">New Trip</string>
+    <string name="trip_name_label">Trip Name</string>
+    <string name="trip_location_label">Location</string>
+    <string name="trip_date_label">Date</string>
+    <string name="trip_save_button">Save</string>
+
+    <!-- User Settings -->
+    <string name="user_settings_title">User Settings</string>
+    <string name="new_password_label">New Password</string>
+    <string name="language_label">Language</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="logout">Log out</string>
 </resources>

@@ -23,17 +23,17 @@ class UserPreferences(context: Context) {
         prefs.edit { clear() }
     }
     fun setPassword(password: String) {
-        prefs.edit().putString("password", password).apply()
+        prefs.edit { putString("password", password) }
     }
 
     fun getPassword(): String? = prefs.getString("password", null)
 
-    fun setLanguage(language: String) {
-        prefs.edit().putString("language", language).apply()
+    fun setLanguage(languageCode: String) {
+        prefs.edit { putString("language", languageCode) }
     }
 
     fun getLanguage(): String {
-        return prefs.getString("language", "Català") ?: "Català"
+        return prefs.getString("language", "ca") ?: "ca"
     }
 
 

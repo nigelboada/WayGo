@@ -1,16 +1,14 @@
 package com.example.waygo.ui.screens
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
-import androidx.compose.runtime.*
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-
+import com.example.waygo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +22,7 @@ fun LoginScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Inici de sessió") })
+            TopAppBar(title = { Text(stringResource(R.string.login_title)) })
         }
     ) { paddingValues ->
         Column(
@@ -37,37 +35,38 @@ fun LoginScreen(
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Usuari") },
+                label = { Text(stringResource(R.string.username_label)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contrasenya") },
+                label = { Text(stringResource(R.string.password_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation()
             )
 
             if (errorMessage != null) {
                 Text(
-                    text = errorMessage ?: "",
+                    text = stringResource(R.string.login_error),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+
+            val loginErrorText = stringResource(R.string.login_error)
 
             Button(
                 onClick = {
                     if (username == "admin" && password == "1234") {
                         onLoginSuccess()
                     } else {
-                        errorMessage = "Usuari o contrasenya incorrectes"
-                    }
+                        errorMessage = loginErrorText                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Iniciar sessió")
+                Text(stringResource(R.string.login_button))
             }
         }
     }
