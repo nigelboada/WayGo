@@ -14,54 +14,53 @@ import com.example.waygo.viewmodel.ActivityViewModel
 import com.example.waygo.viewmodel.TripViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController) {
-    val context = LocalContext.current  // Obtenim el context actual
+
+fun NavGraph(navController: NavHostController, startDestination: String) {
+    val context = LocalContext.current
 
     val itineraryViewModel: ActivityViewModel = viewModel()
     val tripViewModel: TripViewModel = viewModel()
 
-
-
-    NavHost(navController = navController, startDestination = "home") {
-
-
+    // Aquí definim el NavHost amb el paràmetre startDestination
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
             LoginScreen(
                 navController = navController,
                 onLoginSuccess = {
-                    // Quan el login sigui correcte, es marca com logat i es redirigeix
-                    SessionManager.setLoggedIn(context, true)  // Es passa el context aquí
-                    navController.navigate("home")
+                    SessionManager.setLoggedIn(context, true)
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
                 }
             )
         }
+        composable("register") {
+            RegisterScreen(navController) {
+                navController.navigate("home")
+            }
+        }
 
+        // Altres pantalles
         composable("home") { HomeScreen(navController) }
         composable("about") { AboutScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
         composable("terms") { TermsScreen(navController) }
-
-
-
         composable("trip") { TripListScreen(navController) }
         composable("add_trip") { AddTripScreen(navController) }
         composable("edit_trip/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             EditTripScreen(navController = navController, tripId = tripId)
         }
-
-
         composable("itinerary_list/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             ActivityListScreen(navController, tripId, itineraryViewModel)
         }
-
         composable("add_activity/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            AddActivityScreen(navController, tripId, itineraryViewModel) // <-- Aquí el compartim
+            AddActivityScreen(navController, tripId, itineraryViewModel)
         }
-
-        composable("edit_activity/{activityId}/{tripId}",
+        composable(
+            "edit_activity/{activityId}/{tripId}",
             arguments = listOf(
                 navArgument("activityId") { type = NavType.StringType },
                 navArgument("tripId") { type = NavType.StringType }
@@ -69,26 +68,19 @@ fun NavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val activityId = backStackEntry.arguments?.getString("activityId") ?: ""
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-
-            // Aquí recuperem la llista de dies del viatge (availableDays) associada al tripId
-            val availableDays = tripViewModel.getDaysForTrip(tripId)  // Aquí has de tenir una funció que retorni la llista de dies per aquest tripId
+            val availableDays = tripViewModel.getDaysForTrip(tripId)
 
             EditActivityScreen(
                 navController = navController,
                 activityId = activityId,
                 tripId = tripId,
-                availableDays = availableDays,  // Afegim la llista de dies
+                availableDays = availableDays,
                 activityViewModel = itineraryViewModel
             )
         }
-
-
-
         composable("settings") {
             UserSettingsScreen(navController = navController, context = LocalContext.current)
         }
-
-
-
     }
 }
+

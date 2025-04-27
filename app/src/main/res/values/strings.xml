@@ -5,7 +5,7 @@
 
     <!-- Login -->
     <string name="login_title">Login</string>
-    <string name="username_label">Email</string>
+    <string name="username_label">Username</string>
     <string name="password_label">Password</string>
     <string name="login_button">Log in</string>
     <string name="login_error">Incorrect username or password</string>
@@ -36,4 +36,17 @@
     <string name="language_label">Language</string>
     <string name="save_changes">Save Changes</string>
     <string name="logout">Log out</string>
+
+
+    <!-- RegisterScreen -->
+    <string name="register_title">Register</string>
+    <string name="email_label">Email</string>
+    <string name="pasword_label">Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="register_button">Register</string>
+    <string name="registration_error">Registration failed. Please try again.</string>
+    <string name="password_mismatch_error">Passwords do not match.</string>
+    <string name="register_prompt">Don"t have an account? Register here</string>
+
+
 </resources>

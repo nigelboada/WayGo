@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -9,7 +12,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.testing"
+        applicationId = "com.example.waygo"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -42,6 +45,12 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.splashscreen)
+
+    // 🔥 BOM de Firebase (controla les versions internes automàticament)
+    implementation(platform(libs.firebase.bom.v33130))
+
+// 🔐 Autenticació per correu electrònic i contrasenya
+    implementation("com.google.firebase:firebase-auth-ktx")
 
 
     implementation(libs.androidx.core.ktx)

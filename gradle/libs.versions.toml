@@ -2,6 +2,7 @@
 agp = "8.8.0"
 coreSplashscreen = "1.0.1"
 firebaseBom = "33.12.0"
+firebaseBomVersion = "33.13.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -23,7 +24,9 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-bom-v33130 = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
 firebase-core = { module = "com.google.firebase:firebase-core" }
+google-firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

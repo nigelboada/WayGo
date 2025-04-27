@@ -5,7 +5,7 @@
 
     <!-- Login -->
     <string name="login_title">Inicia sessió</string>
-    <string name="username_label">Correu electrònic</string>
+    <string name="username_label">Nom d"usuari</string>
     <string name="password_label">Contrasenya</string>
     <string name="login_button">Entrar</string>
     <string name="login_error">Usuari o contrasenya incorrectes</string>
@@ -36,4 +36,17 @@
     <string name="language_label">Idioma</string>
     <string name="save_changes">Guardar canvis</string>
     <string name="logout">Tancar sessió</string>
+
+    <!-- RegisterScreen -->
+    <string name="register_title">Registrar-se</string>
+    <string name="email_label">Correu electrònic</string>
+    <string name="pasword_label">Contrasenya</string>
+    <string name="confirm_password_label">Confirmar contrasenya</string>
+    <string name="register_button">Registrar-se</string>
+    <string name="registration_error">Error en el registre. Torna-ho a provar.</string>
+    <string name="password_mismatch_error">Les contrasenyes no coincideixen.</string>
+    <string name="register_prompt">¿No tens compte? Registra"t aquí</string>
+
+
+
 </resources>

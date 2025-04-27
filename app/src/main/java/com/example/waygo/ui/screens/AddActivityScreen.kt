@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.waygo.viewmodel.ActivityViewModel
-import com.example.waygo.models.Activity
+import com.example.waygo.models.Itinerary
 import com.example.waygo.viewmodel.TripViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -142,7 +142,7 @@ fun AddActivityScreen(
                             }
 
                             else -> {
-                                val newActivity = Activity(
+                                val newItinerary = Itinerary(
                                     tripId = tripId,
                                     title = name,
                                     description = description,
@@ -150,7 +150,7 @@ fun AddActivityScreen(
                                     hour = activityHour
                                 )
 
-                                activityViewModel.addActivity(newActivity)
+                                activityViewModel.addActivity(newItinerary)
                                 navController.popBackStack()
                             }
                         }

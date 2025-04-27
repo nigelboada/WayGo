@@ -1,20 +1,20 @@
 package com.example.waygo.repository
 
 import androidx.compose.runtime.mutableStateListOf
-import com.example.waygo.models.Activity
+import com.example.waygo.models.Itinerary
 
 object ActivityRepository {
-    private val itineraryItems = mutableStateListOf<Activity>()
+    private val itineraryItems = mutableStateListOf<Itinerary>()
 
-    fun getItemsForTrip(tripId: String): List<Activity> {
+    fun getItemsForTrip(tripId: String): List<Itinerary> {
         return itineraryItems.filter { it.tripId == tripId }
     }
 
-    fun addItem(item: Activity) {
+    fun addItem(item: Itinerary) {
         itineraryItems.add(item)
     }
 
-    fun updateItem(updated: Activity) {
+    fun updateItem(updated: Itinerary) {
         val index = itineraryItems.indexOfFirst { it.id == updated.id }
         if (index != -1) itineraryItems[index] = updated
     }
@@ -23,11 +23,11 @@ object ActivityRepository {
         itineraryItems.removeIf { it.id == itemId }
     }
 
-    fun getActivityById(id: String): Activity? {
+    fun getActivityById(id: String): Itinerary? {
         return itineraryItems.find { it.id == id }
     }
 
-    fun getAllActivities(): List<Activity> {
+    fun getAllActivities(): List<Itinerary> {
         return itineraryItems
     }
 

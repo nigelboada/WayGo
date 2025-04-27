@@ -10,6 +10,6 @@ data class Trip(
     val location: String,
     val startDate: String,
     val endDate: String,
-    val activities: List<Activity> = emptyList()
+    val activities: List<Itinerary> = emptyList()
 
 )

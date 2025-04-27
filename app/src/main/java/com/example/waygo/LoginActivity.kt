@@ -26,7 +26,7 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreenContent() {
-    val navController: NavController = rememberNavController()
+    val navController = rememberNavController()
     val context = LocalContext.current  // Obtenir el context actual
 
     WayGoTheme {
