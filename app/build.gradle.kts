@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    alias(libs.plugins.google.services)
+    id("com.google.gms.google-services")
 
 }
 
@@ -12,7 +12,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.testing"
+        applicationId = "com.example.waygo"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -46,18 +46,17 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
 
+    // 🔥 BOM de Firebase (controla les versions internes automàticament)
+    implementation(platform(libs.firebase.bom.v33130))
+
+// 🔐 Autenticació per correu electrònic i contrasenya
+    implementation("com.google.firebase:firebase-auth-ktx")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-
-    implementation(platform(libs.firebase.bom))
-
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.core) // Firebase core
-    implementation(libs.firebase.auth.ktx) // Firebase Auth
-
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -68,10 +67,6 @@ dependencies {
     implementation(libs.androidx.navigation.testing)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.cast.framework)
-
-
-
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

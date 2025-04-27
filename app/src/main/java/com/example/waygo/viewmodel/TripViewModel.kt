@@ -4,6 +4,7 @@ package com.example.waygo.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.waygo.models.Trip
+import com.example.waygo.repository.ActivityRepository
 import com.example.waygo.repository.TripRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,8 +21,15 @@ class TripViewModel : ViewModel() {
         loadTrips()
     }
 
-    private fun loadTrips() {
-        _trips.value = TripRepository.getAllTrips()
+    internal fun loadTrips() {
+        viewModelScope.launch {
+            val trips = TripRepository.getAllTrips()
+            val tripsWithActivities = trips.map { trip ->
+                val activities = ActivityRepository.getItemsForTrip(trip.id)
+                trip.copy(activities = activities)
+            }
+            _trips.value = tripsWithActivities
+        }
     }
 
     fun addTrip(title: String, description: String, startDate: String, endDate: String, location: String) {

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,12 +19,18 @@ import com.example.waygo.viewmodel.TripViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun TripListScreen(
     navController: NavController,
     viewModel: TripViewModel = viewModel()
 ) {
     val trips = viewModel.trips.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.loadTrips()
+    }
+
 
     Scaffold(
         topBar = {
@@ -61,8 +68,12 @@ fun TripListScreen(
             LazyColumn(
                 contentPadding = paddingValues,
                 modifier = Modifier.fillMaxSize()
-            ) {
-                items(trips) { trip ->
+            )
+
+            {
+                items(trips)
+
+                { trip ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -70,7 +81,6 @@ fun TripListScreen(
                             .clickable {
                                 navController.navigate("itinerary_list/${trip.id}")
                             }
-
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(trip.title, style = MaterialTheme.typography.titleLarge)
@@ -78,6 +88,41 @@ fun TripListScreen(
                             Spacer(modifier = Modifier.height(4.dp))
                             Text("📍 ${trip.location}")
                             Text("🗓️ ${trip.startDate} - ${trip.endDate}")
+
+                            // 🔽 Mostrem les activitats si n'hi ha
+                            if (trip.activities.isNotEmpty()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Activitats:",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    trip.activities
+                                        .sortedWith(compareBy({ it.day }, { it.hour }))
+                                        .take(3) // Mostra fins a 3 activitats
+                                        .forEach { activity ->
+                                            Text(
+                                                text = "• ${activity.day} ${activity.hour} - ${activity.title}",
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+
+                                    if (trip.activities.size > 3) {
+                                        Text(
+                                            text = "+ ${trip.activities.size - 3} més...",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.secondary
+                                        )
+                                    }
+                                }
+                            } else {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Cap activitat afegida", style = MaterialTheme.typography.bodySmall)
+                            }
 
                             Spacer(modifier = Modifier.height(12.dp))
 
@@ -103,9 +148,6 @@ fun TripListScreen(
                                     Text("Elimina")
                                 }
                             }
-
-
-
                         }
                     }
                 }

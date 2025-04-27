@@ -2,7 +2,8 @@ package com.example.waygo.models
 
 import java.util.UUID
 
-data class Activity(
+data class Itinerary(
+
     val id: String = UUID.randomUUID().toString(),
     val tripId: String,  // Relació amb el viatge
     val title: String,

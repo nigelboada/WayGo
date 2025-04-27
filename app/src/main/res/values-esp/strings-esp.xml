@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">WayGo</string>
+    <string name="default_user">usuario@udl.cat</string>
+    <string name="default_pass">123456</string>
+
+    <!-- Login -->
+    <string name="login_title">Iniciar sesión</string>
+    <string name="username_label">Nombre de usuario</string>
+    <string name="password_label">Contraseña</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_error">Usuario o contraseña incorrectos</string>
+
+    <!-- Home -->
+    <string name="home_title">WayGo</string>
+    <string name="home_welcome">Bienvenido a la pantalla de inicio</string>
+    <string name="go_to_settings">Ir a Configuración</string>
+    <string name="go_to_profile">Ir al Perfil</string>
+    <string name="go_to_trips">Ir a Viajes</string>
+    <string name="go_to_about">Ir a Acerca de</string>
+    <string name="go_to_terms">Ir a Términos y Condiciones</string>
+
+    <!-- TripList -->
+    <string name="trip_list_title">Mis viajes</string>
+    <string name="add_trip_button">Añadir viaje</string>
+
+    <!-- AddTrip -->
+    <string name="add_trip_title">Nuevo viaje</string>
+    <string name="trip_name_label">Nombre del viaje</string>
+    <string name="trip_location_label">Ubicación</string>
+    <string name="trip_date_label">Fecha</string>
+    <string name="trip_save_button">Guardar</string>
+
+    <!-- User Settings -->
+    <string name="user_settings_title">Configuración de usuario</string>
+    <string name="new_password_label">Nueva contraseña</string>
+    <string name="language_label">Idioma</string>
+    <string name="save_changes">Guardar cambios</string>
+    <string name="logout">Cerrar sesión</string>
+
+    <!-- RegisterScreen -->
+    <string name="register_title">Registrarse</string>
+    <string name="email_label">Correo electrónico</string>
+    <string name="pasword_label">Contraseña</string>
+    <string name="confirm_password_label">Confirmar contraseña</string>
+    <string name="register_button">Registrarse</string>
+    <string name="registration_error">Error en el registro. Inténtalo de nuevo.</string>
+    <string name="password_mismatch_error">Las contraseñas no coinciden.</string>
+    <string name="register_prompt">¿No tienes cuenta? Regístrate aquí</string>
+
+
+</resources>

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.waygo.viewmodel.ActivityViewModel
+import com.example.waygo.viewmodel.TripViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,6 +26,15 @@ fun ActivityListScreen(
 ) {
     val activities = viewModel.activities.collectAsState().value
     val filteredActivities = activities.filter { it.tripId == tripId }
+
+    val activityViewModel: ActivityViewModel = viewModel()
+    val tripViewModel: TripViewModel = viewModel()
+
+// Connectem els dos ViewModels
+    activityViewModel.tripViewModel = tripViewModel
+
+
+
 
     Scaffold(
         topBar = {
