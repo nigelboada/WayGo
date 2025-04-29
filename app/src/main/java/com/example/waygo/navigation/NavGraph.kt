@@ -39,9 +39,15 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
         }
         composable("register") {
             Log.d("NavGraph", "Navegant a RegisterScreen")
-            RegisterScreen(navController) {
-                navController.navigate("home")
-            }
+            RegisterScreen(
+                onRegisterClick = { name, email, password, address, country, phone, birthdate, login ->
+                    // Aquí crides a la funció del ViewModel o el que vulguis fer
+                },
+                onBackToLoginClick = {
+                    // Navegar cap al Login
+                }
+            )
+
         }
 
         // Altres pantalles
