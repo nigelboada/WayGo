@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.waygo.utils.LanguageManager
 import com.example.waygo.utils.UserPreferences
 
+import android.util.Log
 
 
 
@@ -38,7 +39,11 @@ class MainActivity : ComponentActivity() {
             ) {
                 WayGoTheme {
                     val navController = rememberNavController()
+
+                    Log.d("MainActivity", "L'idioma carregat és: $langCode")
+
                     val isLoggedIn = SessionManager.isLoggedIn(localizedContext)
+                    Log.d("MainActivity", "Usuari loguejat? $isLoggedIn")
 
                     // Directament passem el startDestination a la funció NavGraph
                     NavGraph(

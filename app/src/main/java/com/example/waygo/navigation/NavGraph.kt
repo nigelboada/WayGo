@@ -13,6 +13,9 @@ import com.example.waygo.utils.SessionManager
 import com.example.waygo.viewmodel.ActivityViewModel
 import com.example.waygo.viewmodel.TripViewModel
 
+import android.util.Log
+
+
 @Composable
 
 fun NavGraph(navController: NavHostController, startDestination: String) {
@@ -24,8 +27,8 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
     // Aquí definim el NavHost amb el paràmetre startDestination
     NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
+            Log.d("NavGraph", "Navegant a LoginScreen")
             LoginScreen(
-                navController = navController,
                 onLoginSuccess = {
                     SessionManager.setLoggedIn(context, true)
                     navController.navigate("home") {
@@ -35,28 +38,54 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             )
         }
         composable("register") {
+            Log.d("NavGraph", "Navegant a RegisterScreen")
             RegisterScreen(navController) {
                 navController.navigate("home")
             }
         }
 
         // Altres pantalles
-        composable("home") { HomeScreen(navController) }
-        composable("about") { AboutScreen(navController) }
-        composable("profile") { ProfileScreen(navController) }
-        composable("terms") { TermsScreen(navController) }
-        composable("trip") { TripListScreen(navController) }
-        composable("add_trip") { AddTripScreen(navController) }
-        composable("edit_trip/{tripId}") { backStackEntry ->
+        composable("home") {
+            Log.d("NavGraph", "Navegant a HomeScreen")
+            HomeScreen(navController)
+        }
+        composable("about") {
+            Log.d("NavGraph", "Navegant a AboutScreen")
+            AboutScreen(navController)
+        }
+        composable("profile") {
+            Log.d("NavGraph", "Navegant a ProfileScreen")
+            ProfileScreen(navController)
+        }
+        composable("terms") {
+            Log.d("NavGraph", "Navegant a TermsScreen")
+            TermsScreen(navController)
+        }
+        composable("trip") {
+            Log.d("NavGraph", "Navegant a TripListScreen")
+            TripListScreen(navController)
+        }
+        composable("add_trip") {
+            Log.d("NavGraph", "Navegant a AddTripScreen")
+            AddTripScreen(navController)
+        }
+        composable("edit_trip/{tripId}") {
+            backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+            Log.d("NavGraph", "Navegant a EditTripScreen")
+
             EditTripScreen(navController = navController, tripId = tripId)
         }
         composable("itinerary_list/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+            Log.d("NavGraph", "Navegant a ActivityListScreen")
+
             ActivityListScreen(navController, tripId, itineraryViewModel)
         }
         composable("add_activity/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+            Log.d("NavGraph", "Navegant a AddActivityScreen")
+
             AddActivityScreen(navController, tripId, itineraryViewModel)
         }
         composable(
@@ -70,6 +99,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             val availableDays = tripViewModel.getDaysForTrip(tripId)
 
+            Log.d("NavGraph", "Navegant a EditActivityScreen")
             EditActivityScreen(
                 navController = navController,
                 activityId = activityId,
@@ -79,6 +109,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             )
         }
         composable("settings") {
+            Log.d("NavGraph", "Navegant a UserSettingsScreen")
             UserSettingsScreen(navController = navController, context = LocalContext.current)
         }
     }

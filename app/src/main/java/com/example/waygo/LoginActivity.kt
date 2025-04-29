@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.waygo.ui.screens.LoginScreen
 import com.example.waygo.ui.theme.WayGoTheme
@@ -32,7 +31,6 @@ fun LoginScreenContent() {
     WayGoTheme {
         // Passant el context i altres paràmetres
         LoginScreen(
-            navController = navController,
             onLoginSuccess = {
                 // Quan el login sigui correcte, es marca com logat i es redirigeix
                 SessionManager.setLoggedIn(context, true)

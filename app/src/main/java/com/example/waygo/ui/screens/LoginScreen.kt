@@ -8,18 +8,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
+
+import android.util.Log
+
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
     onLoginSuccess: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val context = LocalContext.current
+    LocalContext.current
 
     Column(
         modifier = Modifier
@@ -55,15 +56,20 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            onLoginSuccess()
-                        } else {
-                            errorMessage = task.exception?.message
-                        }
+                Log.d("LoginScreen", "S'ha clicat el botó de login per a l'usuari: $email")
+
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password) .addOnCompleteListener {
+
+                    task ->
+                    if (task.isSuccessful) {
+                    Log.d("LoginScreen", "Login correcte per a l'usuari: $email")
+                    onLoginSuccess()
+                    } else {
+                        Log.e("LoginScreen", "Error de login: ${task.exception?.message}")
                     }
+
+                }
+
             },
             modifier = Modifier.fillMaxWidth()
         ) {
