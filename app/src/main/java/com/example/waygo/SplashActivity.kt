@@ -33,16 +33,13 @@ fun SplashScreen() {
     // Verifiquem si l'usuari ja està registrat
     val isLoggedIn = remember { mutableStateOf(SessionManager.isLoggedIn(context)) }
 
-    LaunchedEffect(isLoggedIn.value) {
-        delay(2000)  // SplashScreen de 2 segons
-
-        // En funció de si està registrat, anem a la RegisterScreen o HomeScreen
-        if (isLoggedIn.value) {
-            navController.navigate("home")
-        } else {
-            navController.navigate("register")
+    LaunchedEffect(Unit) {
+        delay(2000)
+        navController.navigate("register") {
+            popUpTo("splash") { inclusive = true }
         }
     }
+
 
     // A continuació, passarem la nostra navController i la startDestination
     NavGraph(navController = navController, startDestination = if (isLoggedIn.value) "home" else "register")

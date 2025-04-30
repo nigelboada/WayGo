@@ -23,7 +23,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
     val tripViewModel: TripViewModel = viewModel()
 
     // Aquí definim el NavHost amb el paràmetre startDestination
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(navController = navController, startDestination = "register") {
         composable("login") {
 
             val context = LocalContext.current
