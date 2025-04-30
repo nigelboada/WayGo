@@ -53,9 +53,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
 
 
-    implementation(libs.androidx.core.ktx)
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.navigation.testing)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.cast.framework)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

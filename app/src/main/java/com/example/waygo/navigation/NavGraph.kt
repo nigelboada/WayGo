@@ -17,19 +17,21 @@ import android.util.Log
 
 
 @Composable
-
 fun NavGraph(navController: NavHostController, startDestination: String) {
-    val context = LocalContext.current
 
     val itineraryViewModel: ActivityViewModel = viewModel()
     val tripViewModel: TripViewModel = viewModel()
 
     // Aquí definim el NavHost amb el paràmetre startDestination
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(navController = navController, startDestination = "register") {
         composable("login") {
-            Log.d("NavGraph", "Navegant a LoginScreen")
+
+            val context = LocalContext.current
+
             LoginScreen(
+                navController = navController,
                 onLoginSuccess = {
+
                     SessionManager.setLoggedIn(context, true)
                     navController.navigate("home") {
                         popUpTo("login") { inclusive = true }
@@ -37,18 +39,18 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
                 }
             )
         }
+
         composable("register") {
             Log.d("NavGraph", "Navegant a RegisterScreen")
-            RegisterScreen(
-                onRegisterClick = { name, email, password, address, country, phone, birthdate, login ->
-                    // Aquí crides a la funció del ViewModel o el que vulguis fer
-                },
-                onBackToLoginClick = {
-                    // Navegar cap al Login
-                }
-            )
-
+            RegisterScreen(navController) {
+                navController.navigate("home")
+            }
         }
+
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController)
+        }
+
 
         // Altres pantalles
         composable("home") {
@@ -75,8 +77,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             Log.d("NavGraph", "Navegant a AddTripScreen")
             AddTripScreen(navController)
         }
-        composable("edit_trip/{tripId}") {
-            backStackEntry ->
+        composable("edit_trip/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             Log.d("NavGraph", "Navegant a EditTripScreen")
 

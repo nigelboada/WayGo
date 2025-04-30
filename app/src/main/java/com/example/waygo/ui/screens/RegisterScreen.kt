@@ -2,21 +2,19 @@ package com.example.waygo.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.waygo.R
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+
+import com.example.waygo.repository.AuthRepository
+
 
 // Aquesta funció envia el correu de verificació
 private fun sendEmailVerification() {
@@ -29,9 +27,9 @@ private fun sendEmailVerification() {
 }
 
 // Funció de registre d'usuari
-fun signup(email: String, password: String, navController: NavController) {
+fun signup(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
     if (email.isEmpty() || password.isEmpty()) {
-        Log.e("Auth", "Email or password can't be empty")
+        onError("Email or password can't be empty")
         return
     }
 
@@ -39,64 +37,103 @@ fun signup(email: String, password: String, navController: NavController) {
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 sendEmailVerification()
-                navController.navigate("login") // Redirigeix a la pantalla de login
+                onSuccess() // ✅ crida la callback passada
             } else {
-                Log.e("Auth", task.exception?.message ?: "Something went wrong")
+                onError(task.exception?.message ?: "Something went wrong")
             }
         }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    onRegisterClick: (name: String, email: String, password: String, address: String, country: String, phone: String, birthdate: String, login: String) -> Unit,
-    onBackToLoginClick: () -> Unit
+    navController: NavController,
+    onRegisterSuccess: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
-    var country by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var birthdate by remember { mutableStateOf("") }
-    var login by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Registra't", style = MaterialTheme.typography.headlineMedium)
+    val authRepository = remember { AuthRepository() }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Nom complet") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Correu electrònic") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Contrasenya") }, modifier = Modifier.fillMaxWidth(), visualTransformation = PasswordVisualTransformation())
-        OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Adreça") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = country, onValueChange = { country = it }, label = { Text("País") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Telèfon") }, modifier = Modifier.fillMaxWidth(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone))
-        OutlinedTextField(value = birthdate, onValueChange = { birthdate = it }, label = { Text("Data de naixement (DD/MM/AAAA)") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text("Nom d’usuari") }, modifier = Modifier.fillMaxWidth())
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                onRegisterClick(name, email, password, address, country, phone, birthdate, login)
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Registrar-me")
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(stringResource(R.string.register_title)) })
         }
-
-        TextButton(
-            onClick = onBackToLoginClick,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Ja tens compte? Inicia sessió")
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text(stringResource(R.string.username_label)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(stringResource(R.string.password_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text(stringResource(R.string.confirm_password_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (username.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
+                        authRepository.signup(username, password) { success, message ->
+                            if (success) {
+                                navController.navigate("login") {
+                                    popUpTo("register") { inclusive = true }
+                                }
+                            } else {
+                                errorMessage = message ?: "Ha fallat el registre."
+                            }
+                        }
+                    } else {
+                        errorMessage = "Please make sure all fields are filled correctly."
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.register_button))
+            }
+
+            // 🔽 Nou botó afegit aquí:
+            TextButton(
+                onClick = {
+                    navController.navigate("login") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ja tens un compte? Inicia sessió")
+            }
+
         }
     }
 }
-

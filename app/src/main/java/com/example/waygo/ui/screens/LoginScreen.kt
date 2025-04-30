@@ -3,82 +3,94 @@ package com.example.waygo.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.FirebaseAuth
+import androidx.navigation.NavController
+import com.example.waygo.repository.AuthRepository
 
-import android.util.Log
-
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit
+    navController: NavController,
+    onLoginSuccess: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "WayGo Login", style = MaterialTheme.typography.headlineMedium)
+    val authRepository = remember { AuthRepository() }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                Log.d("LoginScreen", "S'ha clicat el botó de login per a l'usuari: $email")
-
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password) .addOnCompleteListener {
-
-                    task ->
-                    if (task.isSuccessful) {
-                    Log.d("LoginScreen", "Login correcte per a l'usuari: $email")
-                    onLoginSuccess()
-                    } else {
-                        Log.e("LoginScreen", "Error de login: ${task.exception?.message}")
-                    }
-
-                }
-
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Login")
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Iniciar Sessió") })
         }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correu electrònic") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        errorMessage?.let {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = it, color = MaterialTheme.colorScheme.error)
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contrasenya") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(
+                onClick = {
+                    authRepository.login(email, password) { success, message ->
+                        if (success) {
+                            onLoginSuccess()
+                            navController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        } else {
+                            errorMessage = message
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Iniciar Sessió")
+            }
+
+            TextButton(
+                onClick = {
+                    navController.navigate("register") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            ) {
+                Text("Encara no tens compte? Registra't")
+            }
+
+            TextButton(
+                onClick = { navController.navigate("forgot_password") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Has oblidat la contrasenya?")
+            }
+
         }
     }
 }

@@ -14,12 +14,9 @@
         android:theme="@style/Theme.WayGo"
         tools:targetApi="31">
 
+    <!-- SplashActivity com el MAIN i LAUNCHER -->
     <activity
-        android:name=".LoginActivity"
-        android:launchMode="singleTask"
-
-
-
+        android:name=".SplashActivity"
         android:exported="true"
         android:theme="@style/Theme.WayGo.Splash">
         <intent-filter>
@@ -28,17 +25,12 @@
         </intent-filter>
     </activity>
 
-
+    <!-- MainActivity sense el filtre MAIN/LAUNCHER -->
     <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.WayGo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:name=".MainActivity"
+        android:exported="true"
+        android:theme="@style/Theme.WayGo" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+</application>
 
 </manifest>
