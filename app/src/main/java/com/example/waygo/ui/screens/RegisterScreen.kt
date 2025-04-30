@@ -24,9 +24,9 @@ private fun sendEmailVerification() {
 }
 
 // Funció de registre d'usuari
-fun signup(email: String, password: String, navController: NavController) {
+fun signup(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
     if (email.isEmpty() || password.isEmpty()) {
-        Log.e("Auth", "Email or password can't be empty")
+        onError("Email or password can't be empty")
         return
     }
 
@@ -34,12 +34,13 @@ fun signup(email: String, password: String, navController: NavController) {
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 sendEmailVerification()
-                navController.navigate("login") // Redirigeix a la pantalla de login
+                onSuccess() // ✅ crida la callback passada
             } else {
-                Log.e("Auth", task.exception?.message ?: "Something went wrong")
+                onError(task.exception?.message ?: "Something went wrong")
             }
         }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +99,16 @@ fun RegisterScreen(
             Button(
                 onClick = {
                     if (username.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
-                        signup(username, password, navController)
+                        signup(
+                            email = username,
+                            password = password,
+                            onSuccess = {
+                                onRegisterSuccess() // 🔁 Això vindrà del NavGraph i navegarà a "home"
+                            },
+                            onError = {
+                                errorMessage = it
+                            }
+                        )
                     } else {
                         errorMessage = "Please make sure all fields are filled correctly."
                     }
@@ -107,6 +117,7 @@ fun RegisterScreen(
             ) {
                 Text(stringResource(R.string.register_button))
             }
+
         }
     }
 }
