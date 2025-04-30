@@ -83,6 +83,14 @@ fun LoginScreen(
             ) {
                 Text("Encara no tens compte? Registra't")
             }
+
+            TextButton(
+                onClick = { navController.navigate("forgot_password") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Has oblidat la contrasenya?")
+            }
+
         }
     }
 }

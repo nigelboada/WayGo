@@ -47,6 +47,11 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             }
         }
 
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController)
+        }
+
+
         // Altres pantalles
         composable("home") {
             Log.d("NavGraph", "Navegant a HomeScreen")
