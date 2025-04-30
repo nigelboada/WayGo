@@ -13,6 +13,9 @@ import com.example.waygo.R
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+import com.example.waygo.repository.AuthRepository
+
+
 // Aquesta funció envia el correu de verificació
 private fun sendEmailVerification() {
     val user = Firebase.auth.currentUser
@@ -52,6 +55,8 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val authRepository = remember { AuthRepository() }
 
     Scaffold(
         topBar = {
@@ -99,16 +104,15 @@ fun RegisterScreen(
             Button(
                 onClick = {
                     if (username.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
-                        signup(
-                            email = username,
-                            password = password,
-                            onSuccess = {
-                                onRegisterSuccess() // 🔁 Això vindrà del NavGraph i navegarà a "home"
-                            },
-                            onError = {
-                                errorMessage = it
+                        authRepository.signup(username, password) { success, message ->
+                            if (success) {
+                                navController.navigate("login") {
+                                    popUpTo("register") { inclusive = true }
+                                }
+                            } else {
+                                errorMessage = message ?: "Ha fallat el registre."
                             }
-                        )
+                        }
                     } else {
                         errorMessage = "Please make sure all fields are filled correctly."
                     }
@@ -116,6 +120,18 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.register_button))
+            }
+
+            // 🔽 Nou botó afegit aquí:
+            TextButton(
+                onClick = {
+                    navController.navigate("login") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ja tens un compte? Inicia sessió")
             }
 
         }
