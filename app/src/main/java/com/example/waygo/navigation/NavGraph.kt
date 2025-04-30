@@ -17,9 +17,7 @@ import android.util.Log
 
 
 @Composable
-
 fun NavGraph(navController: NavHostController, startDestination: String) {
-    val context = LocalContext.current
 
     val itineraryViewModel: ActivityViewModel = viewModel()
     val tripViewModel: TripViewModel = viewModel()
@@ -27,9 +25,13 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
     // Aquí definim el NavHost amb el paràmetre startDestination
     NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
-            Log.d("NavGraph", "Navegant a LoginScreen")
+
+            val context = LocalContext.current
+
             LoginScreen(
+                navController = navController,
                 onLoginSuccess = {
+
                     SessionManager.setLoggedIn(context, true)
                     navController.navigate("home") {
                         popUpTo("login") { inclusive = true }
@@ -37,6 +39,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
                 }
             )
         }
+
         composable("register") {
             Log.d("NavGraph", "Navegant a RegisterScreen")
             RegisterScreen(navController) {
@@ -69,8 +72,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             Log.d("NavGraph", "Navegant a AddTripScreen")
             AddTripScreen(navController)
         }
-        composable("edit_trip/{tripId}") {
-            backStackEntry ->
+        composable("edit_trip/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
             Log.d("NavGraph", "Navegant a EditTripScreen")
 

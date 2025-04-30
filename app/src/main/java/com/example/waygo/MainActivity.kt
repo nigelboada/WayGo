@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     // Directament passem el startDestination a la funció NavGraph
                     NavGraph(
                         navController = navController,
-                        startDestination = if (isLoggedIn) "home" else "login"
+                        startDestination = if (isLoggedIn) "home" else "register"
                     )
                 }
             }
