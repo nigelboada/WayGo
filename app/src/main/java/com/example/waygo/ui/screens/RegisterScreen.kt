@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -44,57 +43,70 @@ fun signup(email: String, password: String, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController, onRegisterSuccess: () -> Unit) {
-    var email by remember { mutableStateOf("") }
+fun RegisterScreen(
+    navController: NavController,
+    onRegisterSuccess: () -> Unit
+) {
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "WayGo Register", style = MaterialTheme.typography.headlineMedium)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                // Aquí aniria el teu codi per a registrar l'usuari
-                // Quan l'usuari es registri correctament, cridem el callback
-                onRegisterSuccess()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Register")
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(stringResource(R.string.register_title)) })
         }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text(stringResource(R.string.username_label)) },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        errorMessage?.let {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = it, color = MaterialTheme.colorScheme.error)
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(stringResource(R.string.password_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text(stringResource(R.string.confirm_password_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (username.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
+                        signup(username, password, navController)
+                    } else {
+                        errorMessage = "Please make sure all fields are filled correctly."
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.register_button))
+            }
         }
     }
 }
