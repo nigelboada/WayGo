@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     id("com.google.gms.google-services")
+    id ("kotlin-kapt")
 
 }
 
@@ -49,8 +50,13 @@ dependencies {
     // 🔥 BOM de Firebase (controla les versions internes automàticament)
     implementation(platform(libs.firebase.bom.v33130))
 
-// 🔐 Autenticació per correu electrònic i contrasenya
+    // 🔐 Autenticació per correu electrònic i contrasenya
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Room
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
 
 
     implementation("androidx.core:core-ktx:1.12.0")
