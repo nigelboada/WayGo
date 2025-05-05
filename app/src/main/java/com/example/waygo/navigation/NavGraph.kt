@@ -14,29 +14,31 @@ import com.example.waygo.viewmodel.ActivityViewModel
 import com.example.waygo.viewmodel.TripViewModel
 
 import android.util.Log
+import androidx.compose.runtime.remember
 import com.example.waygo.local.AppDatabase
 import com.example.waygo.repository.TripRepository
 import com.example.waygo.viewmodel.TripViewModelFactory
 
 
 @Composable
-fun NavGraph(navController: NavHostController, startDestination: String) {
+fun NavGraph(navController: NavHostController) {
     val context = LocalContext.current
     val db = AppDatabase.getDatabase(context)
     val tripDao = db.tripDao()  // Aquí obtenim el tripDao directament
 
-    // Crear el repositori
     val tripRepository = TripRepository(tripDao)
 
-    // Crear el ViewModel
     val tripViewModel: TripViewModel = viewModel(
         factory = TripViewModelFactory(tripRepository)
     )
 
     val itineraryViewModel: ActivityViewModel = viewModel() // Afegeix aquest ViewModel
 
+    val isLoggedIn = remember { SessionManager.isLoggedIn(context) }
+    val startDestination = if (isLoggedIn) "home" else "register"
+
     // Aquí definim el NavHost amb el paràmetre startDestination
-    NavHost(navController = navController, startDestination = "register") {
+    NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
             val context = LocalContext.current
 
@@ -44,6 +46,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
                 navController = navController,
                 onLoginSuccess = {
                     SessionManager.setLoggedIn(context, true)
+                    Log.d("LoginScreen", "S'ha guardat que l'usuari està loguejat")
                     navController.navigate("home") {
                         popUpTo("login") { inclusive = true }
                     }

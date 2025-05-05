@@ -42,5 +42,5 @@ fun SplashScreen() {
 
 
     // A continuació, passarem la nostra navController i la startDestination
-    NavGraph(navController = navController, startDestination = if (isLoggedIn.value) "home" else "register")
+    NavGraph(navController = navController)
 }

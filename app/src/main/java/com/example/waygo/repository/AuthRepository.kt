@@ -1,5 +1,6 @@
 package com.example.waygo.repository
 
+import androidx.compose.runtime.Composable
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -31,7 +32,7 @@ class AuthRepository {
             .addOnCompleteListener { task ->
                 val user = auth.currentUser
                 if (task.isSuccessful && user != null && user.isEmailVerified) {
-                    onResult(true, null)
+                    onResult(true, user.uid)
                 } else if (user != null && !user.isEmailVerified) {
                     onResult(false, "Verifica el teu correu abans d'iniciar sessió.")
                 } else {

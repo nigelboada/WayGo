@@ -2,22 +2,55 @@ package com.example.waygo.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 object SessionManager {
-    private const val PREF_NAME = "waygo_pref"  // Nom del fitxer de les preferències
-    private const val IS_LOGGED_IN = "is_logged_in"  // Clau per saber si l'usuari està logat
+    private const val PREF_NAME = "waygo_pref"
 
-    // Funció per establir l'estat de logat a les preferències
-    fun setLoggedIn(context: Context, loggedIn: Boolean) {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(IS_LOGGED_IN, loggedIn)  // Guardem l'estat de connexió
-        editor.apply()  // Aplica els canvis
+    private const val IS_LOGGED_IN = "is_logged_in"
+    private const val USER_ID = "user_id"
+    private const val LOGIN_TIME = "login_time"
+    private const val LOGOUT_TIME = "logout_time"
+
+    private fun getPrefs(context: Context): SharedPreferences {
+        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    // Funció per comprovar si l'usuari està logat o no
+    fun setLoggedIn(context: Context, loggedIn: Boolean) {
+        getPrefs(context).edit { putBoolean(IS_LOGGED_IN, loggedIn) }
+    }
+
     fun isLoggedIn(context: Context): Boolean {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getBoolean(IS_LOGGED_IN, false)  // Retorna "false" si no hi ha cap estat emmagatzemat
+        return getPrefs(context).getBoolean(IS_LOGGED_IN, false)
+    }
+
+    fun saveLoginSession(context: Context, userId: String) {
+        getPrefs(context).edit {
+            putBoolean(IS_LOGGED_IN, true)
+            putString(USER_ID, userId)
+            putLong(LOGIN_TIME, System.currentTimeMillis())
+        }
+    }
+
+    fun saveLogoutTime(context: Context) {
+        getPrefs(context).edit {
+            putLong(LOGOUT_TIME, System.currentTimeMillis())
+        }
+    }
+
+    fun getUserId(context: Context): String? {
+        return getPrefs(context).getString(USER_ID, null)
+    }
+
+    fun getLoginTime(context: Context): Long {
+        return getPrefs(context).getLong(LOGIN_TIME, 0L)
+    }
+
+    fun getLogoutTime(context: Context): Long {
+        return getPrefs(context).getLong(LOGOUT_TIME, 0L)
+    }
+
+    fun clearSession(context: Context) {
+        getPrefs(context).edit { clear() }
     }
 }
