@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         val prefs = UserPreferences(newBase)
-        val langCode = prefs.getLanguage() ?: "en"  // default language
+        val langCode = prefs.getLanguage()  // default language
         val context = LanguageManager.setLocale(newBase, langCode)
         super.attachBaseContext(context)
     }
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val prefs = UserPreferences(this)
-        val langCode = prefs.getLanguage() ?: "en"
+        val langCode = prefs.getLanguage()
         val localizedContext = LanguageManager.setLocale(this, langCode)
 
         setContent {
@@ -47,8 +47,8 @@ class MainActivity : ComponentActivity() {
 
                     // Directament passem el startDestination a la funció NavGraph
                     NavGraph(
-                        navController = navController,
-                        startDestination = if (isLoggedIn) "home" else "register"
+                        navController = navController
+//                        startDestination = if (isLoggedIn) "home" else "register"
                     )
                 }
             }

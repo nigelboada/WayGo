@@ -48,6 +48,8 @@ fun UserSettingsScreen(navController: NavController, context: Context) {
                     Log.d("Settings", "L'usuari ha fet logout")
 
                     FirebaseAuth.getInstance().signOut()
+                    SessionManager.saveLogoutTime(context) // ← Afegeix aquesta línia
+                    SessionManager.clearSession(context)   // ← I aquesta
                     SessionManager.setLoggedIn(context, false)
 
                     navController.navigate("login") {
