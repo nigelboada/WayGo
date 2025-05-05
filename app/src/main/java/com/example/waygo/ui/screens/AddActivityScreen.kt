@@ -22,9 +22,8 @@ fun AddActivityScreen(
     navController: NavController,
     tripId: String,
     activityViewModel: ActivityViewModel = viewModel(),
-    tripViewModel: TripViewModel = viewModel()
+    tripViewModel: TripViewModel
 
-// Utilitzem ActivityViewModel aquí
 ) {
 
     LaunchedEffect(tripId) {
@@ -104,7 +103,7 @@ fun AddActivityScreen(
                         val parsedDay = dateFormat.parse(activityDay)
                         val parsedHour = try {
                             timeFormat.parse(activityHour)
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             null
                         }
 
@@ -124,7 +123,7 @@ fun AddActivityScreen(
                                     snackbarHostState.showSnackbar("Tots els camps són obligatoris")
                                 }
                             }
-                            parsedDay == null || parsedHour == null -> {
+                            parsedDay == null -> {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar("Format incorrecte de data o hora")
                                 }
@@ -154,7 +153,7 @@ fun AddActivityScreen(
                                 navController.popBackStack()
                             }
                         }
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         coroutineScope.launch {
                             snackbarHostState.showSnackbar("Format de data o hora incorrecte")
                         }

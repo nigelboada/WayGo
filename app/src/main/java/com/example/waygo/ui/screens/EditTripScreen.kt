@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.waygo.viewmodel.TripViewModel
 import kotlinx.coroutines.launch
@@ -19,7 +18,7 @@ import java.util.*
 fun EditTripScreen(
     navController: NavController,
     tripId: String,
-    viewModel: TripViewModel = viewModel()
+    viewModel: TripViewModel
 ) {
     // Cridar a getTripById per carregar el viatge
     LaunchedEffect(tripId) {
@@ -144,7 +143,7 @@ fun EditTripScreen(
                                 navController.popBackStack()
                             }
                         }
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         coroutineScope.launch {
                             snackbarHostState.showSnackbar("Format de data incorrecte (usa dd/MM/yyyy)")
                         }

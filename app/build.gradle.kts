@@ -52,6 +52,8 @@ dependencies {
 
     // 🔐 Autenticació per correu electrònic i contrasenya
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+
 
     // Room
     implementation ("androidx.room:room-runtime:2.6.1")

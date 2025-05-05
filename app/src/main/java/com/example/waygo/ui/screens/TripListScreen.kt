@@ -13,8 +13,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.waygo.models.Trip
 import com.example.waygo.viewmodel.TripViewModel
 
 
@@ -23,7 +23,7 @@ import com.example.waygo.viewmodel.TripViewModel
 @Composable
 fun TripListScreen(
     navController: NavController,
-    viewModel: TripViewModel = viewModel()
+    viewModel: TripViewModel
 ) {
     val trips = viewModel.trips.collectAsState().value
 
@@ -71,9 +71,7 @@ fun TripListScreen(
             )
 
             {
-                items(trips)
-
-                { trip ->
+                items(trips) { trip: Trip ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -103,7 +101,7 @@ fun TripListScreen(
                                 ) {
                                     trip.activities
                                         .sortedWith(compareBy({ it.day }, { it.hour }))
-                                        .take(3) // Mostra fins a 3 activitats
+                                        .take(3)
                                         .forEach { activity ->
                                             Text(
                                                 text = "• ${activity.day} ${activity.hour} - ${activity.title}",
