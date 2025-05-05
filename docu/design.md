@@ -38,7 +38,7 @@ data class Trip(
 
 📝 Els viatges estan vinculats a un userId intern (via TripEntity) i poden tenir activitats associades (encara que aquestes no estiguin persistides actualment).
 
-🗃️ Database Schema
+🗃 Database Schema
 
 S'utilitza Room per gestionar una base de dades SQLite local. L'esquema conté dues taules: users i trips.
 
