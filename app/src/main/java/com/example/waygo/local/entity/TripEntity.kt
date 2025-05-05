@@ -1,17 +1,15 @@
-package com.example.waygo.models
+package com.example.waygo.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(tableName = "trips")
-data class Trip(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+data class TripEntity(
+    @PrimaryKey val id: String, // era Int o convertit a partir d'Int
     val title: String,
     val description: String,
     val location: String,
     val startDate: String,
     val endDate: String,
-    val activities: List<Itinerary> = emptyList() // <- AIXÒ ÉS IMPORTANT!
-
+    val userId: String
 )
