@@ -1,8 +1,12 @@
 package com.example.waygo.repository
 
+import com.example.waygo.di.RetrofitClient
+import com.example.waygo.di.TripApiService
 import com.example.waygo.local.dao.TripDao
 import com.example.waygo.local.entity.TripEntity
 import com.example.waygo.models.Trip
+import com.example.waygo.di.dto.toTrip
+
 
 class TripRepository(private val tripDao: TripDao) {
 
@@ -25,6 +29,16 @@ class TripRepository(private val tripDao: TripDao) {
     suspend fun getTripById(tripId: String): Trip? {
         return tripDao.getTripById(tripId)?.toTrip()
     }
+
+
+    private val api = RetrofitClient.instance.create(TripApiService::class.java)
+
+    suspend fun fetchTripsFromApi(): List<Trip> {
+        val dtoList = api.getTrips()
+        return dtoList.map { dto -> dto.toTrip() } // Necessitaràs un mapper
+    }
+
+
 
     private fun TripEntity.toTrip() = Trip(
         id = id,
