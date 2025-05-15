@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
-import com.example.waygo.navigation.NavGraph
 import com.example.waygo.utils.SessionManager
 import com.example.waygo.ui.theme.WayGoTheme
 import kotlinx.coroutines.delay

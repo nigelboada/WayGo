@@ -1,6 +1,6 @@
 package com.example.waygo.di.dto
 
-import com.example.waygo.models.Trip
+import com.example.waygo.domain.model.Trip
 
 fun TripDto.toTrip(): Trip {
     return Trip(

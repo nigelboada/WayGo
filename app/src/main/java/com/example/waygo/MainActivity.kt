@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.rememberNavController
-import com.example.waygo.navigation.NavGraph
 import com.example.waygo.ui.theme.WayGoTheme
 import com.example.waygo.utils.SessionManager
 import androidx.compose.ui.platform.LocalContext
@@ -49,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     // Directament passem el startDestination a la funció NavGraph
                     NavGraph(
                         navController = navController
-//                        startDestination = if (isLoggedIn) "home" else "register"
+//                          startDestination = if (isLoggedIn) "home" else "register"
                     )
                 }
             }
