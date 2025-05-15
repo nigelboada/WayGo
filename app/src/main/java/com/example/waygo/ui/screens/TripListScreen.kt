@@ -138,7 +138,7 @@ fun TripListScreen(
 
                                 Button(
                                     onClick = {
-                                        viewModel.deleteTrip(trip.id)
+                                        viewModel.deleteTrip(trip)
                                     },
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                                     modifier = Modifier.weight(1f)

@@ -2,10 +2,12 @@ package com.example.waygo.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.waygo.local.entity.TripEntity
 import com.example.waygo.models.Itinerary
 import com.example.waygo.models.Trip
 import com.example.waygo.repository.ActivityRepository
 import com.example.waygo.repository.TripRepository
+import com.example.waygo.utils.SessionManager
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -71,12 +73,14 @@ class TripViewModel(private val tripRepository: TripRepository) : ViewModel() {
         }
     }
 
-    fun deleteTrip(id: String) {
+    fun deleteTrip(trip: Trip) {
         viewModelScope.launch {
-            tripRepository.deleteTrip(id.toInt().toString())
-            loadTrips()
+            tripRepository.deleteTrip(trip.id) // Passa directament l'ID com a String
+            loadTrips() // opcional, per refrescar la llista
         }
     }
+
+
 
     private val _trip = MutableStateFlow<Trip?>(null)
     val trip: StateFlow<Trip?> = _trip
