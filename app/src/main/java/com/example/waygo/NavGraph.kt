@@ -1,6 +1,5 @@
 package com.example.waygo
 
-import HotelListScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,6 +16,8 @@ import com.example.waygo.ui.viewmodel.TripViewModel
 import android.util.Log
 import androidx.compose.runtime.remember
 import com.example.waygo.data.local.AppDatabase
+import com.example.waygo.di.HotelApiService
+import com.example.waygo.di.RetrofitClient
 import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.domain.repository.TripRepository
 import com.example.waygo.ui.viewmodel.HotelViewModel
@@ -165,13 +166,15 @@ fun NavGraph(navController: NavHostController) {
 
 
         composable("hotel_list") {
-            val hotelRepository = HotelRepository() // o passa-li dependències si cal
+            val apiService = RetrofitClient.instance.create(HotelApiService::class.java)
+            val hotelRepository = HotelRepository(apiService)
             val hotelViewModel: HotelViewModel = viewModel(
                 factory = HotelViewModelFactory(hotelRepository)
             )
 
             HotelListScreen(viewModel = hotelViewModel)
         }
+
 
 
 

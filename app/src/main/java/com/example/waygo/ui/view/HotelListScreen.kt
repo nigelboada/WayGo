@@ -1,3 +1,5 @@
+package com.example.waygo.ui.view
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -6,15 +8,24 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.waygo.di.HotelApiService
+import com.example.waygo.di.RetrofitClient
+import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.ui.viewmodel.HotelViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HotelListScreen(viewModel: HotelViewModel) {
-    val hotels = viewModel.hotels
+    val hotels by viewModel.hotels.collectAsState()
+
+    val retrofit = RetrofitClient.instance
+    val api = retrofit.create(HotelApiService::class.java)
+    val repository = HotelRepository(api)
+    val viewModel = HotelViewModel(repository)
+
 
     LaunchedEffect(Unit) {
-        viewModel.fetchHotels()
+        viewModel.loadHotels()
     }
 
     Scaffold(
@@ -43,8 +54,9 @@ fun HotelListScreen(viewModel: HotelViewModel) {
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(text = hotel.name, style = MaterialTheme.typography.titleMedium)
-                                Text(text = "Ubicació: ${hotel.location}", style = MaterialTheme.typography.bodyMedium)
-                                Text(text = "Preu: ${hotel.pricePerNight}€", style = MaterialTheme.typography.bodySmall)
+                                Text(text = "Ubicació: ${hotel.address}", style = MaterialTheme.typography.bodyMedium)
+                                Text(text = "Preu mínim: ${hotel.rooms.minOfOrNull { it.price } ?: "Desconegut"}€", style = MaterialTheme.typography.bodySmall)
+
                             }
                         }
                     }
@@ -53,3 +65,4 @@ fun HotelListScreen(viewModel: HotelViewModel) {
         }
     }
 }
+

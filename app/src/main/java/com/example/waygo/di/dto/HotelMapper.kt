@@ -6,10 +6,10 @@ fun HotelDto.toHotel(): Hotel {
     return Hotel(
         id = locationId ?: "",
         name = name ?: "Sense nom",
-        location = locationString ?: "Ubicació desconeguda",
-        rating = rating?.toDoubleOrNull() ?: 0.0,
+        address = locationString ?: "Ubicació desconeguda",
+        rating = rating?.toIntOrNull() ?: 0,  // <- si esperes Int
         imageUrl = photo?.images?.medium?.url ?: "",
-        pricePerNight = price?.filter { it.isDigit() || it == '.' }?.toDoubleOrNull() ?: 0.0
+        rooms = emptyList()  // Aquí està la correcció important
     )
 }
 
