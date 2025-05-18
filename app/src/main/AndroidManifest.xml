@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.waygo">
 
+<uses-permission android:name="android.permission.INTERNET" />
+
+
 <application
         android:name=".MyApp"
+
+        android:usesCleartextTraffic="true"
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WayGo"
         tools:targetApi="31">
+
+
 
     <!-- SplashActivity com el MAIN i LAUNCHER -->
     <activity
