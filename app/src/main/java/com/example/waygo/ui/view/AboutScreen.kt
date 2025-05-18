@@ -1,5 +1,5 @@
 // AboutScreen.kt
-package com.example.waygo.ui.view.screens
+package com.example.waygo.ui.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

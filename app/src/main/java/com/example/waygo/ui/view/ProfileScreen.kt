@@ -1,4 +1,4 @@
-package com.example.waygo.ui.view.screens
+package com.example.waygo.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package com.example.waygo.ui.view.screens
+package com.example.waygo.ui.view
 
 import android.content.Context
 import android.content.Intent

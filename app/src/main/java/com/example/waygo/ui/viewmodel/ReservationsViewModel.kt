@@ -4,10 +4,10 @@ package com.example.waygo.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.waygo.BuildConfig
 import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.repository.HotelRepository
 
-import com.google.android.datatransport.BuildConfig
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class ReservationsViewModel @Inject constructor(
         //IMPORTANTE USANDO EL GROUP ID!!!
         //AQUI tambien buscar el correo del usuario authenticado!!
 
-        val res = repo.getGroupReservations(BuildConfig.GROUP_ID, "vitorlui@gmail.com")
+        val res = repo.getGroupReservations(BuildConfig.GROUP_ID, "nigelboada@gmail.com")
         _uiState.value = ReservationsUiState(false, res)
     }
 

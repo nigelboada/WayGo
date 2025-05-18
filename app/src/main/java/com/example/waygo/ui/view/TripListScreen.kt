@@ -1,4 +1,4 @@
-package com.example.waygo.ui.view.trip
+package com.example.waygo.ui.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

@@ -1,4 +1,4 @@
-package com.example.waygo.ui.view.hotel
+package com.example.waygo.ui.view
 
 import android.util.Log
 import android.widget.Toast

@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.waygo.BuildConfig
+
 
 class HotelViewModel @Inject constructor(private val repository: HotelRepository) : ViewModel() {
 
@@ -17,6 +19,8 @@ class HotelViewModel @Inject constructor(private val repository: HotelRepository
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+
+
     init {
         loadHotels()
     }
@@ -24,7 +28,8 @@ class HotelViewModel @Inject constructor(private val repository: HotelRepository
     fun loadHotels() {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.getHotels()
+            val groupId = BuildConfig.GROUP_ID
+            val result = repository.getHotels(groupId)
             result.let {
                 _hotels.value = it
             }

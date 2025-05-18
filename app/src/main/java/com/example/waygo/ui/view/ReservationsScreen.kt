@@ -1,4 +1,4 @@
-package com.example.waygo.ui.view.hotel
+package com.example.waygo.ui.view
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
