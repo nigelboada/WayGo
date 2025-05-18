@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.remotepersistence.data.local.entity.SubTaskEntity
+import com.example.waygo.data.local.entity.SubTaskEntity
 
 @Dao
 interface SubTaskDao {

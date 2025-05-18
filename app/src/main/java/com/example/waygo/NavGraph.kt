@@ -16,10 +16,22 @@ import com.example.waygo.ui.viewmodel.TripViewModel
 import android.util.Log
 import androidx.compose.runtime.remember
 import com.example.waygo.data.local.AppDatabase
-import com.example.waygo.di.HotelApiService
+import com.example.waygo.data.remote.api.HotelApiService
+import com.example.waygo.data.repository.HotelRepositoryImpl
 import com.example.waygo.di.RetrofitClient
-import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.domain.repository.TripRepository
+import com.example.waygo.ui.view.activity.ActivityListScreen
+import com.example.waygo.ui.view.activity.AddActivityScreen
+import com.example.waygo.ui.view.activity.EditActivityScreen
+import com.example.waygo.ui.view.hotel.HotelListScreen
+import com.example.waygo.ui.view.screens.AboutScreen
+import com.example.waygo.ui.view.screens.ForgotPasswordScreen
+import com.example.waygo.ui.view.screens.ProfileScreen
+import com.example.waygo.ui.view.screens.TermsScreen
+import com.example.waygo.ui.view.screens.SettingsScreen
+import com.example.waygo.ui.view.trip.AddTripScreen
+import com.example.waygo.ui.view.trip.EditTripScreen
+import com.example.waygo.ui.view.trip.TripListScreen
 import com.example.waygo.ui.viewmodel.HotelViewModel
 import com.example.waygo.ui.viewmodel.HotelViewModelFactory
 import com.example.waygo.ui.viewmodel.TripViewModelFactory
@@ -102,7 +114,11 @@ fun NavGraph(navController: NavHostController) {
             val tripRepository = TripRepository(db.tripDao())
             val tripViewModel: TripViewModel = viewModel(factory = TripViewModelFactory(tripRepository))
 
-            EditTripScreen(navController = navController, tripId = tripId, viewModel = tripViewModel)
+            EditTripScreen(
+                navController = navController,
+                tripId = tripId,
+                viewModel = tripViewModel
+            )
         }
 
         composable("itinerary_list/{tripId}") { backStackEntry ->
@@ -151,7 +167,7 @@ fun NavGraph(navController: NavHostController) {
         }
         composable("settings") {
             Log.d("NavGraph", "Navegant a UserSettingsScreen")
-            UserSettingsScreen(navController = navController, context = LocalContext.current)
+            SettingsScreen(navController = navController, context = LocalContext.current)
         }
 
         composable("activity_list/{tripId}") { backStackEntry ->
@@ -167,7 +183,8 @@ fun NavGraph(navController: NavHostController) {
 
         composable("hotel_list") {
             val apiService = RetrofitClient.instance.create(HotelApiService::class.java)
-            val hotelRepository = HotelRepository(apiService)
+            val taskDao = db.taskDao()
+            val hotelRepository = HotelRepositoryImpl(apiService, taskDao)
             val hotelViewModel: HotelViewModel = viewModel(
                 factory = HotelViewModelFactory(hotelRepository)
             )

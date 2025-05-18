@@ -1,10 +1,10 @@
-package com.example.remotepersistence.data.local.dao
+package com.example.waygo.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.remotepersistence.data.local.entity.TaskEntity
+import com.example.waygo.data.local.entity.TaskEntity
 
 @Dao
 interface TaskDao {

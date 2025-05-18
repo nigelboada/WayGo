@@ -47,5 +47,12 @@
     <string name="password_mismatch_error">Las contraseñas no coinciden.</string>
     <string name="register_prompt">¿No tienes cuenta? Regístrate aquí</string>
 
+    <!-- Error Messages -->
+    <string name="error_invalid_email">Correo electrónico inválido</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_password_mismatch">La contraseña no coincide</string>
+    <string name="error_required_field">Campo obligatorio</string>
+    <string name="error_mobile_digits">Debe tener 10 dígitos</string>
+    <string name="error_pin_digits">Debe tener 6 dígitos</string>
 
 </resources>

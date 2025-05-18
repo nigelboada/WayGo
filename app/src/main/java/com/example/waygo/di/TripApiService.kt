@@ -1,6 +1,6 @@
 package com.example.waygo.di
 
-import com.example.waygo.di.dto.TripDto
+import com.example.waygo.data.remote.dto.TripDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 

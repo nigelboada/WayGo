@@ -3,10 +3,10 @@ package com.example.waygo.domain.repository
 import com.example.waygo.di.RetrofitClient
 import com.example.waygo.di.TripApiService
 import com.example.waygo.data.local.dao.TripDao
-import com.example.waygo.data.local.entity.TripEntity
+import com.example.waygo.data.local.mapper.toTrip
+import com.example.waygo.data.remote.mapper.toTrip
+import com.example.waygo.data.local.mapper.toTripEntity
 import com.example.waygo.domain.model.Trip
-import com.example.waygo.di.dto.toTrip
-
 
 class TripRepository(private val tripDao: TripDao) {
 
@@ -40,22 +40,5 @@ class TripRepository(private val tripDao: TripDao) {
 
 
 
-    private fun TripEntity.toTrip() = Trip(
-        id = id,
-        title = title,
-        description = description,
-        startDate = startDate,
-        endDate = endDate,
-        location = location
-    )
 
-    private fun Trip.toTripEntity(userId: String) = TripEntity(
-        id = id,
-        title = title,
-        description = description,
-        location = location,
-        startDate = startDate,
-        endDate = endDate,
-        userId = userId
-    )
 }

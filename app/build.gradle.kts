@@ -3,8 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
+
     id("com.google.gms.google-services")
     id ("kotlin-kapt")
+
+    id("com.google.dagger.hilt.android")
 
 }
 
@@ -20,6 +23,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField ("String", "GROUP_ID", "\"G05\"")
+
+        buildConfigField("String", "HOTELS_API_URL", "\"https://api.hotels.com/\"")
     }
 
     buildTypes {
@@ -40,10 +47,15 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
 
     implementation(libs.androidx.core.splashscreen)
 
@@ -65,6 +77,14 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+
+
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
 
 
     implementation("androidx.core:core-ktx:1.12.0")

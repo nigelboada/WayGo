@@ -1,4 +1,4 @@
-package com.example.remotepersistence.data.local.entity
+package com.example.waygo.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

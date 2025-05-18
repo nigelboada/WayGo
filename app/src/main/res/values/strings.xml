@@ -49,4 +49,14 @@
     <string name="register_prompt">Don"t have an account? Register here</string>
 
 
+    <!-- Error Messages -->
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="error_password_too_short">Password must have 6 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_required_field">Required field</string>
+    <string name="error_mobile_digits">Must be 10 digits.</string>
+    <string name="error_pin_digits">Must be 6 digits.</string>
+
+
+
 </resources>

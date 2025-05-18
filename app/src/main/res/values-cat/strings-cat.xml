@@ -47,6 +47,13 @@
     <string name="password_mismatch_error">Les contrasenyes no coincideixen.</string>
     <string name="register_prompt">¿No tens compte? Registra"t aquí</string>
 
+    <!-- Error Messages -->
+    <string name="error_invalid_email">Email invàlid</string>
+    <string name="error_password_too_short">La contrasenya ha de tenir almenys 6 caràcters</string>
+    <string name="error_password_mismatch">La contrasenya no coincideix</string>
+    <string name="error_required_field">Camp obligatori</string>
+    <string name="error_mobile_digits">Ha de tenir 10 dígits</string>
+    <string name="error_pin_digits">Ha de tenir 6 dígits</string>
 
 
 </resources>
