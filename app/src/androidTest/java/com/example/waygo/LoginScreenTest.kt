@@ -4,6 +4,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.waygo.MainActivity
 import com.example.waygo.ui.screens.LoginScreen
 import org.junit.Rule
 import org.junit.Test

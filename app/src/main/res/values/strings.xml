@@ -2,4 +2,5 @@
     <string name="app_name">WayGo</string>
     <string name="default_user">user@udl.cat</string>
     <string name="default_pass">123456</string>
+    <string name="title_activity_second">SecondActivity</string>
 </resources>
