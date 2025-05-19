@@ -67,6 +67,7 @@ fun IntentButtonsLayout() {
                 context.startActivity(intent)
             }
 
+
         ) {
             Text(text = "Open Browser")
         }
