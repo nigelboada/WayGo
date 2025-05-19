@@ -66,6 +66,7 @@ fun IntentButtonsLayout() {
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
             }
+
         ) {
             Text(text = "Open Browser")
         }
