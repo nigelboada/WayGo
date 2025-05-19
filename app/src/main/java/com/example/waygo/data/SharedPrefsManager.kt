@@ -6,6 +6,7 @@ import com.example.waygo.utils.LanguageChangeUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.core.content.edit
 
 @Singleton
 class SharedPrefsManager @Inject constructor(
@@ -21,12 +22,12 @@ class SharedPrefsManager @Inject constructor(
     var userLanguage: String?
         get() = preferences.getString("user_language", "en")
         set(value) {
-            preferences.edit().putString("user_language", value).apply()
+            preferences.edit { putString("user_language", value) }
 
             languageChangeUtil.changeLanguage(context, value?:"en")
         }
 
     var darkTheme: Boolean
         get() = preferences.getBoolean("dark_theme", false)
-        set(value) = preferences.edit().putBoolean("dark_theme", value).apply()
+        set(value) = preferences.edit { putBoolean("dark_theme", value) }
 }

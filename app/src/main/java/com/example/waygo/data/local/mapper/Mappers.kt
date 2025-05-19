@@ -7,7 +7,6 @@ import com.example.waygo.domain.model.SubTask
 import com.example.waygo.domain.model.Task
 import com.example.waygo.domain.model.Trip
 
-
 // De dominio a entidad
 fun Task.toEntity(): TaskEntity =
     TaskEntity(id = id, title = title, description = description)
@@ -21,6 +20,7 @@ fun TaskEntity.toDomain(subTasks: List<SubTask>): Task =
 
 fun SubTaskEntity.toDomain(): SubTask =
     SubTask(id = id, parentTaskId = parentTaskId, title = title, description = description)
+
 
 internal fun TripEntity.toTrip() = Trip(
     id = id,

@@ -13,7 +13,7 @@ import com.example.waygo.utils.LanguageManager
 import com.example.waygo.utils.UserPreferences
 
 import android.util.Log
-
+import androidx.activity.enableEdgeToEdge
 
 
 class MainActivity : ComponentActivity() {
@@ -27,6 +27,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
 
 
         val prefs = UserPreferences(this)

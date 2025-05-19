@@ -11,29 +11,6 @@ import com.example.waygo.domain.model.ReserveRequest
 import com.example.waygo.domain.model.Room
 import com.example.waygo.domain.model.Trip
 
-
-fun TripDto.toTrip(): Trip {
-    return Trip(
-        id = id,
-        title = title,
-        description = description,
-        location = location,
-        startDate = startDate,
-        endDate = endDate
-    )
-}
-
-fun Trip.toTripDto(): TripDto {
-    return TripDto(
-        id = id,
-        title = title,
-        description = description,
-        location = location,
-        startDate = startDate,
-        endDate = endDate
-    )
-}
-
 fun HotelDto.toDomain(): Hotel = Hotel(
     id        = id,
     name      = name,
@@ -72,3 +49,26 @@ fun ReserveRequest.toDto(): ReserveRequestDto = ReserveRequestDto(
     guestName = guestName,
     guestEmail = guestEmail
 )
+
+
+fun TripDto.toTrip(): Trip {
+    return Trip(
+        id = id,
+        title = title,
+        description = description,
+        location = location,
+        startDate = startDate,
+        endDate = endDate
+    )
+}
+
+fun Trip.toTripDto(): TripDto {
+    return TripDto(
+        id = id,
+        title = title,
+        description = description,
+        location = location,
+        startDate = startDate,
+        endDate = endDate
+    )
+}

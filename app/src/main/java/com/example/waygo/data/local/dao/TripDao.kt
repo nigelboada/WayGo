@@ -10,7 +10,7 @@ interface TripDao {
     @Query("SELECT * FROM trips WHERE userId = :userId")
     suspend fun getTripsByUser(userId: String): List<TripEntity>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT) // o REPLACE si vols sobreescriure
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertTrip(trip: TripEntity)
 
     @Update
