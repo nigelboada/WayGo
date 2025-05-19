@@ -8,9 +8,7 @@
 
 <application
         android:name=".MyApp"
-
         android:usesCleartextTraffic="true"
-
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,23 +21,16 @@
 
 
 
-    <!-- SplashActivity com el MAIN i LAUNCHER -->
     <activity
-        android:name=".SplashActivity"
+        android:name=".MainActivity"
         android:exported="true"
         android:theme="@style/Theme.WayGo.Splash">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
+
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-
-    <!-- MainActivity sense el filtre MAIN/LAUNCHER -->
-    <activity
-        android:name=".MainActivity"
-        android:exported="true"
-        android:theme="@style/Theme.WayGo" />
-
 </application>
 
 </manifest>
