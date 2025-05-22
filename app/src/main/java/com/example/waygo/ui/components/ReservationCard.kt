@@ -49,12 +49,12 @@ fun ReservationCard(
                     .weight(1f)
             ) {
                 Text(
-                    text = item.hotel.name,
+                    text = item.hotel?.name ?: "Unknown hotel",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = item.room.roomType.replaceFirstChar { it.uppercase() },
+                    text = item.room?.roomType?.replaceFirstChar { it.uppercase() } ?: "",
                     style = MaterialTheme.typography.bodySmall
                 )
 
@@ -73,14 +73,14 @@ fun ReservationCard(
                         color = MaterialTheme.colorScheme.primaryContainer
                     ) {
                         Text(
-                            text = item.hotel.rating.toString(),
+                            text = (item.hotel?.rating ?: 0).toString(),
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "€${item.room.price}",
+                        text = "€${item.room?.price ?: 0}",
                         fontWeight = FontWeight.Bold
                     )
                 }

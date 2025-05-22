@@ -4,12 +4,12 @@ import com.example.waygo.data.remote.dto.HotelDto
 import com.example.waygo.data.remote.dto.ReservationDto
 import com.example.waygo.data.remote.dto.ReserveRequestDto
 import com.example.waygo.data.remote.dto.RoomDto
-import com.example.waygo.data.remote.dto.TripDto
 import com.example.waygo.domain.model.Hotel
 import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.model.ReserveRequest
 import com.example.waygo.domain.model.Room
 import com.example.waygo.domain.model.Trip
+import com.example.waygo.data.remote.dto.TripDto
 
 fun HotelDto.toDomain(): Hotel = Hotel(
     id        = id,
@@ -37,8 +37,9 @@ fun ReservationDto.toDomain(): Reservation = Reservation(
     endDate    = endDate,
     guestName  = guestName,
     guestEmail = guestEmail,
-    hotel = hotel.toDomain(),   // HotelDto → Hotel
-    room  = room.toDomain()     // RoomDto  → Room
+    hotel = hotel.toDomain(),
+    room  = room.toDomain()
+    // RoomDto  → Room
 )
 
 fun ReserveRequest.toDto(): ReserveRequestDto = ReserveRequestDto(

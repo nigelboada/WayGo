@@ -5,11 +5,14 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "trips")
 data class TripEntity(
-    @PrimaryKey val id: String, // era Int o convertit a partir d'Int
-    val userId: String,
-    val title: String,
-    val description: String,
-    val location: String,
-    val startDate: String,
-    val endDate: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val userId: Int,
+    val destination: String,
+    val startDate: Long,
+    val endDate: Long,
+    val budget: Double,
+    val notes: String,
+    val isFavorite: Boolean,
+    val coverImageUrl: String,
 )

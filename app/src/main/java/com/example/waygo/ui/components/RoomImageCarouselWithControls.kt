@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -21,7 +21,7 @@ import coil.compose.rememberAsyncImagePainter
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RoomImageCarouselWithControls(images: List<String>, onDismiss: () -> Unit) {
-    var currentIndex by remember { mutableIntStateOf(0) }
+    var currentIndex by remember { mutableStateOf(0) }
 
     AlertDialog(
         onDismissRequest = onDismiss,

@@ -1,26 +1,12 @@
 package com.example.waygo.domain.repository
 
-import android.content.Context
-import com.example.waygo.data.local.AppDatabase
-import com.example.waygo.data.local.entity.UserEntity
+import com.example.waygo.domain.model.User
 
-class UserRepository(context: Context) {
-    private val userDao = AppDatabase.getDatabase(context).userDao()
-
-    suspend fun insertUser(user: UserEntity): Boolean {
-        return if (!userDao.isUsernameTaken(user.username)) {
-            userDao.insertUser(user)
-            true
-        } else {
-            false
-        }
-    }
-
-    suspend fun isUsernameTaken(username: String): Boolean {
-        return userDao.isUsernameTaken(username)
-    }
-
-    suspend fun getUser(username: String): UserEntity? {
-        return userDao.getUserByUsername(username)
-    }
+interface UserRepository {
+    suspend fun getUserById(id: String): User?
+    suspend fun getAllUsers(): List<User>
+    suspend fun updateUser(user: User): Boolean
+    suspend fun deleteUser(id: Int): Boolean
+    suspend fun insertUser(user: User): Boolean
+    suspend fun getUserByFirebaseUid(firebaseUid: String): User?
 }

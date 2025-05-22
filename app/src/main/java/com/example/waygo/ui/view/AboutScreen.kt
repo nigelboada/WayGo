@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.waygo.data.AppInfo
+import com.example.waygo.ui.viewmodel.AuthViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
     navController: NavController,
+    authViewModel: AuthViewModel
 ) {
     Scaffold(
         topBar = {

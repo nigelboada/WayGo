@@ -10,12 +10,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.waygo.domain.repository.AuthRepository
-import com.example.waygo.utils.SessionManager
+import com.example.waygo.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
+    authViewModel: AuthViewModel,
     onLoginSuccess: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }

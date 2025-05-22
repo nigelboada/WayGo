@@ -7,5 +7,4 @@ data class TripDto(
     val location: String,
     val startDate: String,
     val endDate: String
-    // No incloem activities aquí, només si l’API ho retorna
 )

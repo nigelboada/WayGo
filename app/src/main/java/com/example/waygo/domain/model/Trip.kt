@@ -12,6 +12,6 @@ data class Trip(
     val location: String,
     val startDate: String,
     val endDate: String,
-    val activities: List<Itinerary> = emptyList() // <- AIXÒ ÉS IMPORTANT!
+    val activities: List<ItineraryItem> = emptyList() // <- AIXÒ ÉS IMPORTANT!
 
 )

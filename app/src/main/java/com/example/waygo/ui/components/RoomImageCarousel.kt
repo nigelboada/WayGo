@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RoomImageCarousel(

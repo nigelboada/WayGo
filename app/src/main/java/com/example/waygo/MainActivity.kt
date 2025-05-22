@@ -1,59 +1,57 @@
 package com.example.waygo
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.navigation.compose.rememberNavController
-import com.example.waygo.ui.theme.WayGoTheme
-import com.example.waygo.utils.SessionManager
-import androidx.compose.ui.platform.LocalContext
-import com.example.waygo.utils.LanguageManager
-import com.example.waygo.utils.UserPreferences
-
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
+import com.example.waygo.ui.theme.WayGoTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.mutableStateOf
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.lifecycleScope
+import com.example.waygo.ui.viewmodel.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    override fun attachBaseContext(newBase: Context) {
-        val prefs = UserPreferences(newBase)
-        val langCode = prefs.getLanguage()  // default language
-        val context = LanguageManager.setLocale(newBase, langCode)
-        super.attachBaseContext(context)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
 
+        val authViewModel : AuthViewModel by viewModels()
+        val isChecking = mutableStateOf(true)
 
-        val prefs = UserPreferences(this)
-        val langCode = prefs.getLanguage()
-        val localizedContext = LanguageManager.setLocale(this, langCode)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                isChecking.value
+            }
+        }
+
+        lifecycleScope.launch {
+            delay(1500L)
+            isChecking.value = false
+        }
 
         setContent {
-            CompositionLocalProvider(
-                LocalContext provides localizedContext
-            ) {
-                WayGoTheme {
-                    val navController = rememberNavController()
-
-                    Log.d("MainActivity", "L'idioma carregat és: $langCode")
-
-                    val isLoggedIn = SessionManager.isLoggedIn(localizedContext)
-                    Log.d("MainActivity", "Usuari loguejat? $isLoggedIn")
-
-                    // Directament passem el startDestination a la funció NavGraph
-                    NavGraph(
-                        navController = navController
-//                          startDestination = if (isLoggedIn) "home" else "register"
-                    )
+            WayGoTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    MainScreen(authViewModel = authViewModel)
                 }
             }
         }
     }
 }
+
+@Composable
+fun MainScreen(authViewModel: AuthViewModel) {
+    val navController = rememberNavController()
+    NavGraph(navController = navController, authViewModel)
+}
+
+

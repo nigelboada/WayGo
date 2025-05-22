@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +34,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,12 +43,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
-import com.example.waygo.ui.viewmodel.HotelDetailViewModel
 import com.example.waygo.ui.components.RoomImageCarouselWithControls
+import com.example.waygo.ui.viewmodel.HotelDetailViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,13 +75,14 @@ fun HotelDetailScreen(
     val selectedRoom = ui.value.selectedRoom
     val hotelId = ui.value.hotel?.id
     Scaffold(
+        containerColor = Color.White,
         topBar = {
 
             TopAppBar(
-                title = { Text((ui.value.hotel?.name + " ($hotelId)"))  },
+                title = { Text((ui.value.hotel?.name + " ($hotelId)") ?: "Hotel")  },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        Icon(Icons.Default.ArrowBack, null)
                     }
                 }
             )
@@ -112,7 +116,12 @@ fun HotelDetailScreen(
             }
 
             items(ui.value.rooms ?: emptyList()) { room ->
-                Card(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
                     Column(Modifier.padding(16.dp)) {
                         Text(room.roomType + " (${room.id})", fontWeight = FontWeight.Bold)
                         Text("${room.price} € / night")
@@ -120,7 +129,7 @@ fun HotelDetailScreen(
 
                         Spacer(Modifier.height(8.dp))
 
-                        room.images.firstOrNull()?.let { img ->
+                        room.images?.firstOrNull()?.let { img ->
                             Image(
                                 painter = rememberAsyncImagePainter(base + img),
                                 contentDescription = null,
@@ -128,6 +137,7 @@ fun HotelDetailScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(100.dp)
+                                    .clip(RoundedCornerShape(12.dp))
                                     .clickable {
                                         imageToShow = room.images.map { base + it }
                                         showRoomImage = true
@@ -157,7 +167,10 @@ fun HotelDetailScreen(
                             Button(onClick = {
                                 vm.selectRoom(room)
                                 showConfirmation = true
-                            }) {
+                            },
+                                shape = RoundedCornerShape(50),
+                                modifier = Modifier.padding(top = 8.dp)
+                            ) {
                                 Text("Reserve")
                             }
                         }

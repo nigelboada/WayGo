@@ -14,6 +14,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 import com.example.waygo.domain.repository.AuthRepository
+import com.example.waygo.ui.viewmodel.AuthViewModel
 
 
 // Aquesta funció envia el correu de verificació
@@ -49,6 +50,7 @@ fun signup(email: String, password: String, onSuccess: () -> Unit, onError: (Str
 @Composable
 fun RegisterScreen(
     navController: NavController,
+    authViewModel: AuthViewModel,
     onRegisterSuccess: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }

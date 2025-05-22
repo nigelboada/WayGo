@@ -1,23 +1,28 @@
 package com.example.waygo.ui.view
 
 import android.app.DatePickerDialog
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -35,9 +40,9 @@ import java.time.format.DateTimeFormatter
 // ------------------------ Navigation Destinations ---------------------------
 sealed class Screen(val route: String, val icon: ImageVector, val label: String) {
     object Book     : Screen("book", Icons.Default.Search, "Book")
-    object MyRes    : Screen("my_reservations", Icons.AutoMirrored.Filled.ListAlt, "My Reservations")
-    object AllRes   : Screen("all_reservations", Icons.Default.AdminPanelSettings, "All Reservations")
-    object Hotel    : Screen("hotel/{hotelId}/{groupId}/{start}/{end}", Icons.Default.Hotel, "Hotel") {
+    object MyRes    : Screen("my_reservations", Icons.Default.Favorite, "My Reservations")
+    object AllRes   : Screen("all_reservations", Icons.Default.Menu, "All Reservations")
+    object Hotel    : Screen("hotel/{hotelId}/{groupId}/{start}/{end}", Icons.Default.Home, "Hotel") {
         fun create(hid: String, gid: String, s: String, e: String) = "hotel/$hid/$gid/$s/$e"
     }
 
@@ -45,6 +50,7 @@ sealed class Screen(val route: String, val icon: ImageVector, val label: String)
 
 val base = BuildConfig.HOTELS_API_URL.trimEnd('/')
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun HomeHotel(rootNav: NavController) {
 
@@ -111,6 +117,7 @@ fun HomeHotel(rootNav: NavController) {
 
 
 // ----------------------------- Book Screen ----------------------------------
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookScreen(
@@ -140,12 +147,17 @@ fun BookScreen(
             /* ⬇⬇  ¡todos los TODO() eliminados! ⬇⬇ */
             ExposedDropdownMenu(
                 expanded = ui.cityMenu,
-                onDismissRequest = { vm.toggleCityMenu() }
+                onDismissRequest = { vm.toggleCityMenu() },
+                modifier = Modifier.background(Color.White)
             ) {
                 listOf("Barcelona", "Paris", "Londres").forEach { c ->
                     DropdownMenuItem(
-                        text = { Text(c) },
-                        onClick = { vm.selectCity(c) }
+                        text = { Text(c, color = Color.Black) },
+                        onClick = { vm.selectCity(c) },
+                        colors = MenuDefaults.itemColors(
+                            textColor = Color.Black
+                        ),
+                        modifier = Modifier.background(Color.White)
                     )
                 }
             }
@@ -190,6 +202,7 @@ fun BookScreen(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateField(
     label: String,
@@ -204,7 +217,19 @@ fun DateField(
         onValueChange = {},
         readOnly = true,
         enabled = false,                     // ← evita que consuma el click
-        label = { Text(label) },
+        label = { Text(label, color = Color.Black) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = Color.White,
+            focusedBorderColor = Color(0xFF007AFF),
+            unfocusedBorderColor = Color.LightGray,
+            disabledBorderColor = Color.Transparent,
+            cursorColor = Color(0xFF007AFF),
+            unfocusedTextColor = Color.Black,
+            focusedTextColor = Color.Black,
+            focusedPlaceholderColor = Color.Black,
+            focusedLabelColor = Color.Black,
+            unfocusedLabelColor = Color.Black
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
@@ -226,21 +251,46 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
 
     LazyColumn {
         items(hotels) { h ->
-            Card(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp).clickable { onClick(h) }) {
+            Card(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp).
+                clickable { onClick(h) },
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
                 Log.d("home", h.id)
                 val id = h.id
                 Row(Modifier.height(120.dp)) {
                     Image(
-                        painter = rememberAsyncImagePainter(base + h.imageUrl),
+                        painter = rememberAsyncImagePainter(base + ( h.imageUrl ?: "")),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.width(120.dp).fillMaxHeight()
+                        modifier = Modifier
+                            .width(120.dp)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
                     )
-                    Column(Modifier.padding(8.dp)) {
-                        Text(h.name + " ($id)", fontWeight = FontWeight.Bold)
-                        Text(h.address)
+                    Column(Modifier.padding(12.dp)) {
+                        Text(
+                            h.name,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+                        Text(
+                            h.address,
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
                         Spacer(Modifier.weight(1f))
-                        Text("From ${h.rooms?.minOfOrNull { it.price } ?: "-"}€", fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "From ${h.rooms?.minOfOrNull { it.price } ?: "-"}€",
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF007AFF)
+                        )
                     }
                 }
             }
@@ -249,3 +299,5 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
 
 
 }
+
+

@@ -14,7 +14,7 @@ Representa un usuari registrat que pot iniciar sessió i gestionar els seus viat
 
 ```kotlin
 data class User(
-    val id: String,
+    val id: Int,
     val username: String,
     val password: String
 )

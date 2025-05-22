@@ -1,200 +1,81 @@
 package com.example.waygo
 
+import ConfigureProfileScreen
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.waygo.ui.view.*
-import com.example.waygo.utils.SessionManager
-import com.example.waygo.ui.viewmodel.ActivityViewModel
-import com.example.waygo.ui.viewmodel.TripViewModel
-
-import android.util.Log
-import androidx.compose.runtime.remember
-import com.example.waygo.data.local.AppDatabase
-import com.example.waygo.data.remote.api.HotelApiService
-import com.example.waygo.data.repository.HotelRepositoryImpl
-import com.example.waygo.di.RetrofitClient
-import com.example.waygo.domain.repository.TripRepository
-import com.example.waygo.ui.view.ActivityListScreen
-import com.example.waygo.ui.view.AddActivityScreen
-import com.example.waygo.ui.view.EditActivityScreen
-import com.example.waygo.ui.view.HotelListScreen
-import com.example.waygo.ui.view.AboutScreen
-import com.example.waygo.ui.view.ForgotPasswordScreen
-import com.example.waygo.ui.view.ProfileScreen
-import com.example.waygo.ui.view.TermsScreen
-import com.example.waygo.ui.view.SettingsScreen
-import com.example.waygo.ui.view.AddTripScreen
-import com.example.waygo.ui.view.EditTripScreen
-import com.example.waygo.ui.view.TripListScreen
-import com.example.waygo.ui.viewmodel.HotelViewModel
-import com.example.waygo.ui.viewmodel.HotelViewModelFactory
-import com.example.waygo.ui.viewmodel.TripViewModelFactory
-
+import com.example.waygo.ui.viewmodel.AuthViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController) {
-    val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context)
-    val tripDao = db.tripDao()  // Aquí obtenim el tripDao directament
+fun NavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
+    NavHost(navController = navController, startDestination = "login") {
+        composable("login") { LoginScreen(navController, authViewModel) }
+        composable("home") { HomeScreen(navController, authViewModel) }
+        composable("profile") { ProfileScreen(navController, authViewModel) }
 
-    val tripRepository = TripRepository(tripDao)
-
-    val tripViewModel: TripViewModel = viewModel(
-        factory = TripViewModelFactory(tripRepository)
-    )
-
-    val itineraryViewModel: ActivityViewModel = viewModel() // Afegeix aquest ViewModel
-
-    val isLoggedIn = remember { SessionManager.isLoggedIn(context) }
-    val startDestination = if (isLoggedIn) "home" else "register"
-
-    // Aquí definim el NavHost amb el paràmetre startDestination
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable("login") {
-            val context = LocalContext.current
-
-            LoginScreen(
-                navController = navController,
-                onLoginSuccess = {
-                    SessionManager.setLoggedIn(context, true)
-                    Log.d("LoginScreen", "S'ha guardat que l'usuari està loguejat")
-                    navController.navigate("home") {
-                        popUpTo("login") { inclusive = true }
-                    }
-                }
-            )
+        composable("profile/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) {
+            val userId = it.arguments?.getInt("id") ?: -1
+            ProfileScreen(navController, authViewModel)
         }
 
-        composable("register") {
-            Log.d("NavGraph", "Navegant a RegisterScreen")
-            RegisterScreen(navController) {
-                navController.navigate("home")
+        composable("profileMenu") { ProfileScreen(navController, authViewModel) }
+        composable("about") { AboutScreen(navController, authViewModel) }
+        composable("termsAndConditions") { TermsScreen(navController, authViewModel) }
+        composable("settings") { SettingsScreen(navController, authViewModel = authViewModel) }
+        composable("configureProfile") { ConfigureProfileScreen(navController, authViewModel) }
+        composable("register") { RegisterScreen(navController, authViewModel = authViewModel, onRegisterSuccess = {
+            navController.navigate("home") {
+                popUpTo("register") { inclusive = true }
             }
-        }
-
-        composable("forgot_password") {
-            ForgotPasswordScreen(navController)
-        }
-
-        // Altres pantalles
-        composable("home") {
-            Log.d("NavGraph", "Navegant a HomeScreen")
-            HomeScreen(navController)
-        }
-        composable("about") {
-            Log.d("NavGraph", "Navegant a AboutScreen")
-            AboutScreen(navController)
-        }
-        composable("profile") {
-            Log.d("NavGraph", "Navegant a ProfileScreen")
-            ProfileScreen(navController)
-        }
-        composable("terms") {
-            Log.d("NavGraph", "Navegant a TermsScreen")
-            TermsScreen(navController)
-        }
-        composable("trip") {
-            Log.d("NavGraph", "Navegant a TripListScreen")
-            TripListScreen(navController, tripViewModel)
-        }
-        composable("add_trip") {
-            Log.d("NavGraph", "Navegant a AddTripScreen")
-            AddTripScreen(navController = navController, viewModel = tripViewModel)
-        }
-        composable("edit_trip/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: return@composable
-            val context = LocalContext.current
-            val db = AppDatabase.getDatabase(context)
-            val tripRepository = TripRepository(db.tripDao())
-            val tripViewModel: TripViewModel = viewModel(factory = TripViewModelFactory(tripRepository))
-
-            EditTripScreen(
-                navController = navController,
-                tripId = tripId,
-                viewModel = tripViewModel
-            )
-        }
-
-        composable("itinerary_list/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            Log.d("NavGraph", "Navegant a ActivityListScreen")
-
-            ActivityListScreen(
-                tripId = tripId,
-                navController = navController,
-                tripViewModel = tripViewModel,
-                activityViewModel = itineraryViewModel
-            )
+            })
 
         }
 
-        composable("add_activity/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            Log.d("NavGraph", "Navegant a AddActivityScreen")
+        composable("itinerary/{tripId}",
+            arguments = listOf(navArgument("tripId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // Obtención del parámetro tripId desde los argumentos
+            val tripIdString = backStackEntry.arguments?.getString("tripId")
+            val tripId = tripIdString?.toIntOrNull() ?: -1
+            //val tripId = 11;
 
-            AddActivityScreen(
-                navController = navController,
-                tripId = tripId,
-                activityViewModel = itineraryViewModel,
-                tripViewModel = tripViewModel
-            )
+            Log.d("Navigation", "TripId: $tripId")
+
+            // Recuperar el tripName desde savedStateHandle
+            val tripName = backStackEntry.savedStateHandle.get<String>("tripName") ?: "Trip"
+
+            // Llamada a la pantalla ItineraryScreen
+            ItineraryScreen(navController, tripId, tripName, authViewModel = authViewModel)
         }
+
         composable(
-            "edit_activity/{activityId}/{tripId}",
+            route = "hotel/{hotelId}/{groupId}/{start}/{end}",
             arguments = listOf(
-                navArgument("activityId") { type = NavType.StringType },
-                navArgument("tripId") { type = NavType.StringType }
+                navArgument("hotelId") { type = NavType.StringType },
+                navArgument("groupId") { type = NavType.StringType },
+                navArgument("start") { type = NavType.StringType },
+                navArgument("end") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val activityId = backStackEntry.arguments?.getString("activityId") ?: ""
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            val availableDays = tripViewModel.getDaysForTrip(tripId)
+            val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
+            val groupId = backStackEntry.arguments?.getString("groupId") ?: ""
+            val start = backStackEntry.arguments?.getString("start") ?: ""
+            val end = backStackEntry.arguments?.getString("end") ?: ""
 
-            Log.d("NavGraph", "Navegant a EditActivityScreen")
-            EditActivityScreen(
-                navController = navController,
-                activityId = activityId,
-                tripId = tripId,
-                availableDays = availableDays,
-                activityViewModel = itineraryViewModel
+            HotelDetailScreen(
+                hotelId = hotelId,
+                groupId = groupId,
+                start = start,
+                end = end,
+                navController = navController
             )
         }
-        composable("settings") {
-            Log.d("NavGraph", "Navegant a UserSettingsScreen")
-            SettingsScreen(navController = navController, context = LocalContext.current)
-        }
-
-        composable("activity_list/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
-            ActivityListScreen(
-                tripId = tripId,
-                navController = navController,
-                tripViewModel = tripViewModel,
-                activityViewModel = itineraryViewModel
-            )
-        }
-
-
-        composable("hotel_list") {
-            val apiService = RetrofitClient.instance.create(HotelApiService::class.java)
-            val taskDao = db.taskDao()
-            val hotelRepository = HotelRepositoryImpl(apiService, taskDao)
-            val hotelViewModel: HotelViewModel = viewModel(
-                factory = HotelViewModelFactory(hotelRepository)
-            )
-
-            HotelListScreen(viewModel = hotelViewModel)
-        }
-
-
-
-
-
     }
 }

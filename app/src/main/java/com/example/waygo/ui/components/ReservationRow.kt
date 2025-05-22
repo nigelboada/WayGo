@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,8 +49,8 @@ fun ReservationRow(
     var askDelete by remember { mutableStateOf(false) }
 
     val base = BuildConfig.HOTELS_API_URL.trimEnd('/')
-    val hotelImg = base + res.hotel.imageUrl
-    val roomImages = res.room.images.map { base + it }
+    val hotelImg = base + (res.hotel?.imageUrl ?: "")
+    val roomImages = res.room?.images?.map { base + it }.orEmpty()
 
     Card(
         modifier = modifier
@@ -84,7 +84,7 @@ fun ReservationRow(
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
                         Icon(
-                            Icons.Default.PhotoLibrary,
+                            Icons.Default.AccountBox,
                             contentDescription = "Room images"
                         )
                     }
@@ -103,7 +103,7 @@ fun ReservationRow(
                     fontWeight = FontWeight.Bold
                 )
                 Text("${res.startDate} → ${res.endDate}")
-                Text("Price: €${res.room.price}")
+                Text("Price: €${res.room?.price ?: 0}")
                 Spacer(Modifier.height(8.dp))
                 Text(res.guestName)
             }
