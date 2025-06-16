@@ -7,6 +7,6 @@ data class Hotel(
     val name: String,
     val address: String,
     val rating: Int,
-    val imageUrl: String,
-    val rooms: List<Room>? = emptyList()
+    val rooms: List<Room>,
+    val imageUrl: String
 )
