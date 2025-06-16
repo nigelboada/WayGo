@@ -5,7 +5,7 @@ import com.example.waygo.data.remote.dto.HotelDto
 import com.example.waygo.data.remote.dto.ReservationDto
 import com.example.waygo.data.remote.dto.ReservationResponseDto
 import com.example.waygo.data.remote.dto.ReserveRequestDto
-import com.example.waygo.domain.model.Hotel
+import com.example.waygo.data.remote.model.Hotel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

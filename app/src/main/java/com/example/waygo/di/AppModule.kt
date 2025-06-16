@@ -1,6 +1,6 @@
 package com.example.waygo.di
 
-import com.example.waygo.di.TripApiService
+import com.example.waygo.data.remote.TripApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

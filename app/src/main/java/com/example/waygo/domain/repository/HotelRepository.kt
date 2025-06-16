@@ -1,8 +1,8 @@
 package com.example.waygo.domain.repository
 
-import com.example.waygo.domain.model.Hotel
+import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.domain.model.Reservation
-import com.example.waygo.domain.model.ReserveRequest
+import com.example.waygo.data.remote.model.ReserveRequest
 
 
 

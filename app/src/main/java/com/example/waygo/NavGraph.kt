@@ -18,7 +18,7 @@ import androidx.compose.runtime.remember
 import com.example.waygo.data.local.AppDatabase
 import com.example.waygo.data.remote.api.HotelApiService
 import com.example.waygo.data.repository.HotelRepositoryImpl
-import com.example.waygo.di.RetrofitClient
+import com.example.waygo.data.remote.RetrofitClient
 import com.example.waygo.domain.repository.TripRepository
 import com.example.waygo.ui.view.ActivityListScreen
 import com.example.waygo.ui.view.AddActivityScreen

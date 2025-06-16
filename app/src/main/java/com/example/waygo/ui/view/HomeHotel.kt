@@ -26,7 +26,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
-import com.example.waygo.domain.model.Hotel
+import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.ui.viewmodel.BookViewModel
 import com.example.waygo.ui.viewmodel.ReservationsAllViewModel
 import java.time.LocalDate

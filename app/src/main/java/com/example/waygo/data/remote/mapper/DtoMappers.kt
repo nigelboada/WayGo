@@ -5,10 +5,10 @@ import com.example.waygo.data.remote.dto.ReservationDto
 import com.example.waygo.data.remote.dto.ReserveRequestDto
 import com.example.waygo.data.remote.dto.RoomDto
 import com.example.waygo.data.remote.dto.TripDto
-import com.example.waygo.domain.model.Hotel
+import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.domain.model.Reservation
-import com.example.waygo.domain.model.ReserveRequest
-import com.example.waygo.domain.model.Room
+import com.example.waygo.data.remote.model.ReserveRequest
+import com.example.waygo.data.remote.model.Room
 import com.example.waygo.domain.model.Trip
 
 fun HotelDto.toDomain(): Hotel = Hotel(

@@ -4,8 +4,8 @@ import com.example.waygo.data.local.dao.TaskDao
 import com.example.waygo.data.remote.api.HotelApiService
 import com.example.waygo.data.remote.mapper.toDomain
 import com.example.waygo.data.remote.mapper.toDto
-import com.example.waygo.domain.model.Hotel
-import com.example.waygo.domain.model.ReserveRequest
+import com.example.waygo.data.remote.model.Hotel
+import com.example.waygo.data.remote.model.ReserveRequest
 import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.repository.HotelRepository
 import javax.inject.Inject

@@ -2,7 +2,7 @@ package com.example.waygo.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.waygo.domain.model.Hotel
+import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.domain.repository.HotelRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

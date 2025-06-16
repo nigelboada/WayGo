@@ -1,4 +1,4 @@
-package com.example.waygo.di
+package com.example.waygo.data.remote
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -3,7 +3,7 @@ package com.example.waygo.ui.viewmodel
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
-import com.example.waygo.domain.model.Hotel
+import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.domain.repository.HotelRepository
 import java.time.LocalDate
 import androidx.lifecycle.ViewModel

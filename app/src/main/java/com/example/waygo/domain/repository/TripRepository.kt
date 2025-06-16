@@ -1,7 +1,7 @@
 package com.example.waygo.domain.repository
 
-import com.example.waygo.di.RetrofitClient
-import com.example.waygo.di.TripApiService
+import com.example.waygo.data.remote.RetrofitClient
+import com.example.waygo.data.remote.TripApiService
 import com.example.waygo.data.local.dao.TripDao
 import com.example.waygo.data.local.mapper.toTrip
 import com.example.waygo.data.remote.mapper.toTrip

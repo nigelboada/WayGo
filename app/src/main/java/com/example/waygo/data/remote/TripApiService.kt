@@ -1,9 +1,9 @@
-package com.example.waygo.di
+package com.example.waygo.data.remote
 
-import com.example.waygo.domain.model.Hotel
-import com.example.waygo.domain.model.ReserveRequest
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface TripApiService {
 

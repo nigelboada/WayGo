@@ -1,4 +1,4 @@
-package com.example.waygo.domain.model
+package com.example.waygo.data.remote.model
 
 data class ReserveRequest(
     val hotelId: String,

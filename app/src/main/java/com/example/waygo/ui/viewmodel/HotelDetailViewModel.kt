@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.waygo.domain.model.Hotel
-import com.example.waygo.domain.model.ReserveRequest
-import com.example.waygo.domain.model.Room
+import com.example.waygo.data.remote.model.Hotel
+import com.example.waygo.data.remote.model.ReserveRequest
+import com.example.waygo.data.remote.model.Room
 import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.utils.ErrorUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
