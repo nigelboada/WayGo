@@ -1,37 +1,19 @@
 package com.example.waygo.domain.repository
 
 import com.example.waygo.data.remote.model.Hotel
-import com.example.waygo.domain.model.Reservation
 import com.example.waygo.data.remote.model.ReserveRequest
-
-
-
+import com.example.waygo.data.remote.model.Room
+import java.time.LocalDate
 
 interface HotelRepository {
-
-    /* ---------- Hotels & Availability ---------- */
     suspend fun getHotels(groupId: String): List<Hotel>
-    suspend fun getAvailability(
+    suspend fun checkAvailability(
         groupId: String,
-        start: String,
-        end: String,
+        startDate: String,
+        endDate: String,
         hotelId: String? = null,
         city: String? = null
-    ): List<Hotel>
-
-    /* ---------- Make & cancel reservation (by group) ---------- */
-    suspend fun reserve(groupId: String, request: ReserveRequest): Reservation
-    suspend fun cancel(groupId: String, request: ReserveRequest): String   // returns message
-
-    /* ---------- Reservations queries ---------- */
-    suspend fun getGroupReservations(
-        groupId: String,
-        guestEmail: String? = null
-    ): List<Reservation>
-
-    suspend fun getAllReservations(): Map<String, List<Reservation>>
-
-    /* ---------- Operations by reservation-id ---------- */
-    suspend fun getReservationById(resId: String): Reservation
-    suspend fun cancelById(resId: String): Reservation
+    ): List<Hotel> // o una altra resposta si saps l’estructura
+    suspend fun reserveRoom(groupId: String, request: ReserveRequest): Boolean
+    suspend fun cancelReservation(groupId: String, request: ReserveRequest): Boolean
 }

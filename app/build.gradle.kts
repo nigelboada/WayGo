@@ -106,6 +106,17 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Per fer tests amb coroutines (runBlocking, etc.)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+// Per simular respostes d’API en un futur
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+
+// Per fer servir Retrofit a tests
+    testImplementation("com.squareup.retrofit2:retrofit:2.9.0")
+    testImplementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+
     implementation ("androidx.datastore:datastore-preferences:1.1.3")
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
