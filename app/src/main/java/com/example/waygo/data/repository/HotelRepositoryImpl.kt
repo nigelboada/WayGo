@@ -21,11 +21,11 @@ class HotelRepositoryImpl @Inject constructor(
                 name = dto.name,
                 address = dto.address,
                 rating = dto.rating,
-                imageUrl = dto.imageUrl,
+                imageUrl = dto.imageUrl ?: "",
                 rooms = dto.rooms?.map { roomDto ->
                     Room(
                         id = roomDto.id,
-                        roomType = roomDto.roomType,
+                        roomType = roomDto.roomType ?: "Unknown",
                         price = roomDto.price,
                         images = roomDto.images
                     )
@@ -55,11 +55,11 @@ class HotelRepositoryImpl @Inject constructor(
                 name = dto.name,
                 address = dto.address,
                 rating = dto.rating,
-                imageUrl = dto.imageUrl,
+                imageUrl = dto.imageUrl ?: "",
                 rooms = dto.rooms?.map { roomDto ->
                     Room(
                         id = roomDto.id,
-                        roomType = roomDto.roomType,
+                        roomType = roomDto.roomType ?: "Unknown",
                         price = roomDto.price,
                         images = roomDto.images
                     )
