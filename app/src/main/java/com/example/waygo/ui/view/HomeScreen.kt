@@ -47,8 +47,13 @@ fun HomeScreen(navController: NavController) {
             }
 
             Button(onClick = { navController.navigate("hotel_list") }) {
-                Text("Llistat Hotels")
+                Text("Llista d'hotels")
             }
+
+            Button(onClick = { navController.navigate("book") }) {
+                Text("Cercar Hotels")
+            }
+
 
         }
     }

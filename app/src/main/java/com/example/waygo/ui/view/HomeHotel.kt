@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -115,8 +117,12 @@ fun HomeHotel(rootNav: NavController) {
 @Composable
 fun BookScreen(
     nav: NavController,
-    vm: BookViewModel = hiltViewModel()
 ) {
+    val owner = LocalViewModelStoreOwner.current
+    val vm: BookViewModel = hiltViewModel()
+
+
+
     val ui by vm.uiState.collectAsState()
 
     Column(Modifier.padding(16.dp)) {

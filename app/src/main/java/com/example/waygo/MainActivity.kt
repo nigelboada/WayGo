@@ -14,8 +14,9 @@ import com.example.waygo.utils.UserPreferences
 
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun attachBaseContext(newBase: Context) {
@@ -36,9 +37,7 @@ class MainActivity : ComponentActivity() {
         val localizedContext = LanguageManager.setLocale(this, langCode)
 
         setContent {
-            CompositionLocalProvider(
-                LocalContext provides localizedContext
-            ) {
+
                 WayGoTheme {
                     val navController = rememberNavController()
 
@@ -53,7 +52,7 @@ class MainActivity : ComponentActivity() {
 //                          startDestination = if (isLoggedIn) "home" else "register"
                     )
                 }
-            }
         }
     }
 }
+

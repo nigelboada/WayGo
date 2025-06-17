@@ -192,7 +192,9 @@ fun NavGraph(navController: NavHostController) {
             HotelListScreen(viewModel = hotelViewModel)
         }
 
-
+        composable("book") {
+            BookScreen(navController)
+        }
 
 
 
