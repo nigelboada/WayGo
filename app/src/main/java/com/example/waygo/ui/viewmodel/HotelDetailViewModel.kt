@@ -71,10 +71,10 @@ class HotelDetailViewModel @Inject constructor(
         )
 
         try {
-            repo.reserve(groupId, req)   // we ignore response here
+            repo.reserveRoom(groupId, req)   // we ignore response here
         } catch (e: HttpException) {
             val decodedError = ErrorUtils.extractErrorMessage(e)
-            Log.e("BookViewModel", "HTTP error: ${decodedError}  $e")
+            Log.e("BookViewModel", "HTTP error: $decodedError  $e")
 
         } catch (e: Exception) {
             Log.e("BookViewModel", "Error: ${e.localizedMessage}")

@@ -33,7 +33,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             try {
-                val results = hotelRepository.checkAvailability("G05", start, end, null, city)
+                val results = hotelRepository.getAvailability("G05", start, end, null, city)
                 _uiState.value = _uiState.value.copy(hotels = results, isLoading = false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(error = e.message, isLoading = false)

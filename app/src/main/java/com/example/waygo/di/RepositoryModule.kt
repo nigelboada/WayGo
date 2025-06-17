@@ -1,8 +1,9 @@
 package com.example.waygo.di
 
-import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.data.repository.HotelRepositoryImpl
-
+import com.example.waygo.data.repository.TaskRepositoryImpl
+import com.example.waygo.domain.repository.HotelRepository
+import com.example.waygo.domain.repository.TaskRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,6 +17,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHotelRepository(
-        hotelRepositoryImpl: HotelRepositoryImpl
+        impl: HotelRepositoryImpl
     ): HotelRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTaskRepository(
+        impl: TaskRepositoryImpl
+    ): TaskRepository
 }

@@ -1,9 +1,13 @@
 package com.example.waygo.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.example.waygo.data.remote.TripApiService
+import com.example.waygo.data.remote.api.HotelApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,4 +33,17 @@ object AppModule {
     fun provideTripApiService(retrofit: Retrofit): TripApiService {
         return retrofit.create(TripApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideHotelApiService(retrofit: Retrofit): HotelApiService =
+        retrofit.create(HotelApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+        context.getSharedPreferences("WayGoPrefs", Context.MODE_PRIVATE)
+
+
+
 }

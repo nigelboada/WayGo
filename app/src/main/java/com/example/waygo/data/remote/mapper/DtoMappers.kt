@@ -29,17 +29,20 @@ fun RoomDto.toDomain(): Room = Room(
     images = images
 )
 
-fun ReservationDto.toDomain(): Reservation = Reservation(
-    id         = id,
-    hotelId    = hotelId,
-    roomId     = roomId,
-    startDate  = startDate,
-    endDate    = endDate,
-    guestName  = guestName,
-    guestEmail = guestEmail,
-    hotel = hotel.toDomain(),   // HotelDto → Hotel
-    room  = room.toDomain()     // RoomDto  → Room
-)
+fun ReservationDto.toReservation(): Reservation {
+    return Reservation(
+        id = id,
+        hotelId = hotelId,
+        roomId = roomId,
+        guestName = guestName,
+        guestEmail = guestEmail,
+        startDate = startDate,
+        endDate = endDate,
+        hotel = hotel.toDomain(),
+        room = room.toDomain()
+    )
+}
+
 
 fun ReserveRequest.toDto(): ReserveRequestDto = ReserveRequestDto(
     hotelId = hotelId,
