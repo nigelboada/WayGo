@@ -36,6 +36,7 @@ class SearchViewModel @Inject constructor(
 
         Log.d("DEBUG", "searchHotels() cridada amb ciutat=$city, start=$start, end=$end")
 
+
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             try {
