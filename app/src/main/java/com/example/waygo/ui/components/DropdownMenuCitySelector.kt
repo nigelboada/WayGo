@@ -20,7 +20,7 @@ fun DropdownMenuCitySelector(
     selectedCity: String,
     onCitySelected: (String) -> Unit
 ) {
-    val cities = listOf("Barcelona", "London", "Paris")
+    val cities = listOf("Barcelona", "Londres", "Paris")
     var expanded by remember { mutableStateOf(false) }
 
     Column {

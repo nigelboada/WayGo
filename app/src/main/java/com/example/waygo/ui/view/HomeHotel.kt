@@ -19,8 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
 import com.example.waygo.data.remote.model.Hotel
-import com.example.waygo.ui.viewmodel.BookViewModel
+import com.example.waygo.ui.search.SearchScreen
 import com.example.waygo.ui.viewmodel.ReservationsAllViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -101,95 +99,11 @@ fun HomeHotel(rootNav: NavController) {
             }
 
             composable(Screen.Book.route) {
-                BookScreen(rootNav)        // usa el NavController raíz para ir a HotelDetail
+                SearchScreen(rootNav)        // usa el NavController raíz para ir a HotelDetail
             }
 
             composable(Screen.MyRes.route) {
                 ReservationsScreen()
-            }
-        }
-    }
-}
-
-
-// ----------------------------- Book Screen ----------------------------------
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BookScreen(
-    nav: NavController,
-) {
-    val owner = LocalViewModelStoreOwner.current
-    val vm: BookViewModel = hiltViewModel()
-
-
-
-    val ui by vm.uiState.collectAsState()
-
-    Column(Modifier.padding(16.dp)) {
-
-        /* ───── Selector de ciudad ───── */
-        ExposedDropdownMenuBox(
-            expanded = ui.cityMenu,
-            onExpandedChange = { vm.toggleCityMenu() }
-        ) {
-            TextField(
-                value = ui.city,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("City") },
-                leadingIcon = { Icon(Icons.Default.Place, null) },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
-
-            /* ⬇⬇  ¡todos los TODO() eliminados! ⬇⬇ */
-            ExposedDropdownMenu(
-                expanded = ui.cityMenu,
-                onDismissRequest = { vm.toggleCityMenu() }
-            ) {
-                listOf("Barcelona", "Paris", "Londres").forEach { c ->
-                    DropdownMenuItem(
-                        text = { Text(c) },
-                        onClick = { vm.selectCity(c) }
-                    )
-                }
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-        DateField("Start", ui.startDate) { vm.pickStart(it) }
-        Spacer(Modifier.height(8.dp))
-        DateField("End", ui.endDate) { vm.pickEnd(it) }
-
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = { vm.search() },
-            modifier = Modifier.fillMaxWidth()
-        ) { Text("Search") }
-
-        Spacer(Modifier.height(16.dp))
-
-        if (ui.loading) {
-            CircularProgressIndicator()
-        } else {
-            HotelList(ui.hotels) { h ->
-                nav.navigate(
-                    Screen.Hotel.create(
-                        h.id,
-                        vm.groupId,
-                        ui.startDate.toString(),
-                        ui.endDate.toString()
-                    )
-                )
-            }
-
-            if (ui.message != null) {
-                Text(
-                    text = ui.message!!,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
             }
         }
     }
@@ -224,34 +138,4 @@ fun DateField(
                 ).show()
             }
     )
-}
-
-
-@Composable
-fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
-
-    LazyColumn {
-        items(hotels) { h ->
-            Card(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp).clickable { onClick(h) }) {
-                Log.d("home", h.id)
-                val id = h.id
-                Row(Modifier.height(120.dp)) {
-                    Image(
-                        painter = rememberAsyncImagePainter(base + h.imageUrl),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.width(120.dp).fillMaxHeight()
-                    )
-                    Column(Modifier.padding(8.dp)) {
-                        Text(h.name + " ($id)", fontWeight = FontWeight.Bold)
-                        Text(h.address)
-                        Spacer(Modifier.weight(1f))
-                        Text("From ${h.rooms?.minOfOrNull { it.price } ?: "-"}€", fontWeight = FontWeight.SemiBold)
-                    }
-                }
-            }
-        }
-    }
-
-
 }
