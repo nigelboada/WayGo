@@ -1,6 +1,5 @@
 package com.example.waygo.data.remote.model
 
-import com.example.waygo.data.remote.model.Room
 
 data class Hotel(
     val id: String,

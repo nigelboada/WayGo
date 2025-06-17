@@ -246,7 +246,7 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
                         Text(h.name + " ($id)", fontWeight = FontWeight.Bold)
                         Text(h.address)
                         Spacer(Modifier.weight(1f))
-                        Text("From ${h.rooms.minOfOrNull { it.price } ?: "-"}€", fontWeight = FontWeight.SemiBold)
+                        Text("From ${h.rooms?.minOfOrNull { it.price } ?: "-"}€", fontWeight = FontWeight.SemiBold)
                     }
                 }
             }

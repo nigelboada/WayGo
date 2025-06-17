@@ -13,10 +13,10 @@ import com.example.waygo.domain.model.Trip
 
 fun HotelDto.toDomain(): Hotel = Hotel(
     id        = id,
-    name      = name,
-    address   = address,
-    rating    = rating,
-    imageUrl  = imageUrl,
+    name      = name ?: "Unknown Hotel",
+    address   = address ?: "Unknown Address",
+    rating    = rating ?: 0,
+    imageUrl  = imageUrl ?: "",
     rooms     = rooms
         ?.map { it.toDomain() }      // si no es null lo mapea
         ?: emptyList()               // si es null lista vacía
@@ -24,9 +24,9 @@ fun HotelDto.toDomain(): Hotel = Hotel(
 
 fun RoomDto.toDomain(): Room = Room(
     id = id,
-    roomType = roomType,
-    price = price,
-    images = images
+    roomType = roomType ?: "Unknown",
+    price = price ?: 0f,
+    images = images ?: emptyList()
 )
 
 fun ReservationDto.toReservation(): Reservation {
@@ -38,8 +38,20 @@ fun ReservationDto.toReservation(): Reservation {
         guestEmail = guestEmail,
         startDate = startDate,
         endDate = endDate,
-        hotel = hotel.toDomain(),
-        room = room.toDomain()
+        hotel = hotel?.toDomain() ?: Hotel(
+            id = "unknown",
+            name = "Unknown Hotel",
+            address = "Unknown Address",
+            rating = 0,
+            imageUrl = "",
+            rooms = emptyList()
+        ),
+        room = room?.toDomain() ?: Room(
+            id = "unknown",
+            roomType = "Unknown",
+            price = 0f,
+            images = emptyList()
+        )
     )
 }
 

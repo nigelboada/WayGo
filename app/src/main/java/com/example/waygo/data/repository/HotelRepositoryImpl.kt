@@ -1,5 +1,6 @@
 package com.example.waygo.data.repository
 
+import android.util.Log
 import com.example.waygo.data.remote.api.HotelApiService
 import com.example.waygo.data.remote.dto.ReserveRequestDto
 import com.example.waygo.data.remote.mapper.toReservation
@@ -18,16 +19,15 @@ class HotelRepositoryImpl @Inject constructor(
         return apiService.getHotels(groupId).map { dto ->
             Hotel(
                 id = dto.id,
-                name = dto.name,
-                address = dto.address,
-                rating = dto.rating,
-                imageUrl = dto.imageUrl ?: "",
+                name = dto.name ?: "Unknown Hotel",
+                address = dto.address ?: "Unknown Address",
+                rating = dto.rating?.toInt() ?: 0,                imageUrl = dto.imageUrl ?: "",
                 rooms = dto.rooms?.map { roomDto ->
                     Room(
                         id = roomDto.id,
                         roomType = roomDto.roomType ?: "Unknown",
-                        price = roomDto.price,
-                        images = roomDto.images
+                        price = roomDto.price ?: 0f,
+                        images = roomDto.images ?: emptyList()
                     )
                 } ?: emptyList()
             )
@@ -49,23 +49,32 @@ class HotelRepositoryImpl @Inject constructor(
             city = city
         )
 
-        return response.availableHotels.map { dto ->
+        Log.d("HotelRepo", "Availability response: $response")
+
+        Log.d("API_RESPONSE", "Available hotels: ${response.availableHotels}")
+
+        return response.availableHotels?.map { dto ->
+
+            Log.d("HOTEL_MAPPER", "Mapping hotel: id=${dto.id}, name=${dto.name}, rooms=${dto.rooms}")
+
             Hotel(
                 id = dto.id,
-                name = dto.name,
-                address = dto.address,
-                rating = dto.rating,
-                imageUrl = dto.imageUrl ?: "",
+                name = dto.name ?: "Unknown Hotel",
+                address = dto.address ?: "Unknown Address",
+                rating = dto.rating?.toInt() ?: 0,                imageUrl = dto.imageUrl ?: "",
                 rooms = dto.rooms?.map { roomDto ->
+
+                    Log.d("ROOM_MAPPER", "Mapping room: id=${roomDto.id}, price=${roomDto.price}, images=${roomDto.images}")
+
                     Room(
                         id = roomDto.id,
                         roomType = roomDto.roomType ?: "Unknown",
-                        price = roomDto.price,
-                        images = roomDto.images
+                        price = roomDto.price ?: 0f,
+                        images = roomDto.images ?: emptyList()
                     )
                 } ?: emptyList()
             )
-        }
+        } ?: emptyList()
     }
 
     override suspend fun reserveRoom(groupId: String, request: ReserveRequest): Boolean {

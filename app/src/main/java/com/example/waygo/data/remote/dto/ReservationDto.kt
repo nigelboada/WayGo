@@ -11,6 +11,6 @@ data class ReservationDto(
     val endDate: String,
 
     /* nuevos campos (pueden ser null si backend los omite en otro endpoint) */
-    val hotel: HotelDto,
-    val room:  RoomDto
+    val hotel: HotelDto?,
+    val room:  RoomDto?
 )
