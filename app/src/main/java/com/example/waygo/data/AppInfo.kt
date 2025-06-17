@@ -1,6 +1,6 @@
 package com.example.waygo.data
 
-import com.google.android.datatransport.BuildConfig
+import com.example.waygo.BuildConfig
 
 object AppInfo {
     const val VERSION_NAME: String = BuildConfig.VERSION_NAME

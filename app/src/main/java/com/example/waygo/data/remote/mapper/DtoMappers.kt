@@ -23,10 +23,10 @@ fun HotelDto.toDomain(): Hotel = Hotel(
 )
 
 fun RoomDto.toDomain(): Room = Room(
-    id       = id,
+    id = id,
     roomType = roomType,
-    price    = price,
-    images   = images
+    price = price,
+    images = images
 )
 
 fun ReservationDto.toDomain(): Reservation = Reservation(

@@ -31,12 +31,8 @@ class TripRepository(private val tripDao: TripDao) {
     }
 
 
-    private val api = RetrofitClient.instance.create(TripApiService::class.java)
+    private val api = RetrofitClient.retrofit.create(TripApiService::class.java)
 
-    suspend fun fetchTripsFromApi(): List<Trip> {
-        val dtoList = api.getTrips()
-        return dtoList.map { dto -> dto.toTrip() } // Necessitaràs un mapper
-    }
 
 
 

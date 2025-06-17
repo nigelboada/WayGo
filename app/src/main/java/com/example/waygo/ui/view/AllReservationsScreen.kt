@@ -22,10 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.waygo.ui.components.ReservationRow
 import com.example.waygo.ui.viewmodel.ReservationsAllViewModel
 import com.example.waygo.domain.model.Reservation
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.waygo.ui.components.ReservationRow
 
 
 @Composable

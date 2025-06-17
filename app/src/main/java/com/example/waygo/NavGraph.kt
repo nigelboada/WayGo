@@ -182,9 +182,9 @@ fun NavGraph(navController: NavHostController) {
 
 
         composable("hotel_list") {
-            val apiService = RetrofitClient.instance.create(HotelApiService::class.java)
+            val apiService = RetrofitClient.retrofit.create(HotelApiService::class.java)
             val taskDao = db.taskDao()
-            val hotelRepository = HotelRepositoryImpl(apiService, taskDao)
+            val hotelRepository = HotelRepositoryImpl(apiService)
             val hotelViewModel: HotelViewModel = viewModel(
                 factory = HotelViewModelFactory(hotelRepository)
             )

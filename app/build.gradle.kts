@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.waygo"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -80,7 +80,7 @@ dependencies {
     implementation("com.squareup:javapoet:1.13.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
@@ -96,7 +96,6 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.runtime.livedata)
 
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -109,23 +108,22 @@ dependencies {
     // Per fer tests amb coroutines (runBlocking, etc.)
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
-// Per simular respostes d’API en un futur
+    // Per simular respostes d’API en un futur
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
-// Per fer servir Retrofit a tests
+    // Per fer servir Retrofit a tests
     testImplementation("com.squareup.retrofit2:retrofit:2.9.0")
     testImplementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
 
     implementation ("androidx.datastore:datastore-preferences:1.1.3")
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
-
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
+    
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
 }

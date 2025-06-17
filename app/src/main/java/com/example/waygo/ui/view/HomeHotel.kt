@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ListAlt
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,9 +35,9 @@ import java.time.format.DateTimeFormatter
 // ------------------------ Navigation Destinations ---------------------------
 sealed class Screen(val route: String, val icon: ImageVector, val label: String) {
     object Book     : Screen("book", Icons.Default.Search, "Book")
-    object MyRes    : Screen("my_reservations", Icons.AutoMirrored.Filled.ListAlt, "My Reservations")
-    object AllRes   : Screen("all_reservations", Icons.Default.AdminPanelSettings, "All Reservations")
-    object Hotel    : Screen("hotel/{hotelId}/{groupId}/{start}/{end}", Icons.Default.Hotel, "Hotel") {
+    object MyRes    : Screen("my_reservations", Icons.AutoMirrored.Filled.List, "My Reservations")
+    object AllRes   : Screen("all_reservations", Icons.Default.Lock, "All Reservations")
+    object Hotel    : Screen("hotel/{hotelId}/{groupId}/{start}/{end}", Icons.Default.Place, "Hotel") {
         fun create(hid: String, gid: String, s: String, e: String) = "hotel/$hid/$gid/$s/$e"
     }
 
@@ -240,7 +240,7 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
                         Text(h.name + " ($id)", fontWeight = FontWeight.Bold)
                         Text(h.address)
                         Spacer(Modifier.weight(1f))
-                        Text("From ${h.rooms?.minOfOrNull { it.price } ?: "-"}€", fontWeight = FontWeight.SemiBold)
+                        Text("From ${h.rooms.minOfOrNull { it.price } ?: "-"}€", fontWeight = FontWeight.SemiBold)
                     }
                 }
             }

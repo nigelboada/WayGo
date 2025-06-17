@@ -29,9 +29,11 @@ runtimeLivedata = "1.8.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
-firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
+#noinspection SimilarGradleDependency
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+#noinspection SimilarGradleDependency
 firebase-bom-v33130 = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
 firebase-core = { module = "com.google.firebase:firebase-core" }
 google-firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }

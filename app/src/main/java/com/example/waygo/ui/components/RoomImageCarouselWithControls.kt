@@ -1,8 +1,12 @@
 package com.example.waygo.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -11,52 +15,57 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.example.waygo.BuildConfig
 
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RoomImageCarouselWithControls(images: List<String>, onDismiss: () -> Unit) {
+fun RoomImageCarouselWithControls(
+    images: List<String>,
+    onDismiss: () -> Unit
+) {
+    val base = BuildConfig.HOTELS_API_URL.trimEnd('/')
     var currentIndex by remember { mutableIntStateOf(0) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {},
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        },
+        title = { Text("Room Images") },
         text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column {
                 if (images.isNotEmpty()) {
                     Image(
-                        painter = rememberAsyncImagePainter(images[currentIndex]),
+                        painter = rememberAsyncImagePainter(base + images[currentIndex]),
                         contentDescription = null,
-                        contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(1f)
+                            .height(200.dp),
+                        contentScale = ContentScale.Crop
                     )
-
+                    Spacer(Modifier.height(8.dp))
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        TextButton(onClick = {
-                            currentIndex = (currentIndex - 1 + images.size) % images.size
-                        }) {
-                            Text("◀️ Prev")
+                        if (currentIndex > 0) {
+                            TextButton(onClick = { currentIndex-- }) {
+                                Text("Previous")
+                            }
                         }
-                        Text("${currentIndex + 1} / ${images.size}")
-                        TextButton(onClick = {
-                            currentIndex = (currentIndex + 1) % images.size
-                        }) {
-                            Text("Next ▶️")
+                        if (currentIndex < images.size - 1) {
+                            TextButton(onClick = { currentIndex++ }) {
+                                Text("Next")
+                            }
                         }
                     }
+                } else {
+                    Text("No images available.")
                 }
             }
         }

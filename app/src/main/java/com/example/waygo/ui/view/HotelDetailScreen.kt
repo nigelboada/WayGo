@@ -39,8 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
-import com.example.waygo.ui.viewmodel.HotelDetailViewModel
 import com.example.waygo.ui.components.RoomImageCarouselWithControls
+import com.example.waygo.ui.viewmodel.HotelDetailViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
