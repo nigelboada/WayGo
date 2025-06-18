@@ -57,10 +57,29 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
                     }
                     // 🔽 Afegeix les habitacions
                     hotel.rooms.forEach { room ->
-                        Column(Modifier.padding(start = 16.dp, bottom = 4.dp)) {
-                            Text("• ${room.roomType}: ${room.price}€", style = MaterialTheme.typography.bodyMedium)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 4.dp)
+                        ) {
+                            if (room.images.isNotEmpty()) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(base + room.images.first()),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .height(60.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+
+                            Column {
+                                Text("${room.roomType}: ${room.price}€", style = MaterialTheme.typography.bodyMedium)
+                            }
                         }
                     }
+
                 }
             }
         }
