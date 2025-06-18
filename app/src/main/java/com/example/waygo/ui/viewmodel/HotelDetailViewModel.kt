@@ -66,8 +66,8 @@ class HotelDetailViewModel @Inject constructor(
             roomId  = room.id,
             startDate = start,
             endDate   = end,
-            guestName = "Vitor", //CAMBIAR AQUI PARA TU USUARIO
-            guestEmail = "vitorlui@gmail.com" //CAMBIAR AQUI PARA TU USUARIO
+            guestName = "Nigel", //CAMBIAR AQUI PARA TU USUARIO
+            guestEmail = "nboadag@gmail.com" //CAMBIAR AQUI PARA TU USUARIO
         )
 
         try {

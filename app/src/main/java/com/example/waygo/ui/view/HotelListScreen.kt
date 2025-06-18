@@ -1,5 +1,6 @@
 package com.example.waygo.ui.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -7,8 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.ui.viewmodel.HotelViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,11 +23,6 @@ fun HotelListScreen(viewModel: HotelViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.loadHotels()
     }
-
-
-
-
-
 
     Scaffold(
         topBar = {
@@ -50,11 +49,22 @@ fun HotelListScreen(viewModel: HotelViewModel = hiltViewModel()) {
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text(text = hotel.name, style = MaterialTheme.typography.titleMedium)
+                                Image(
+                                    painter = rememberAsyncImagePainter(hotel.imageUrl),
+                                    contentDescription = "Imatge de l'hotel",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(180.dp)
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Text(text = hotel.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                                 Text(text = "Ubicació: ${hotel.address}", style = MaterialTheme.typography.bodyMedium)
                                 Text(text = "Preu mínim: ${hotel.rooms?.minOfOrNull { it.price } ?: "Desconegut"}€", style = MaterialTheme.typography.bodySmall)
-
                             }
+
                         }
                     }
                 }
