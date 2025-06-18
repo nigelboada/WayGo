@@ -1,13 +1,16 @@
 package com.example.waygo.domain.repository
 
-import com.example.waygo.data.remote.RetrofitClient
 import com.example.waygo.data.remote.TripApiService
 import com.example.waygo.data.local.dao.TripDao
 import com.example.waygo.data.local.mapper.toTrip
 import com.example.waygo.data.local.mapper.toTripEntity
 import com.example.waygo.domain.model.Trip
+import javax.inject.Inject
 
-class TripRepository(private val tripDao: TripDao) {
+class TripRepository @Inject constructor(
+    private val tripDao: TripDao,
+    private val tripApi: TripApiService // ara l’injectes
+) {
 
     suspend fun getAllTripsForUser(userId: String): List<Trip> {
         return tripDao.getTripsByUser(userId).map { it.toTrip() }
@@ -29,11 +32,5 @@ class TripRepository(private val tripDao: TripDao) {
         return tripDao.getTripById(tripId)?.toTrip()
     }
 
-
-    private val api = RetrofitClient.retrofit.create(TripApiService::class.java)
-
-
-
-
-
+    // aquí podràs usar tripApi per fer crides a la xarxa, si cal
 }

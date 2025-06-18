@@ -7,13 +7,16 @@ import com.example.waygo.domain.model.Trip
 import com.example.waygo.domain.repository.ActivityRepository
 import com.example.waygo.domain.repository.TripRepository
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class TripViewModel(private val tripRepository: TripRepository) : ViewModel() {
+@HiltViewModel
+class TripViewModel @Inject constructor(private val tripRepository: TripRepository) : ViewModel() {
 
     private val _activities = MutableStateFlow<List<Itinerary>>(emptyList())
     val activities: StateFlow<List<Itinerary>> = _activities

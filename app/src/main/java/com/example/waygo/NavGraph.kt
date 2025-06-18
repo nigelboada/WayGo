@@ -15,10 +15,11 @@ import com.example.waygo.ui.viewmodel.TripViewModel
 
 import android.util.Log
 import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.waygo.data.local.AppDatabase
 import com.example.waygo.data.remote.api.HotelApiService
 import com.example.waygo.data.repository.HotelRepositoryImpl
-import com.example.waygo.data.remote.RetrofitClient
+import com.example.waygo.di.AppModule
 import com.example.waygo.domain.repository.TripRepository
 import com.example.waygo.ui.search.SearchScreen
 import com.example.waygo.ui.view.ActivityListScreen
@@ -40,18 +41,11 @@ import com.example.waygo.ui.viewmodel.TripViewModelFactory
 
 @Composable
 fun NavGraph(navController: NavHostController) {
-    val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context)
-    val tripDao = db.tripDao()  // Aquí obtenim el tripDao directament
-
-    val tripRepository = TripRepository(tripDao)
-
-    val tripViewModel: TripViewModel = viewModel(
-        factory = TripViewModelFactory(tripRepository)
-    )
+    val tripViewModel: TripViewModel = hiltViewModel()
 
     val itineraryViewModel: ActivityViewModel = viewModel() // Afegeix aquest ViewModel
 
+    val context = LocalContext.current
     val isLoggedIn = remember { SessionManager.isLoggedIn(context) }
     val startDestination = if (isLoggedIn) "home" else "register"
 
@@ -110,10 +104,7 @@ fun NavGraph(navController: NavHostController) {
         }
         composable("edit_trip/{tripId}") { backStackEntry ->
             val tripId = backStackEntry.arguments?.getString("tripId") ?: return@composable
-            val context = LocalContext.current
-            val db = AppDatabase.getDatabase(context)
-            val tripRepository = TripRepository(db.tripDao())
-            val tripViewModel: TripViewModel = viewModel(factory = TripViewModelFactory(tripRepository))
+            val tripViewModel: TripViewModel = hiltViewModel()
 
             EditTripScreen(
                 navController = navController,
@@ -183,8 +174,9 @@ fun NavGraph(navController: NavHostController) {
 
 
         composable("hotel_list") {
-            val apiService = RetrofitClient.retrofit.create(HotelApiService::class.java)
-            val taskDao = db.taskDao()
+            val context = LocalContext.current
+            val retrofit = AppModule.provideRetrofit()
+            val apiService = AppModule.provideHotelApiService(retrofit)
             val hotelRepository = HotelRepositoryImpl(apiService)
             val hotelViewModel: HotelViewModel = viewModel(
                 factory = HotelViewModelFactory(hotelRepository)
