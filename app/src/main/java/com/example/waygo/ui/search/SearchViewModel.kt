@@ -1,19 +1,30 @@
 package com.example.waygo.ui.search
 
 import android.util.Log
+import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.waygo.data.local.entity.ReservationEntity
+import com.example.waygo.data.remote.model.Hotel
+import com.example.waygo.data.remote.model.Room
 import com.example.waygo.domain.repository.HotelRepository
+import com.example.waygo.domain.repository.ReservationRepository
+import com.example.waygo.domain.repository.TripRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val hotelRepository: HotelRepository
+    private val hotelRepository: HotelRepository,
+    private val reservationRepo: ReservationRepository,
+    private val tripRepo: TripRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
@@ -56,5 +67,47 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
+
+
+
+    fun reserveRoom(hotel: Hotel, room: Room) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        viewModelScope.launch {
+            val trips = tripRepo.getAllTripsForUser(userId)
+            val trip = trips.firstOrNull()
+
+            if (trip == null) {
+                _uiState.value = _uiState.value.copy(error = "Crea un viatge abans de reservar")
+                return@launch
+            }
+
+            val reservation = ReservationEntity(
+                id = UUID.randomUUID().toString(),
+                hotelId = hotel.id,
+                hotelName = hotel.name,
+                roomId = room.id,
+                roomType = room.roomType,
+                price = room.price,
+                startDate = _uiState.value.startDate,
+                endDate = _uiState.value.endDate,
+                guestEmail = FirebaseAuth.getInstance().currentUser?.email ?: "",
+                tripId = trip.id
+            )
+
+            reservationRepo.saveReservation(reservation)
+
+            Log.d("RESERVA", "Reserva guardada correctament a Room: ${reservation}")
+
+            _uiState.value = _uiState.value.copy(reservaConfirmada = true, error = null)
+
+        }
+    }
+
+    fun resetReservaConfirmada() {
+        _uiState.value = _uiState.value.copy(reservaConfirmada = false)
+    }
+
+
 
 }

@@ -8,5 +8,7 @@ data class SearchUiState(
     val endDate: String = "",
     val isLoading: Boolean = false,
     val hotels: List<Hotel> = emptyList(),
-    val error: String? = null
+    val error: String? = null,
+    val reservaConfirmada: Boolean = false
+
 )

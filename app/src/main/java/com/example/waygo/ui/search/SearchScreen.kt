@@ -19,54 +19,58 @@ import com.example.waygo.ui.components.*
 @Composable
 fun SearchScreen(navController: NavController, viewModel: SearchViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-
-        Log.d("UI_STATE", "Ciutat: ${state.selectedCity}, Start: ${state.startDate}, End: ${state.endDate}, Hotels: ${state.hotels.size}")
-
-        Text("Search Hotels", style = MaterialTheme.typography.titleLarge)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Ciutats
-        DropdownMenuCitySelector(
-            selectedCity = state.selectedCity,
-            onCitySelected = { viewModel.updateCity(it) }
-        )
-
-        // Dates
-        DatePickerField("Start Date", state.startDate) { viewModel.updateDates(it, state.endDate) }
-        DatePickerField("End Date", state.endDate) { viewModel.updateDates(state.startDate, it) }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Log.d("DEBUG", "Ciutat: ${state.selectedCity}, Start: ${state.startDate}, End: ${state.endDate}")
-
-        Button(
-            onClick = { viewModel.searchHotels() },
-            enabled = state.startDate.isNotBlank() && state.endDate.isNotBlank()
-        ) {
-            Text("Search")
+    // Mostrar snackbar quan la reserva es confirma
+    LaunchedEffect(state.reservaConfirmada) {
+        if (state.reservaConfirmada) {
+            snackbarHostState.showSnackbar("Reserva guardada correctament!")
+            // Reiniciar el flag per evitar que es repeteixi
+            viewModel.resetReservaConfirmada()
         }
+    }
 
-        when {
-            state.isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { padding ->
+        Column(modifier = Modifier.padding(16.dp).padding(padding)) {
+
+            Text("Search Hotels", style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            DropdownMenuCitySelector(
+                selectedCity = state.selectedCity,
+                onCitySelected = { viewModel.updateCity(it) }
+            )
+
+            DatePickerField("Start Date", state.startDate) { viewModel.updateDates(it, state.endDate) }
+            DatePickerField("End Date", state.endDate) { viewModel.updateDates(state.startDate, it) }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { viewModel.searchHotels() },
+                enabled = state.startDate.isNotBlank() && state.endDate.isNotBlank()
+            ) {
+                Text("Search")
             }
-            state.error != null -> {
-                Text("Error: ${state.error}", color = Color.Red)
-            }
-            state.hotels.isEmpty() -> {
-                Text("No s'han trobat hotels.", color = Color.Gray)
-            }
-            else -> {
-                HotelList(hotels = state.hotels, onClick = { hotel ->
-                    // podries navegar o fer print
-                    Log.d("UI", "Clicat: ${hotel.name}")
-                })
+
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
+                state.error != null -> {
+                    Text("Error: ${state.error}", color = Color.Red)
+                }
+                state.hotels.isEmpty() -> {
+                    Text("No s'han trobat hotels.", color = Color.Gray)
+                }
+                else -> {
+                    HotelList(hotels = state.hotels) { hotel, room ->
+                        viewModel.reserveRoom(hotel, room)
+                    }
+                }
             }
         }
-
-
     }
 }

@@ -2,8 +2,10 @@ package com.example.waygo.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.waygo.data.local.AppDatabase
 import com.example.waygo.data.remote.TripApiService
 import com.example.waygo.data.remote.api.HotelApiService
+import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.domain.repository.TripRepository
 import dagger.Module
 import dagger.Provides
@@ -50,6 +52,16 @@ object AppModule {
         val db = com.example.waygo.data.local.AppDatabase.getDatabase(context)
         return TripRepository(db.tripDao(), tripApi)
     }
+
+    @Provides
+    @Singleton
+    fun provideReservationRepository(
+        @ApplicationContext context: Context
+    ): ReservationRepository {
+        val db = AppDatabase.getDatabase(context)
+        return ReservationRepository(db.reservationDao())
+    }
+
 
 
     @Singleton

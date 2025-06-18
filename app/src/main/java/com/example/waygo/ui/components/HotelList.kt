@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,10 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.data.remote.model.Hotel
+import com.example.waygo.data.remote.model.Room
 import com.example.waygo.ui.view.base
 
 @Composable
-fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
+fun HotelList(hotels: List<Hotel>, onClick: (Hotel, Room) -> Unit) {
 
     Log.d("HotelList", "Renderitzant ${hotels.size} hotels")
 
@@ -38,7 +40,7 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
-                    .clickable { onClick(hotel) }
+                    .clickable(enabled = false) {}
             ) {
                 Column {
                     Row(Modifier.height(120.dp)) {
@@ -76,6 +78,12 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
 
                             Column {
                                 Text("${room.roomType}: ${room.price}€", style = MaterialTheme.typography.bodyMedium)
+                            }
+
+                            Button(onClick = {
+                                onClick(hotel, room)
+                            }) {
+                                Text("Reservar")
                             }
                         }
                     }
