@@ -1,6 +1,7 @@
 package com.example.waygo.ui.view
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,9 @@ import com.example.waygo.ui.viewmodel.TripViewModel
 import com.example.waygo.domain.model.Itinerary
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.remember
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import coil.compose.rememberAsyncImagePainter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,14 +122,30 @@ fun ActivityListScreen(
                 }
 
                 items(reservations) { res ->
-                    Card(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("🏨 Hotel: ${res.hotelName}")
-                            Text("🛏 Habitació: ${res.roomType} (${res.roomId})")
-                            Text("💰 Preu: ${res.price}€")
-                            Text("📆 Del ${res.startDate} al ${res.endDate}")
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Row(modifier = Modifier.padding(8.dp)) {
+                            // 🖼️ Imatge de l’hotel
+                            Image(
+                                painter = rememberAsyncImagePainter(res.imageUrl),
+                                contentDescription = "Imatge de l’hotel",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(80.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            // 📄 Detalls de la reserva
+                            Column {
+                                Text("🏨 Hotel: ${res.hotelName}", fontWeight = FontWeight.Bold)
+                                Text("🛏 Habitació: ${res.roomType} (${res.roomId})")
+                                Text("💰 Preu: ${res.price}€")
+                                Text("📆 Del ${res.startDate} al ${res.endDate}")
+                            }
                         }
                     }
                 }

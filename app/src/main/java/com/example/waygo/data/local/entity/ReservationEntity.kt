@@ -14,5 +14,7 @@ data class ReservationEntity(
     val price: Float,
     val startDate: String,
     val endDate: String,
-    val guestEmail: String
+    val guestEmail: String,
+
+    val imageUrl: String
 )

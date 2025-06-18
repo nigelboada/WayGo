@@ -3,7 +3,8 @@ package com.example.waygo.data.repository
 import android.util.Log
 import com.example.waygo.data.remote.api.HotelApiService
 import com.example.waygo.data.remote.dto.ReserveRequestDto
-import com.example.waygo.data.remote.mapper.toDomain
+import com.example.waygo.utils.assignHotelImage
+import com.example.waygo.utils.assignRoomImage
 import com.example.waygo.data.remote.mapper.toReservation
 import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.data.remote.model.ReserveRequest
@@ -12,23 +13,32 @@ import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.domain.model.Reservation
 import javax.inject.Inject
 
+
+
+
 class HotelRepositoryImpl @Inject constructor(
     private val apiService: HotelApiService
 ) : HotelRepository {
 
     override suspend fun getHotels(groupId: String): List<Hotel> {
-        return apiService.getHotels(groupId).map { dto ->
+        val response = apiService.getHotels(groupId)
+
+        return response.map { dto ->
+            val hotelName = dto.name ?: "Unknown Hotel"
+
             Hotel(
                 id = dto.id,
-                name = dto.name ?: "Unknown Hotel",
+                name = hotelName,
                 address = dto.address ?: "Unknown Address",
-                rating = dto.rating?.toInt() ?: 0,                imageUrl = dto.imageUrl ?: "",
+                rating = dto.rating?.toInt() ?: 0,
+                imageUrl = assignHotelImage(hotelName),
                 rooms = dto.rooms?.map { roomDto ->
+                    val type = roomDto.roomType ?: "Unknown"
                     Room(
                         id = roomDto.id,
-                        roomType = roomDto.roomType ?: "Unknown",
+                        roomType = type,
                         price = roomDto.price ?: 0f,
-                        images = roomDto.images ?: emptyList()
+                        images = listOf(assignRoomImage(type))
                     )
                 } ?: emptyList()
             )
@@ -55,22 +65,24 @@ class HotelRepositoryImpl @Inject constructor(
         Log.d("API_RESPONSE", "Available hotels: ${response.availableHotels}")
 
         return response.availableHotels?.map { dto ->
+            val hotelName = dto.name ?: "Unknown Hotel"
 
-            Log.d("DTO_IMAGE_CHECK", "Hotel DTO: name=${dto.name}, imageUrl=${dto.imageUrl}")
-
-
-            // 🔍 AFEGEIX AQUEST LOG PER L'HOTEL
-            Log.d("HOTEL_IMAGE", "Hotel: ${dto.name}, imageUrl: '${dto.imageUrl}'")
-
-            dto.rooms?.forEach { roomDto ->
-                // 🔍 AFEGEIX AQUEST LOG PER CADA IMATGE D’HABITACIÓ
-                roomDto.images?.forEach { image ->
-                    Log.d("ROOM_IMAGE", "Room image: '$image'")
-                }
-            }
-
-            // Aquí ja estàs retornant amb toDomain() (pas 2)
-            dto.toDomain()
+            Hotel(
+                id = dto.id,
+                name = hotelName,
+                address = dto.address ?: "Unknown Address",
+                rating = dto.rating?.toInt() ?: 0,
+                imageUrl = assignHotelImage(hotelName),
+                rooms = dto.rooms?.map { roomDto ->
+                    val type = roomDto.roomType ?: "Unknown"
+                    Room(
+                        id = roomDto.id,
+                        roomType = type,
+                        price = roomDto.price ?: 0f,
+                        images = listOf(assignRoomImage(type))
+                    )
+                } ?: emptyList()
+            )
         } ?: emptyList()
 
     }

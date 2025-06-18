@@ -20,7 +20,7 @@ import com.example.waygo.data.local.entity.TripEntity
     TripEntity::class,
     TaskEntity::class,
     SubTaskEntity::class,
-    ReservationEntity::class], version = 5)
+    ReservationEntity::class], version = 6)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun tripDao(): TripDao
@@ -33,7 +33,9 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                Room.databaseBuilder(context, AppDatabase::class.java, "waygo_database").fallbackToDestructiveMigration().build().also { INSTANCE = it }
+                Room.databaseBuilder(context, AppDatabase::class.java, "waygo.db")
+                    .fallbackToDestructiveMigration()
+                    .build()
             }
         }
     }

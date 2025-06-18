@@ -21,25 +21,21 @@ import com.example.waygo.ui.view.base
 fun HotelList(hotels: List<Hotel>, onClick: (Hotel, Room) -> Unit) {
     Log.d("HotelList", "Renderitzant ${hotels.size} hotels")
 
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         items(hotels) { hotel ->
-            Log.d("IMAGE_DEBUG", "Hotel: ${hotel.name}, imageUrl: ${hotel.imageUrl}")
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(12.dp)) {
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-            ) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    // 📸 Imatge gran de l'hotel
+                    // 🖼 Imatge principal de l'hotel
                     Image(
                         painter = rememberAsyncImagePainter(
-                            model = base + hotel.imageUrl,
+                            model = hotel.imageUrl,
                             onState = { state ->
                                 if (state is AsyncImagePainter.State.Error) {
-                                    Log.e("IMAGE_ERROR", "No es pot carregar: ${hotel.imageUrl}")
-                                    Log.e("IMAGE_ERROR", "URL fallida: ${base + hotel.imageUrl}")
-
+                                    Log.e("IMG_ERROR", "Error carregant ${hotel.imageUrl}")
                                 }
                             }
                         ),
@@ -52,13 +48,13 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel, Room) -> Unit) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(hotel.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Text(hotel.address ?: "Adreça desconeguda", style = MaterialTheme.typography.bodyMedium)
-                    Text("⭐ ${hotel.rating} · Des de ${hotel.rooms.minOfOrNull { it.price } ?: "-"}€", style = MaterialTheme.typography.bodySmall)
+                    Text(hotel.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(hotel.address ?: "Adreça desconeguda")
+                    Text("⭐ ${hotel.rating} · Des de ${hotel.rooms.minOfOrNull { it.price } ?: "-"}€")
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 🛏 Habitacions (fins a 3)
+                    // 🛏 Habitacions
                     hotel.rooms.take(3).forEach { room ->
                         RoomItem(room = room) {
                             onClick(hotel, room)
