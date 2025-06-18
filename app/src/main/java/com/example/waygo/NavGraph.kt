@@ -36,7 +36,6 @@ import com.example.waygo.ui.view.EditTripScreen
 import com.example.waygo.ui.view.TripListScreen
 import com.example.waygo.ui.viewmodel.HotelViewModel
 import com.example.waygo.ui.viewmodel.HotelViewModelFactory
-import com.example.waygo.ui.viewmodel.TripViewModelFactory
 
 
 @Composable

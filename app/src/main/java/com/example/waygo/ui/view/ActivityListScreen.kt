@@ -17,7 +17,7 @@ import com.example.waygo.ui.viewmodel.ActivityViewModel
 import com.example.waygo.ui.viewmodel.TripViewModel
 import com.example.waygo.domain.model.Itinerary
 import androidx.compose.foundation.lazy.items
-
+import androidx.compose.runtime.remember
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,22 +26,20 @@ fun ActivityListScreen(
     tripId: String,
     navController: NavController,
     tripViewModel: TripViewModel,
-    activityViewModel: ActivityViewModel // 👈 Afegeix aquest nou paràmetre
-)
- {
+    activityViewModel: ActivityViewModel
+) {
+    LaunchedEffect(tripId) {
+        activityViewModel // potser hi poses un `activityViewModel.loadActivities(tripId)` si tens aquesta funció
+    }
 
-     LaunchedEffect(tripId) {
-         activityViewModel // ✅ Només si vols fer una recàrrega
-     }
+    val activities = activityViewModel.activities.collectAsState().value
+    val filteredActivities = activities.filter { it.tripId == tripId }
 
+    val reservations = remember(tripId) {
+        tripViewModel.getReservationsForTrip(tripId)
+    }.collectAsState().value
 
-
-
-     val activities = activityViewModel.activities.collectAsState().value
-     val filteredActivities = activities.filter { it.tripId == tripId }
-
-
-     Scaffold(
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Activitats del viatge") },
@@ -60,25 +58,21 @@ fun ActivityListScreen(
             )
         }
     ) { paddingValues ->
-        if (filteredActivities.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            ) {
-                Text(
-                    "No hi ha activitats afegides.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        } else {
-
-            LazyColumn(
-                contentPadding = paddingValues,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(filteredActivities, key = { it.id }) { activity: Itinerary ->
+        LazyColumn(
+            contentPadding = paddingValues,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // ACTIVITATS
+            if (filteredActivities.isEmpty()) {
+                item {
+                    Text(
+                        "No hi ha activitats afegides.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            } else {
+                items(filteredActivities, key = { it.id }) { activity ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -113,9 +107,29 @@ fun ActivityListScreen(
                 }
             }
 
+            // RESERVES
+            if (reservations.isNotEmpty()) {
+                item {
+                    Text(
+                        "Reserves d’habitació",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 24.dp)
+                    )
+                }
 
+                items(reservations) { res ->
+                    Card(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("🏨 Hotel: ${res.hotelName}")
+                            Text("🛏 Habitació: ${res.roomType} (${res.roomId})")
+                            Text("💰 Preu: ${res.price}€")
+                            Text("📆 Del ${res.startDate} al ${res.endDate}")
+                        }
+                    }
+                }
+            }
         }
     }
-
- }
-
+}

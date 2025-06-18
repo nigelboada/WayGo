@@ -2,9 +2,11 @@ package com.example.waygo.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.domain.model.Itinerary
 import com.example.waygo.domain.model.Trip
 import com.example.waygo.domain.repository.ActivityRepository
+import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.domain.repository.TripRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,10 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class TripViewModel @Inject constructor(private val tripRepository: TripRepository) : ViewModel() {
+class TripViewModel @Inject constructor(
+    private val tripRepository: TripRepository,
+    private val reservationRepository: ReservationRepository
+) : ViewModel() {
 
     private val _activities = MutableStateFlow<List<Itinerary>>(emptyList())
     val activities: StateFlow<List<Itinerary>> = _activities
@@ -109,4 +114,16 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
         }
         return days
     }
+
+    fun getReservationsForTrip(tripId: String): StateFlow<List<ReservationEntity>> {
+        val reservations = MutableStateFlow<List<ReservationEntity>>(emptyList())
+
+        viewModelScope.launch {
+            val result = reservationRepository.getReservationsForTrip(tripId)
+            reservations.value = result
+        }
+
+        return reservations
+    }
+
 }
