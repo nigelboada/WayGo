@@ -20,8 +20,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
 
-// MODIFICACIONS A `HotelDetailViewModel.kt`
-
 @HiltViewModel
 class HotelDetailViewModel @Inject constructor(
     private val repo: HotelRepository,
@@ -31,12 +29,12 @@ class HotelDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HotelDetailUiState())
     val uiState: StateFlow<HotelDetailUiState> = _uiState
 
+    private val _successfulReservation = MutableStateFlow(false)
+    val successfulReservation: StateFlow<Boolean> = _successfulReservation
+
     var showImageDialog by mutableStateOf(false)
     fun showImageDialog() { showImageDialog = true }
     fun hideImageDialog() { showImageDialog = false }
-
-    var successfulReservation by mutableStateOf(false)
-        private set
 
     fun selectRoom(room: Room) {
         _uiState.value = _uiState.value.copy(selectedRoom = room)
@@ -48,23 +46,24 @@ class HotelDetailViewModel @Inject constructor(
 
     fun load(hotelId: String, gid: String, s: String, e: String) {
         if (uiState.value.hotel != null) return
-        groupId = gid; start = s; end = e
+        groupId = gid
+        start = s
+        end = e
         viewModelScope.launch {
             val hotel = repo.getHotels(gid).first { it.id == hotelId }
-            val freeRooms = repo.getAvailability(gid, s, e).first { it.id == hotelId }.rooms
+            val freeRooms = repo.getAvailability(gid, s, e)
+                .first { it.id == hotelId }.rooms
             _uiState.value = HotelDetailUiState(false, hotel, freeRooms)
         }
     }
 
     fun reserveRoom(room: Room, tripId: String) = viewModelScope.launch {
-        Log.d("reserveRoom called", "room: $room")
-
         val req = ReserveRequest(
             hotelId = uiState.value.hotel!!.id,
             roomId = room.id,
             startDate = start,
             endDate = end,
-            guestName = "Nigel",
+            guestName = "Nigel", // Placeholder
             guestEmail = "nboadag@gmail.com"
         )
 
@@ -84,8 +83,9 @@ class HotelDetailViewModel @Inject constructor(
                     guestEmail = req.guestEmail,
                     imageUrl = room.images.firstOrNull() ?: ""
                 )
+
                 reservationRepository.saveReservation(reservationEntity)
-                successfulReservation = true
+                _successfulReservation.value = true
                 Log.d("reserveRoom", "Reserva guardada correctament a Room")
             }
         } catch (e: HttpException) {
@@ -95,7 +95,12 @@ class HotelDetailViewModel @Inject constructor(
             Log.e("HotelDetailViewModel", "Error: ${e.localizedMessage}")
         }
     }
+
+    fun resetReservationSuccessFlag() {
+        _successfulReservation.value = false
+    }
 }
+
 
 
 

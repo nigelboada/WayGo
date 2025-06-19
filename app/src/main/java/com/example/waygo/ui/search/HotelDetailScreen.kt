@@ -74,11 +74,15 @@ fun HotelDetailScreen(
     var selectedTrip by remember { mutableStateOf<Trip?>(null) }
 
 
-    LaunchedEffect(vm.successfulReservation) {
-        if (vm.successfulReservation) {
-            tripViewModel.getReservationsForTrip(selectedTrip?.id ?: return@LaunchedEffect)
+    val reservationSuccess by vm.successfulReservation.collectAsState()
+
+    LaunchedEffect(reservationSuccess) {
+        if (reservationSuccess && selectedTrip != null) {
+            tripViewModel.getReservationsForTrip(selectedTrip!!.id)
+            vm.resetReservationSuccessFlag()
         }
     }
+
 
 
     var showTripSelector by remember { mutableStateOf(false) }
