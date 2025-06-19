@@ -117,6 +117,7 @@ class TripViewModel @Inject constructor(
     fun getReservationsForTrip(tripId: String) {
         viewModelScope.launch {
             val result = reservationRepository.getReservationsForTrip(tripId)
+            Log.d("TripViewModel", "Reserves trobades per $tripId: $result")
             _reservations.value = result
         }
     }

@@ -62,19 +62,27 @@ fun HotelDetailScreen(
     navController: NavHostController,
     vm: HotelDetailViewModel = hiltViewModel(),
 ) {
-    val ui = vm.uiState.collectAsState()
     val base = BuildConfig.HOTELS_API_URL.trimEnd('/')
     var showConfirmation by remember { mutableStateOf(false) }
     var showRoomImage by remember { mutableStateOf(false) }
     var imageToShow by remember { mutableStateOf<List<String>?>(null) }
+
+    val ui = vm.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-
-
     val tripViewModel: TripViewModel = hiltViewModel()
+
+    var selectedTrip by remember { mutableStateOf<Trip?>(null) }
+
+
+    LaunchedEffect(vm.successfulReservation) {
+        if (vm.successfulReservation) {
+            tripViewModel.getReservationsForTrip(selectedTrip?.id ?: return@LaunchedEffect)
+        }
+    }
+
 
     var showTripSelector by remember { mutableStateOf(false) }
     var activeTrips by remember { mutableStateOf<List<Trip>>(emptyList()) }
-    var selectedTrip by remember { mutableStateOf<Trip?>(null) }
     var showNoTripSnackbar by remember { mutableStateOf(false) }
 
 
