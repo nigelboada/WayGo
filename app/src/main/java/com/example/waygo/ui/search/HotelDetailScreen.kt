@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -20,7 +21,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -39,8 +43,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
+import com.example.waygo.domain.model.Trip
 import com.example.waygo.ui.components.RoomImageCarouselWithControls
 import com.example.waygo.ui.viewmodel.HotelDetailViewModel
+import com.example.waygo.ui.viewmodel.TripViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -61,6 +67,17 @@ fun HotelDetailScreen(
     var showConfirmation by remember { mutableStateOf(false) }
     var showRoomImage by remember { mutableStateOf(false) }
     var imageToShow by remember { mutableStateOf<List<String>?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+
+    val tripViewModel: TripViewModel = hiltViewModel()
+
+    var showTripSelector by remember { mutableStateOf(false) }
+    var activeTrips by remember { mutableStateOf<List<Trip>>(emptyList()) }
+    var selectedTrip by remember { mutableStateOf<Trip?>(null) }
+    var showNoTripSnackbar by remember { mutableStateOf(false) }
+
+
 
     val dateFormat = DateTimeFormatter.ISO_DATE
     val nights = ChronoUnit.DAYS.between(LocalDate.parse(start, dateFormat), LocalDate.parse(end, dateFormat)).toInt()
@@ -71,6 +88,7 @@ fun HotelDetailScreen(
 
     val selectedRoom = ui.value.selectedRoom
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
 
             TopAppBar(
@@ -180,12 +198,19 @@ fun HotelDetailScreen(
             onDismissRequest = { showConfirmation = false },
             confirmButton = {
                 TextButton(onClick = {
-                    showConfirmation = false
-                    vm.reserveRoom(selectedRoom)
-                    navController.popBackStack()
+                    val actius = tripViewModel.getActiveTrips()
+                    if (actius.isNotEmpty()) {
+                        activeTrips = actius
+                        showTripSelector = true
+                        showConfirmation = false
+                    } else {
+                        showConfirmation = false
+                        showNoTripSnackbar = true // 👈 En comptes de cridar showSnackbar aquí
+                    }
                 }) {
                     Text("Confirm")
                 }
+
             },
             dismissButton = {
                 TextButton(onClick = { showConfirmation = false }) {
@@ -203,5 +228,58 @@ fun HotelDetailScreen(
                 }
             }
         )
+    }
+
+
+    if (showTripSelector) {
+        AlertDialog(
+            onDismissRequest = { showTripSelector = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    selectedTrip?.let { trip ->
+                        vm.reserveRoom(selectedRoom!!, trip.id)
+
+
+
+                        showTripSelector = false
+                        navController.popBackStack()
+                    }
+                }) {
+                    Text("Afegir al viatge")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showTripSelector = false }) {
+                    Text("Cancel·la")
+                }
+            },
+            title = { Text("Selecciona un viatge") },
+            text = {
+                Column {
+                    activeTrips.forEach { trip ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedTrip = trip }
+                                .padding(8.dp)
+                        ) {
+                            RadioButton(
+                                selected = trip == selectedTrip,
+                                onClick = { selectedTrip = trip }
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(trip.title)
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    if (showNoTripSnackbar) {
+        LaunchedEffect(showNoTripSnackbar) {
+            snackbarHostState.showSnackbar("No hi ha cap viatge actiu. Crea’n un abans.")
+            showNoTripSnackbar = false
+        }
     }
 }

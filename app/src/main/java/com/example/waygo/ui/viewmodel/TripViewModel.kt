@@ -1,5 +1,6 @@
 package com.example.waygo.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.waygo.data.local.entity.ReservationEntity
@@ -26,10 +27,11 @@ class TripViewModel @Inject constructor(
     private val _activities = MutableStateFlow<List<Itinerary>>(emptyList())
     val activities: StateFlow<List<Itinerary>> = _activities
 
-
-
     private val _trips = MutableStateFlow<List<Trip>>(emptyList())
     val trips: StateFlow<List<Trip>> = _trips
+
+    private val _reservations = MutableStateFlow<List<ReservationEntity>>(emptyList())
+    val reservations: StateFlow<List<ReservationEntity>> = _reservations
 
     private val userId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
@@ -81,23 +83,20 @@ class TripViewModel @Inject constructor(
 
     fun deleteTrip(trip: Trip) {
         viewModelScope.launch {
-            tripRepository.deleteTrip(trip.id) // Passa directament l'ID com a String
-            loadTrips() // opcional, per refrescar la llista
+            tripRepository.deleteTrip(trip.id)
+            loadTrips()
         }
     }
-
-
 
     private val _trip = MutableStateFlow<Trip?>(null)
     val trip: StateFlow<Trip?> = _trip
 
     fun getTripById(id: String) {
         viewModelScope.launch {
-            val trip = tripRepository.getTripById(id) // ara usa l’`id` com a `String`
+            val trip = tripRepository.getTripById(id)
             _trip.value = trip
         }
     }
-
 
     fun getDaysForTrip(tripId: String): List<String> {
         val trip = trips.value.find { it.id == tripId } ?: return emptyList()
@@ -115,15 +114,43 @@ class TripViewModel @Inject constructor(
         return days
     }
 
-    fun getReservationsForTrip(tripId: String): StateFlow<List<ReservationEntity>> {
-        val reservations = MutableStateFlow<List<ReservationEntity>>(emptyList())
-
+    fun getReservationsForTrip(tripId: String) {
         viewModelScope.launch {
             val result = reservationRepository.getReservationsForTrip(tripId)
-            reservations.value = result
+            _reservations.value = result
         }
-
-        return reservations
     }
 
+    fun saveReservation(reservation: ReservationEntity) {
+        viewModelScope.launch {
+            reservationRepository.saveReservation(reservation)
+            // Recarrega les reserves del viatge actual després de guardar
+            getReservationsForTrip(reservation.tripId)
+        }
+    }
+
+    fun getActiveTrips(): List<Trip> {
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        Log.d("TripDebug", "Avui és: $today")
+        Log.d("TripDebug", "Viatges disponibles: ${trips.value}")
+
+        trips.value.forEach { trip ->
+            Log.d("TripDebug", "Viatge: ${trip.title} - start: ${trip.startDate}, end: ${trip.endDate}")
+        }
+
+        return trips.value.filter { trip ->
+            try {
+                val startDate = LocalDate.parse(trip.startDate, formatter)
+                val endDate = LocalDate.parse(trip.endDate, formatter)
+                val isActive = !today.isAfter(endDate)
+                Log.d("TripDebug", "Viatge ${trip.title} és actiu? $isActive")
+                isActive
+            } catch (e: Exception) {
+                Log.e("TripViewModel", "Error parsing trip dates: ${e.localizedMessage}")
+                false
+            }
+        }
+    }
 }

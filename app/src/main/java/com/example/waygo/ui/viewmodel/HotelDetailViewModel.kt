@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.data.remote.model.ReserveRequest
 import com.example.waygo.data.remote.model.Room
 import com.example.waygo.domain.repository.HotelRepository
+import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.utils.ErrorUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HotelDetailViewModel @Inject constructor(
-    private val repo: HotelRepository
+    private val repo: HotelRepository,
+    private val reservationRepository: ReservationRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HotelDetailUiState())
@@ -57,62 +60,53 @@ class HotelDetailViewModel @Inject constructor(
 //    }
 
     /* -------- reserve selected room -------- */
-    fun reserveRoom(room: Room) = viewModelScope.launch {
-
+    fun reserveRoom(room: Room, tripId: String) = viewModelScope.launch {
         Log.d("reserveRoom called", "room: $room")
 
         val req = ReserveRequest(
             hotelId = uiState.value.hotel!!.id,
-            roomId  = room.id,
+            roomId = room.id,
             startDate = start,
-            endDate   = end,
-            guestName = "Nigel", //CAMBIAR AQUI PARA TU USUARIO
-            guestEmail = "nboadag@gmail.com" //CAMBIAR AQUI PARA TU USUARIO
+            endDate = end,
+            guestName = "Nigel", // substituir per usuari real
+            guestEmail = "nboadag@gmail.com"
         )
 
         try {
-            repo.reserveRoom(groupId, req)   // we ignore response here
+            val result = repo.reserveRoom(groupId, req) // si retorna true
+
+            if (result) {
+                val reservationEntity = ReservationEntity(
+                    id = room.id + tripId,
+                    tripId = tripId,
+                    hotelId = uiState.value.hotel!!.id,
+                    hotelName = uiState.value.hotel!!.name,
+                    roomId = room.id,
+                    roomType = room.roomType,
+                    price = room.price,
+                    startDate = start,
+                    endDate = end,
+                    guestEmail = req.guestEmail,
+                    imageUrl = room.images.firstOrNull() ?: ""
+                )
+
+                reservationRepository.saveReservation(reservationEntity)
+                Log.d("reserveRoom", "Reserva guardada correctament a Room")
+            }
+
         } catch (e: HttpException) {
             val decodedError = ErrorUtils.extractErrorMessage(e)
-            Log.e("BookViewModel", "HTTP error: $decodedError  $e")
+            Log.e("HotelDetailViewModel", "HTTP error: $decodedError  $e")
 
         } catch (e: Exception) {
-            Log.e("BookViewModel", "Error: ${e.localizedMessage}")
+            Log.e("HotelDetailViewModel", "Error: ${e.localizedMessage}")
         }
-
     }
+
+
 }
 
 
-//try {
-//    val hotels = repo.getAvailability(groupId, s.format(fmt), e.format(fmt), city = city)
-//    _uiState.update { it.copy(loading = false, hotels = hotels) }
-//} catch (e: HttpException) {
-//
-//    val decodedError = ErrorUtils.extractErrorMessage(e)
-//
-//    Log.e("BookViewModel", "HTTP error: ${decodedError}  $e")
-//    _uiState.update { it.copy(loading = false, hotels = emptyList(), message = decodedError) }
-//
-//    _uiState.update {
-//        it.copy(
-//            loading = false,
-//            hotels = emptyList(),
-//            message = "Error: ${decodedError}}"
-//        )
-//    }
-//
-//} catch (e: Exception) {
-//    Log.e("BookViewModel", "Error: ${e.localizedMessage}")
-////            _uiState.update { it.copy(loading = false, hotels = emptyList()) }
-//    _uiState.update {
-//        it.copy(
-//            loading = false,
-//            hotels = emptyList(),
-//            message = "Error: ${e.message}}"
-//        )
-//    }
-//}
 
 data class HotelDetailUiState(
     val loading: Boolean = true,

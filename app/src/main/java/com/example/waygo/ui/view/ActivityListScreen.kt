@@ -16,12 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.waygo.ui.viewmodel.ActivityViewModel
 import com.example.waygo.ui.viewmodel.TripViewModel
-import com.example.waygo.domain.model.Itinerary
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
+import androidx.compose.runtime.remember
+import com.example.waygo.data.local.entity.ReservationEntity
+import kotlinx.coroutines.flow.StateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,16 +33,22 @@ fun ActivityListScreen(
     tripViewModel: TripViewModel,
     activityViewModel: ActivityViewModel
 ) {
+    // Carrega dades inicials
     LaunchedEffect(tripId) {
-        activityViewModel // potser hi poses un `activityViewModel.loadActivities(tripId)` si tens aquesta funció
+        tripViewModel.getTripById(tripId)
+        // Afegir aquí activityViewModel.loadActivities(tripId) si en tens
     }
 
     val activities = activityViewModel.activities.collectAsState().value
     val filteredActivities = activities.filter { it.tripId == tripId }
 
-    val reservations = remember(tripId) {
+    // Obtenim i observem les reserves només una vegada
+    // Cal carregar explícitament les reserves (només una vegada)
+    LaunchedEffect(tripId) {
         tripViewModel.getReservationsForTrip(tripId)
-    }.collectAsState().value
+    }
+    val reservations = tripViewModel.reservations.collectAsState().value
+
 
     Scaffold(
         topBar = {
@@ -128,18 +135,15 @@ fun ActivityListScreen(
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Row(modifier = Modifier.padding(8.dp)) {
-                            // 🖼️ Imatge de l’hotel
                             Image(
                                 painter = rememberAsyncImagePainter(res.imageUrl),
                                 contentDescription = "Imatge de l’hotel",
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(80.dp)
+                                modifier = Modifier.size(80.dp)
                             )
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            // 📄 Detalls de la reserva
                             Column {
                                 Text("🏨 Hotel: ${res.hotelName}", fontWeight = FontWeight.Bold)
                                 Text("🛏 Habitació: ${res.roomType} (${res.roomId})")
@@ -148,6 +152,14 @@ fun ActivityListScreen(
                             }
                         }
                     }
+                }
+            } else {
+                item {
+                    Text(
+                        "No hi ha reserves d’habitació.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
         }

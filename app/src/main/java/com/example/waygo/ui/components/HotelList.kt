@@ -50,7 +50,7 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     hotel.rooms.take(3).forEach { room ->
-                        RoomItem(room = room, onReserve = {}) // no cal reservar des d'aquí
+                        RoomItem(room = room) // no cal reservar des d'aquí
                     }
                 }
             }
@@ -60,7 +60,7 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
 
 
 @Composable
-fun RoomItem(room: Room, onReserve: () -> Unit) {
+fun RoomItem(room: Room) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,8 +72,5 @@ fun RoomItem(room: Room, onReserve: () -> Unit) {
             Text("${room.price} €", style = MaterialTheme.typography.bodySmall)
         }
 
-        Button(onClick = onReserve) {
-            Text("Reservar")
-        }
     }
 }

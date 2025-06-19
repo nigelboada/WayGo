@@ -79,7 +79,7 @@ fun AddActivityScreen(
             OutlinedTextField(
                 value = activityDay,
                 onValueChange = { activityDay = it },
-                label = { Text("Data (dd/MM/yyyy)") },
+                label = { Text("Data (yyyy-MM-dd)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -93,7 +93,7 @@ fun AddActivityScreen(
 
             Button(
                 onClick = {
-                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
                     timeFormat.isLenient = false  // ❗ Molt important: això desactiva els ajustaments automàtics
 

@@ -76,20 +76,20 @@ fun AddTripScreen(
             OutlinedTextField(
                 value = startDate,
                 onValueChange = { startDate = it },
-                label = { Text("Data inici (dd/MM/yyyy)") },
+                label = { Text("Data inici (yyyy-MM-dd)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
                 value = endDate,
                 onValueChange = { endDate = it },
-                label = { Text("Data fi (dd/MM/yyyy)") },
+                label = { Text("Data fi (yyyy-MM-dd)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Button(
                 onClick = {
-                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     val today = Calendar.getInstance().time
 
                     try {
