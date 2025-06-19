@@ -2,6 +2,7 @@ package com.example.waygo.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,14 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.data.remote.model.Room
-import com.example.waygo.ui.view.base
 
 @Composable
-fun HotelList(hotels: List<Hotel>, onClick: (Hotel, Room) -> Unit) {
+fun HotelList(hotels: List<Hotel>, onClick: (Hotel) -> Unit) {
     Log.d("HotelList", "Renderitzant ${hotels.size} hotels")
 
     LazyColumn(
@@ -26,19 +25,15 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel, Room) -> Unit) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(hotels) { hotel ->
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick(hotel) } // 👉 Fa clic al hotel
+            ) {
                 Column(modifier = Modifier.padding(12.dp)) {
 
-                    // 🖼 Imatge principal de l'hotel
                     Image(
-                        painter = rememberAsyncImagePainter(
-                            model = hotel.imageUrl,
-                            onState = { state ->
-                                if (state is AsyncImagePainter.State.Error) {
-                                    Log.e("IMG_ERROR", "Error carregant ${hotel.imageUrl}")
-                                }
-                            }
-                        ),
+                        painter = rememberAsyncImagePainter(hotel.imageUrl),
                         contentDescription = "Imatge de l'hotel",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -54,17 +49,15 @@ fun HotelList(hotels: List<Hotel>, onClick: (Hotel, Room) -> Unit) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 🛏 Habitacions
                     hotel.rooms.take(3).forEach { room ->
-                        RoomItem(room = room) {
-                            onClick(hotel, room)
-                        }
+                        RoomItem(room = room, onReserve = {}) // no cal reservar des d'aquí
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun RoomItem(room: Room, onReserve: () -> Unit) {

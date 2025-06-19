@@ -40,7 +40,8 @@ class HotelRepositoryImpl @Inject constructor(
                         price = roomDto.price ?: 0f,
                         images = listOf(assignRoomImage(type))
                     )
-                } ?: emptyList()
+                } ?: emptyList(),
+                groupId = groupId
             )
         }
     }
@@ -81,7 +82,8 @@ class HotelRepositoryImpl @Inject constructor(
                         price = roomDto.price ?: 0f,
                         images = listOf(assignRoomImage(type))
                     )
-                } ?: emptyList()
+                } ?: emptyList(),
+                groupId = groupId
             )
         } ?: emptyList()
 

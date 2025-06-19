@@ -66,8 +66,8 @@ fun SearchScreen(navController: NavController, viewModel: SearchViewModel = hilt
                     Text("No s'han trobat hotels.", color = Color.Gray)
                 }
                 else -> {
-                    HotelList(hotels = state.hotels) { hotel, room ->
-                        viewModel.reserveRoom(hotel, room)
+                    HotelList(hotels = state.hotels) { hotel ->
+                        navController.navigate("hotel_detail/${hotel.id}/${hotel.groupId}/${state.startDate}/${state.endDate}")
                     }
                 }
             }

@@ -7,5 +7,6 @@ data class Hotel(
     val address: String,
     val rating: Int,
     val rooms: List<Room>,
-    val imageUrl: String
+    val imageUrl: String,
+    val groupId: String //
 )

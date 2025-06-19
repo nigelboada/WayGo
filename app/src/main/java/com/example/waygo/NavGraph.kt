@@ -16,11 +16,9 @@ import com.example.waygo.ui.viewmodel.TripViewModel
 import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.waygo.data.local.AppDatabase
-import com.example.waygo.data.remote.api.HotelApiService
 import com.example.waygo.data.repository.HotelRepositoryImpl
 import com.example.waygo.di.AppModule
-import com.example.waygo.domain.repository.TripRepository
+import com.example.waygo.ui.search.HotelDetailScreen
 import com.example.waygo.ui.search.SearchScreen
 import com.example.waygo.ui.view.ActivityListScreen
 import com.example.waygo.ui.view.AddActivityScreen
@@ -187,6 +185,31 @@ fun NavGraph(navController: NavHostController) {
         composable("book") {
             SearchScreen(navController)
         }
+
+        composable(
+            route = "hotel_detail/{hotelId}/{groupId}/{startDate}/{endDate}",
+            arguments = listOf(
+                navArgument("hotelId") { type = NavType.StringType },
+                navArgument("groupId") { type = NavType.StringType },
+                navArgument("startDate") { type = NavType.StringType },
+                navArgument("endDate") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val hotelId = backStackEntry.arguments?.getString("hotelId") ?: return@composable
+            val groupId = backStackEntry.arguments?.getString("groupId") ?: return@composable
+            val start = backStackEntry.arguments?.getString("startDate") ?: return@composable
+            val end = backStackEntry.arguments?.getString("endDate") ?: return@composable
+
+            HotelDetailScreen(
+                hotelId = hotelId,
+                start = start,
+                end = end,
+                navController = navController,
+                groupId = groupId
+            )
+        }
+
+
 
 
 

@@ -1,4 +1,4 @@
-package com.example.waygo.ui.view
+package com.example.waygo.ui.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -54,7 +54,7 @@ fun HotelDetailScreen(
     start: String,
     end: String,
     navController: NavHostController,
-    vm: HotelDetailViewModel = hiltViewModel()
+    vm: HotelDetailViewModel = hiltViewModel(),
 ) {
     val ui = vm.uiState.collectAsState()
     val base = BuildConfig.HOTELS_API_URL.trimEnd('/')
@@ -70,7 +70,6 @@ fun HotelDetailScreen(
     }
 
     val selectedRoom = ui.value.selectedRoom
-    val hotelId = ui.value.hotel?.id
     Scaffold(
         topBar = {
 
@@ -81,6 +80,7 @@ fun HotelDetailScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
                     }
                 }
+
             )
         }
     ) { padding ->
@@ -122,7 +122,7 @@ fun HotelDetailScreen(
 
                         room.images.firstOrNull()?.let { img ->
                             Image(
-                                painter = rememberAsyncImagePainter(base + img),
+                                painter = rememberAsyncImagePainter(img),
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
@@ -192,6 +192,7 @@ fun HotelDetailScreen(
                     Text("Cancel")
                 }
             },
+            icon = {},
             title = { Text("Confirm Reservation") },
             text = {
                 Column {
