@@ -7,6 +7,7 @@ import com.example.waygo.data.local.dao.ReservationDao
 import com.example.waygo.data.local.dao.SubTaskDao
 import com.example.waygo.data.local.dao.TaskDao
 import com.example.waygo.data.local.dao.TripDao
+import com.example.waygo.data.local.dao.TripImageDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,10 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "waygo.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+
 
     @Provides
     fun provideReservationDao(db: AppDatabase): ReservationDao =
@@ -42,4 +46,9 @@ object DatabaseModule {
     @Provides
     fun provideSubTaskDao(db: AppDatabase): SubTaskDao =
         db.subTaskDao()
+
+    @Provides
+    fun provideTripImageDao(db: AppDatabase): TripImageDao =
+        db.tripImageDao()
+
 }

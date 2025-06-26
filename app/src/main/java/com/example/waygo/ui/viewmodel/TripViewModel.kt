@@ -22,11 +22,17 @@ import javax.inject.Inject
 @HiltViewModel
 class TripViewModel @Inject constructor(
     private val tripRepository: TripRepository,
-    private val reservationRepository: ReservationRepository
+    private val reservationRepository: ReservationRepository,
+    private val tripImageRepository: TripRepository
 ) : ViewModel() {
 
     private val _activities = MutableStateFlow<List<Itinerary>>(emptyList())
     val activities: StateFlow<List<Itinerary>> = _activities
+
+
+    private val _tripImages = MutableStateFlow<List<String>>(emptyList())
+    val tripImages: StateFlow<List<String>> = _tripImages
+
 
     private val _trips = MutableStateFlow<List<Trip>>(emptyList())
     val trips: StateFlow<List<Trip>> = _trips
@@ -154,4 +160,25 @@ class TripViewModel @Inject constructor(
             }
         }
     }
+
+
+    // 2) Mètode per recollir-les de la DB
+    fun getImagesForTrip(tripId: String) {
+        viewModelScope.launch {
+            _tripImages.value = tripRepository.getImagesForTrip(tripId)
+        }
+    }
+
+
+    // crida per desar-les
+    fun addTripImages(tripId: String, uris: List<String>) = viewModelScope.launch {
+        tripImageRepository.addImagesToTrip(tripId, uris)
+        loadTripImages(tripId)
+    }
+
+    // crida per recuperar-les
+    fun loadTripImages(tripId: String) = viewModelScope.launch {
+        _tripImages.value = tripImageRepository.getImagesForTrip(tripId)
+    }
 }
+

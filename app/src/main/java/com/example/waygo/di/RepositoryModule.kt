@@ -5,9 +5,11 @@ package com.example.waygo.di
 import com.example.waygo.data.repository.HotelRepositoryImpl
 import com.example.waygo.data.repository.ReservationRepositoryImpl
 import com.example.waygo.data.repository.TaskRepositoryImpl
+import com.example.waygo.data.repository.TripRepositoryImpl
 import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.domain.repository.TaskRepository
+import com.example.waygo.domain.repository.TripRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,6 +19,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
 
     @Binds
     @Singleton
@@ -35,4 +38,10 @@ abstract class RepositoryModule {
     abstract fun bindTaskRepository(
         impl: TaskRepositoryImpl
     ): TaskRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTripRepository(
+        impl: TripRepositoryImpl
+    ): TripRepository
 }

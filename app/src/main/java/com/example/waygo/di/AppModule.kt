@@ -2,11 +2,8 @@ package com.example.waygo.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.waygo.data.local.AppDatabase
 import com.example.waygo.data.remote.TripApiService
 import com.example.waygo.data.remote.api.HotelApiService
-import com.example.waygo.domain.repository.ReservationRepository
-import com.example.waygo.domain.repository.TripRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +15,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-import com.example.waygo.data.repository.ReservationRepositoryImpl
-import com.example.waygo.data.local.mapper.ReservationMapper
 
 
 @Module
@@ -47,15 +42,7 @@ object AppModule {
     }
 
 
-    @Provides
-    @Singleton
-    fun provideTripRepository(
-        @ApplicationContext context: Context,
-        tripApi: TripApiService
-    ): TripRepository {
-        val db = AppDatabase.getDatabase(context)
-        return TripRepository(db.tripDao(), tripApi)
-    }
+
 
 
 

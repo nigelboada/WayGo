@@ -1,6 +1,9 @@
 package com.example.waygo.ui.view
 
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,13 +21,11 @@ import androidx.navigation.NavController
 import com.example.waygo.ui.viewmodel.ActivityViewModel
 import com.example.waygo.ui.viewmodel.TripViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
-import androidx.compose.runtime.remember
 import com.example.waygo.BuildConfig
-import com.example.waygo.data.local.entity.ReservationEntity
-import kotlinx.coroutines.flow.StateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,21 +36,36 @@ fun ActivityListScreen(
     tripViewModel: TripViewModel,
     activityViewModel: ActivityViewModel
 ) {
+
+    // 1) Launcher per obrir documents (imágenes múltiples)
+    val pickImagesLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris: List<Uri> ->
+        val uriStrings = uris.map { it.toString() }
+        tripViewModel.addTripImages(tripId, uriStrings)
+    }
+
+
     // Carrega dades inicials
     LaunchedEffect(tripId) {
         tripViewModel.getTripById(tripId)
+        tripViewModel.getImagesForTrip(tripId)
+        tripViewModel.getReservationsForTrip(tripId)
+
         // Afegir aquí activityViewModel.loadActivities(tripId) si en tens
     }
 
     val activities = activityViewModel.activities.collectAsState().value
     val filteredActivities = activities.filter { it.tripId == tripId }
 
-    // Obtenim i observem les reserves només una vegada
-    // Cal carregar explícitament les reserves (només una vegada)
-    LaunchedEffect(tripId) {
-        tripViewModel.getReservationsForTrip(tripId)
-    }
     val reservations = tripViewModel.reservations.collectAsState().value
+    val tripImages = tripViewModel.tripImages.collectAsState().value
+
+
+
+
+
+
 
 
     Scaffold(
@@ -62,6 +78,10 @@ fun ActivityListScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { pickImagesLauncher.launch(arrayOf("image/*")) }) {
+                        Icon(Icons.Default.Add, contentDescription = "Afegeix fotos")
+                    }
+
                     IconButton(onClick = {
                         navController.navigate("add_activity/$tripId")
                     }) {
@@ -75,6 +95,27 @@ fun ActivityListScreen(
             contentPadding = paddingValues,
             modifier = Modifier.fillMaxSize()
         ) {
+
+            if (tripImages.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Fotos del viatge",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+                    )
+                }
+                items(tripImages) { uriString ->
+                    Image(
+                        painter = rememberAsyncImagePainter(uriString),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(100.dp)
+                            .clip(MaterialTheme.shapes.medium),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
             // ACTIVITATS
             if (filteredActivities.isEmpty()) {
                 item {
