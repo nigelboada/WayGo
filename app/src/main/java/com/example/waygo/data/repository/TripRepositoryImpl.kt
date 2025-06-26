@@ -15,7 +15,7 @@ class TripRepositoryImpl @Inject constructor(
     private val tripImageDao: TripImageDao
 ) : TripRepository {
 
-    override suspend fun getAllTripsForUser(userId: String): List<Trip> =
+    override suspend fun getAllTripsForUser(userId: String) =
         tripDao.getTripsByUser(userId).map { it.toTrip() }
 
     override suspend fun addTrip(trip: Trip, userId: String) {
@@ -34,12 +34,11 @@ class TripRepositoryImpl @Inject constructor(
         tripDao.getTripById(tripId)?.toTrip()
 
     override suspend fun addImagesToTrip(tripId: String, imageUris: List<String>) {
-        val entities = imageUris.map { uri ->
-            TripImageEntity(tripId = tripId, imageUri = uri)
+        val entities = imageUris.map { uri -> TripImageEntity(tripId = tripId, imageUri = uri)
         }
         tripImageDao.insertAll(entities)
     }
 
     override suspend fun getImagesForTrip(tripId: String): List<String> =
-        tripImageDao.getImagesForTrip(tripId).map { it.imageUri }
+        tripImageDao.getImagesForTrip(tripId)
 }

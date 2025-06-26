@@ -1,5 +1,7 @@
 package com.example.waygo.ui.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import com.example.waygo.domain.model.Trip
 import com.example.waygo.domain.repository.ActivityRepository
 import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.domain.repository.TripRepository
+import com.example.waygo.utils.FileUtils
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +26,6 @@ import javax.inject.Inject
 class TripViewModel @Inject constructor(
     private val tripRepository: TripRepository,
     private val reservationRepository: ReservationRepository,
-    private val tripImageRepository: TripRepository
 ) : ViewModel() {
 
     private val _activities = MutableStateFlow<List<Itinerary>>(emptyList())
@@ -171,14 +173,20 @@ class TripViewModel @Inject constructor(
 
 
     // crida per desar-les
-    fun addTripImages(tripId: String, uris: List<String>) = viewModelScope.launch {
-        tripImageRepository.addImagesToTrip(tripId, uris)
+    fun addTripImages(tripId: String, uris: List<Uri>, context: Context) = viewModelScope.launch {
+        // 1) copia cada URI a fitxer intern i recull rutes
+        val savedPaths = uris.mapNotNull { uri ->
+            FileUtils.copyUriToInternal(context, uri, tripId)
+        }
+        // 2) desa les rutes
+        tripRepository.addImagesToTrip(tripId, savedPaths)
+        // 3) recarrega
         loadTripImages(tripId)
     }
 
     // crida per recuperar-les
     fun loadTripImages(tripId: String) = viewModelScope.launch {
-        _tripImages.value = tripImageRepository.getImagesForTrip(tripId)
+        _tripImages.value = tripRepository.getImagesForTrip(tripId)
     }
 }
 

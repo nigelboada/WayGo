@@ -23,6 +23,7 @@ import com.example.waygo.ui.viewmodel.TripViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
@@ -37,19 +38,22 @@ fun ActivityListScreen(
     activityViewModel: ActivityViewModel
 ) {
 
-    // 1) Launcher per obrir documents (imágenes múltiples)
+
+    val context = LocalContext.current
+
+
     val pickImagesLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenMultipleDocuments()
+        ActivityResultContracts.OpenMultipleDocuments()
     ) { uris: List<Uri> ->
-        val uriStrings = uris.map { it.toString() }
-        tripViewModel.addTripImages(tripId, uriStrings)
+        // ara passem URIs i context directament
+        tripViewModel.addTripImages(tripId, uris, context)
     }
 
 
     // Carrega dades inicials
     LaunchedEffect(tripId) {
         tripViewModel.getTripById(tripId)
-        tripViewModel.getImagesForTrip(tripId)
+        tripViewModel.loadTripImages(tripId)
         tripViewModel.getReservationsForTrip(tripId)
 
         // Afegir aquí activityViewModel.loadActivities(tripId) si en tens
@@ -81,13 +85,13 @@ fun ActivityListScreen(
                     IconButton(onClick = { pickImagesLauncher.launch(arrayOf("image/*")) }) {
                         Icon(Icons.Default.Add, contentDescription = "Afegeix fotos")
                     }
-
                     IconButton(onClick = {
                         navController.navigate("add_activity/$tripId")
                     }) {
                         Icon(Icons.Default.Add, contentDescription = "Afegir activitat")
                     }
                 }
+
             )
         }
     ) { paddingValues ->

@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class TripImageEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val tripId: String,
-    val imageUri: String   // emmagatzemarem la URI/String de l’arxiu
+    val imageUri: String
 )
