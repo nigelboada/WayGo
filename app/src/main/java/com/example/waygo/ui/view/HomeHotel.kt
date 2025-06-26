@@ -82,6 +82,7 @@ fun HomeHotel(rootNav: NavController) {
                 AllReservationsScreen()
             }
 
+
             composable(Screen.Book.route) {
                 SearchScreen(rootNav)        // usa el NavController raíz para ir a HotelDetail
             }
