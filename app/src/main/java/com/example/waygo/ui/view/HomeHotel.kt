@@ -79,7 +79,7 @@ fun HomeHotel(rootNav: NavController) {
 
             composable(Screen.AllRes.route) {
 
-                AllReservationsScreen(navController = rootNav)
+                AllReservationsScreen()
             }
 
             composable(Screen.Book.route) {

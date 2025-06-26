@@ -1,36 +1,35 @@
+// app/src/main/java/com/example/waygo/ui/view/AllReservationsScreen.kt
 package com.example.waygo.ui.view
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.ui.viewmodel.AllReservationsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllReservationsScreen(
-    navController: NavController,
     vm: AllReservationsViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) { vm.loadAll() }
+    LaunchedEffect(Unit) {
+        vm.loadAll()
+    }
 
-    // 1) Importa getValue i renombra la llista
-    val reservationsWithTrip by vm.items.collectAsState()
+    val items by vm.items.collectAsState()
 
     Scaffold(topBar = {
         TopAppBar(title = { Text("Totes les reserves") })
@@ -39,7 +38,7 @@ fun AllReservationsScreen(
             contentPadding = padding,
             modifier = Modifier.fillMaxSize()
         ) {
-            if (reservationsWithTrip.isEmpty()) {
+            if (items.isEmpty()) {
                 item {
                     Text(
                         "Cap reserva trobada",
@@ -48,21 +47,53 @@ fun AllReservationsScreen(
                     )
                 }
             } else {
-                // 2) items(...) ara es refereix a la funció correcte
-                items(reservationsWithTrip) { (res, trip) ->
+                items(items) { (res, trip) ->
                     Card(
-                        Modifier
-                            .fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(8.dp)
-
                     ) {
-                        Column(Modifier.padding(16.dp)) {
-                            Text("Viatge: ${trip?.title ?: "—"}",
-                                style = MaterialTheme.typography.titleMedium)
-                            Text("Hotel: ${res.hotelName}")
-                            Text("Habitació: ${res.roomType}")
-                            Text("Dates: ${res.startDate} → ${res.endDate}")
-                            Text("Preu: €${res.price}")
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // imatge de l’hotel
+                            Image(
+                                painter = rememberAsyncImagePainter(res.hotelImageUrl),
+                                contentDescription = "Hotel",
+                                modifier = Modifier.size(48.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            // imatge de l’habitació
+                            Image(
+                                painter = rememberAsyncImagePainter(res.roomImageUrl),
+                                contentDescription = "Habitació",
+                                modifier = Modifier.size(48.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(Modifier.width(16.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = trip?.title ?: "—",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = "${res.hotelName} • ${res.roomType}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = "${res.startDate} → ${res.endDate}",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+
+                            IconButton(onClick = { vm.deleteReservation(res.id) }) {
+                                Icon(Icons.Default.Delete, contentDescription = "Esborra")
+                            }
                         }
                     }
                 }

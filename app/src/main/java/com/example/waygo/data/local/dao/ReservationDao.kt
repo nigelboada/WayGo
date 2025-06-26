@@ -17,4 +17,8 @@ interface ReservationDao {
     @Query("SELECT * FROM reservations")
     suspend fun getAllReservations(): List<ReservationEntity>
 
+    @Query("DELETE FROM reservations WHERE id = :id")
+    suspend fun deleteById(id: String)
+
+
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.waygo.BuildConfig
 import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.repository.HotelRepository
+import com.example.waygo.domain.repository.ReservationRepository
 
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReservationsViewModel @Inject constructor(
-    private val repo: HotelRepository
+    private val repo: HotelRepository,
+    private val reservationRepo: ReservationRepository, // si vols fer servir el local
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ReservationsUiState())
@@ -39,6 +41,12 @@ class ReservationsViewModel @Inject constructor(
         repo.cancelById(r.id)
         _uiState.update { it.copy(reservations = it.reservations - r) } // quita de la lista
         load()
+    }
+
+    fun deleteReservation(reservationId: String) = viewModelScope.launch {
+        val ok = reservationRepo.deleteReservation(reservationId)
+        if (ok) load()         // recarrega posts-borrat
+        else { /* mostrar error, snack si vols */ }
     }
 }
 

@@ -226,7 +226,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable("all_reservations") {
-            AllReservationsScreen(navController)
+            AllReservationsScreen()
         }
     }
 }

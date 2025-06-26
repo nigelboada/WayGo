@@ -32,4 +32,14 @@ class AllReservationsViewModel @Inject constructor(
         }
         _items.value = withTrips
     }
+
+    /**  Nou: esborra una reserva i recarrega la llista  */
+    fun deleteReservation(reservationId: String) = viewModelScope.launch {
+        val success = reservationRepo.deleteReservation(reservationId)
+        if (success) {
+            loadAll()
+        } else {
+            // aquí podries emetre un event de Snackbar si cal
+        }
+    }
 }
