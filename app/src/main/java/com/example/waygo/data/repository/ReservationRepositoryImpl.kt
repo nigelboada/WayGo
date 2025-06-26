@@ -3,7 +3,6 @@
 package com.example.waygo.data.repository
 
 import com.example.waygo.data.local.dao.ReservationDao
-import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.data.local.mapper.ReservationMapper
 import com.example.waygo.data.remote.api.CancelRequestDto
 import com.example.waygo.data.remote.api.HotelApiService
@@ -56,10 +55,12 @@ class ReservationRepositoryImpl @Inject constructor(
             .map { mapper.toDomain(it)
     }
 
-    override suspend fun getAllReservationsForUser(userId: String): List<ReservationEntity> {
-        // si realment vols filtrar per userId, afegeix-lo a l'entitat; sinó:
+    override suspend fun getAllReservationsForUser(userId: String): List<Reservation> {
+        // si vols filtrar per userId, afegeix userId a ReservationEntity i fer el filtre aquí
         return dao.getAllReservations()
+            .map { entity -> mapper.toDomain(entity) }
     }
+
 
     override suspend fun getAllReservations(): Map<String, List<Reservation>> {
         val entities = dao.getAllReservations()

@@ -2,7 +2,7 @@ package com.example.waygo.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.waygo.data.local.entity.ReservationEntity
+import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.model.Trip
 import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.domain.repository.TripRepository
@@ -18,8 +18,10 @@ class AllReservationsViewModel @Inject constructor(
     private val reservationRepo: ReservationRepository,
     private val tripRepo: TripRepository
 ) : ViewModel() {
-    private val _items = MutableStateFlow<List<Pair<ReservationEntity, Trip?>>>(emptyList())
-    val items: StateFlow<List<Pair<ReservationEntity, Trip?>>> = _items
+
+    // Després:
+    private val _items = MutableStateFlow<List<Pair<Reservation, Trip?>>>(emptyList())
+    val items: StateFlow<List<Pair<Reservation, Trip?>>> = _items
 
     private val userId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()

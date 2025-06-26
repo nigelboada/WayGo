@@ -5,7 +5,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.domain.model.Itinerary
 import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.model.Trip
@@ -22,10 +21,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+
 @HiltViewModel
 class TripViewModel @Inject constructor(
     private val tripRepository: TripRepository,
     private val reservationRepository: ReservationRepository,
+    private val tripImageRepository: TripRepository
 ) : ViewModel() {
 
     private val _activities = MutableStateFlow<List<Itinerary>>(emptyList())
@@ -42,11 +43,16 @@ class TripViewModel @Inject constructor(
     private val _reservations = MutableStateFlow<List<Reservation>>(emptyList())
     val reservations: StateFlow<List<Reservation>> = _reservations
 
+    // ➊ Estat per guardar totes les reserves agrupades per tripId
+    private val _tripReservations = MutableStateFlow<Map<String, List<Reservation>>>(emptyMap())
+    val tripReservations: StateFlow<Map<String, List<Reservation>>> = _tripReservations
+
     private val userId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
 
     init {
         loadTrips()
+        loadAllReservations()        // ➋ les carreguem en iniciar
     }
 
     internal fun loadTrips() {
@@ -57,6 +63,8 @@ class TripViewModel @Inject constructor(
                 trip.copy(activities = activities)
             }
             _trips.value = tripsWithActivities
+
+            loadAllReservations()
         }
     }
 
@@ -187,6 +195,13 @@ class TripViewModel @Inject constructor(
     // crida per recuperar-les
     fun loadTripImages(tripId: String) = viewModelScope.launch {
         _tripImages.value = tripRepository.getImagesForTrip(tripId)
+    }
+
+    /** ➋ Carrega totes les reserves de l'usuari i les agrupa per tripId */
+    private fun loadAllReservations() = viewModelScope.launch {
+        val all = reservationRepository
+            .getAllReservationsForUser(userId)    // retorna List<Reservation>
+        _tripReservations.value = all.groupBy { it.tripId }
     }
 }
 
