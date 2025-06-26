@@ -30,33 +30,19 @@ fun RoomDto.toDomain(): Room = Room(
     images = images ?: emptyList()
 )
 
-fun ReservationDto.toReservation(): Reservation {
-    return Reservation(
-        id = id,
-        hotelId = hotelId,
-        roomId = roomId,
-        guestName = guestName,
-        guestEmail = guestEmail,
-        startDate = startDate,
-        endDate = endDate,
-        hotel = hotel?.toDomain() ?: Hotel(
-            id = "unknown",
-            name = "Unknown Hotel",
-            address = "Unknown Address",
-            rating = 0,
-            imageUrl = "",
-            rooms = emptyList(),
-            groupId = "unknown"
-        ),
-        room = room?.toDomain() ?: Room(
-            id = "unknown",
-            roomType = "Unknown",
-            price = 0f,
-            images = emptyList()
-        )
-    )
-}
-
+fun ReservationDto.toReservation(tripId: String): Reservation = Reservation(
+    id         = id,
+    tripId     = tripId,
+    hotelId    = hotelId,
+    hotelName  = hotel?.name ?: "Unknown Hotel",          // extreiem de hotelDto
+    roomId     = roomId,
+    roomType   = room?.roomType ?: "Unknown",              // extreiem de roomDto
+    price      = room?.price ?: 0f,                        // idem
+    startDate  = startDate,
+    endDate    = endDate,
+    guestEmail = guestEmail,
+    imageUrl   = hotel?.imageUrl ?: ""                     // agafem la imatge principal de l’hotel
+)
 
 fun ReserveRequest.toDto(): ReserveRequestDto = ReserveRequestDto(
     hotelId = hotelId,

@@ -118,6 +118,8 @@ fun ActivityListScreen(
                 }
             }
 
+
+
             // RESERVES
             if (reservations.isNotEmpty()) {
                 item {

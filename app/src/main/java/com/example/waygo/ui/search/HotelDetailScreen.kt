@@ -51,6 +51,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
+import com.example.waygo.data.local.entity.ReservationEntity
+import com.example.waygo.domain.model.Reservation
+import com.google.firebase.auth.FirebaseAuth
+import java.util.UUID
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -249,16 +255,30 @@ fun HotelDetailScreen(
             confirmButton = {
                 TextButton(onClick = {
                     selectedTrip?.let { trip ->
-                        vm.reserveRoom(selectedRoom!!, trip.id)
+                        // Llegeix l'email de l'usuari (o posa un string buit si és null)
+                        val email = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
-
-
+                        val reservation = Reservation(
+                            id         = UUID.randomUUID().toString(),
+                            tripId     = trip.id,
+                            hotelId    = ui.value.hotel!!.id,
+                            hotelName  = ui.value.hotel!!.name,
+                            roomId     = selectedRoom!!.id,
+                            roomType   = selectedRoom.roomType,
+                            price      = selectedRoom.price * nights,
+                            startDate  = start,
+                            endDate    = end,
+                            guestEmail = email,              // ← aquí
+                            imageUrl   = ui.value.hotel!!.imageUrl ?: ""
+                        )
+                        tripViewModel.saveReservation(reservation)
                         showTripSelector = false
                         navController.popBackStack()
                     }
                 }) {
                     Text("Afegir al viatge")
                 }
+
             },
             dismissButton = {
                 TextButton(onClick = { showTripSelector = false }) {

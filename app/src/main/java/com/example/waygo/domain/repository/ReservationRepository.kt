@@ -1,17 +1,8 @@
 package com.example.waygo.domain.repository
 
-import com.example.waygo.data.local.dao.ReservationDao
-import com.example.waygo.data.local.entity.ReservationEntity
-import javax.inject.Inject
+import com.example.waygo.domain.model.Reservation
 
-class ReservationRepository @Inject constructor(
-    private val dao: ReservationDao
-) {
-    suspend fun saveReservation(res: ReservationEntity) {
-        dao.insert(res)
-    }
-
-    suspend fun getReservationsForTrip(tripId: String): List<ReservationEntity> {
-        return dao.getReservationsForTrip(tripId)
-    }
+interface ReservationRepository {
+    suspend fun saveReservation(reservation: Reservation)
+    suspend fun getReservationsForTrip(tripId: String): List<Reservation>
 }

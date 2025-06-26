@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.domain.model.Itinerary
+import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.model.Trip
 import com.example.waygo.domain.repository.ActivityRepository
 import com.example.waygo.domain.repository.ReservationRepository
@@ -30,8 +31,8 @@ class TripViewModel @Inject constructor(
     private val _trips = MutableStateFlow<List<Trip>>(emptyList())
     val trips: StateFlow<List<Trip>> = _trips
 
-    private val _reservations = MutableStateFlow<List<ReservationEntity>>(emptyList())
-    val reservations: StateFlow<List<ReservationEntity>> = _reservations
+    private val _reservations = MutableStateFlow<List<Reservation>>(emptyList())
+    val reservations: StateFlow<List<Reservation>> = _reservations
 
     private val userId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
@@ -121,7 +122,7 @@ class TripViewModel @Inject constructor(
     }
 
 
-    fun saveReservation(reservation: ReservationEntity) {
+    fun saveReservation(reservation: Reservation) {
         viewModelScope.launch {
             reservationRepository.saveReservation(reservation)
             // Recarrega les reserves del viatge actual després de guardar

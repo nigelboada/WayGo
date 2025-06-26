@@ -18,6 +18,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+import com.example.waygo.data.repository.ReservationRepositoryImpl
+import com.example.waygo.data.local.mapper.ReservationMapper
+
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -49,17 +53,8 @@ object AppModule {
         @ApplicationContext context: Context,
         tripApi: TripApiService
     ): TripRepository {
-        val db = com.example.waygo.data.local.AppDatabase.getDatabase(context)
-        return TripRepository(db.tripDao(), tripApi)
-    }
-
-    @Provides
-    @Singleton
-    fun provideReservationRepository(
-        @ApplicationContext context: Context
-    ): ReservationRepository {
         val db = AppDatabase.getDatabase(context)
-        return ReservationRepository(db.reservationDao())
+        return TripRepository(db.tripDao(), tripApi)
     }
 
 

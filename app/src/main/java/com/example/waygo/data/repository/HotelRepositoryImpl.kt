@@ -128,7 +128,10 @@ class HotelRepositoryImpl @Inject constructor(
 
     override suspend fun getGroupReservations(groupId: String, guestEmail: String): List<Reservation> {
         val response = apiService.getGroupReservations(groupId, guestEmail)
-        return response.reservations.map { it.toReservation() }
+        return response.reservations.map { dto ->
+            dto.toReservation(tripId = groupId)
+
+        }
     }
 
 

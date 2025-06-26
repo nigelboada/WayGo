@@ -9,7 +9,13 @@ import java.time.LocalDate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.waygo.BuildConfig
+import com.example.waygo.data.remote.dto.RoomDto
+import com.example.waygo.domain.model.Reservation
+import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.utils.ErrorUtils
+
+import com.google.firebase.auth.FirebaseAuth
+
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,12 +25,14 @@ import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import retrofit2.HttpException
+import java.util.UUID
 
 
 
 @HiltViewModel
 class BookViewModel @Inject constructor(
-    private val repo: HotelRepository
+    private val hotelRepo: HotelRepository,
+    private val reservationRepo: ReservationRepository
 ) : ViewModel() {
 
     val groupId = BuildConfig.GROUP_ID
@@ -51,7 +59,7 @@ class BookViewModel @Inject constructor(
         _uiState.update { it.copy(loading = true, message = null) }
 
         try {
-            val hotels = repo.getAvailability(groupId, s.format(fmt), e.format(fmt), city = city)
+            val hotels = hotelRepo.getAvailability(groupId, s.format(fmt), e.format(fmt), city = city)
             _uiState.update { it.copy(loading = false, hotels = hotels) }
         } catch (e: HttpException) {
 
@@ -80,6 +88,38 @@ class BookViewModel @Inject constructor(
             }
         }
     }
+
+    fun bookRoom(
+                tripId: String,
+                hotel: Hotel,
+                room: RoomDto
+            ) = viewModelScope.launch {
+                // format de dates
+                val fmt = DateTimeFormatter.ISO_DATE
+                val start = uiState.value.startDate!!.format(fmt)
+                val end   = uiState.value.endDate!!.format(fmt)
+
+                // email de l’usuari
+                val email = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
+
+                val r = Reservation(
+                        id         = UUID.randomUUID().toString(),
+                        tripId     = tripId,
+                        hotelId    = hotel.id,                // Hotel.id a data.remote.model
+                        hotelName  = hotel.name,
+                        roomId     = room.id,
+                        roomType   = room.roomType ?: "Unknown",
+                    price      = room.price ?: 0f,              // Float
+                    startDate  = start,                   // String
+                    endDate    = end,                     // String
+                    guestEmail = email,
+                    imageUrl   = hotel.imageUrl
+                )
+
+                reservationRepo.saveReservation(r)
+                _uiState.update { it.copy(message = "Reserva desada!") }
+            }
+
 
 }
 

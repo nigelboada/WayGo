@@ -5,7 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.waygo.data.local.entity.ReservationEntity
+import com.example.waygo.domain.model.Reservation
 import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.data.remote.model.Room
 import com.example.waygo.domain.repository.HotelRepository
@@ -82,21 +82,22 @@ class SearchViewModel @Inject constructor(
                 return@launch
             }
 
-            val reservation = ReservationEntity(
-                id = UUID.randomUUID().toString(),
-                hotelId = hotel.id,
-                hotelName = hotel.name,
-                roomId = room.id,
-                roomType = room.roomType,
-                price = room.price,
-                startDate = _uiState.value.startDate,
-                endDate = _uiState.value.endDate,
-                guestEmail = FirebaseAuth.getInstance().currentUser?.email ?: "",
-                tripId = trip.id,
-                imageUrl = hotel.imageUrl
+            val reservation = Reservation(
+                id         = UUID.randomUUID().toString(),
+                tripId     = trip.id,
+                hotelId    = hotel.id,
+                hotelName  = hotel.name,
+                roomId     = room.id,
+                roomType   = room.roomType,
+                price      = room.price,
+                startDate  = _uiState.value.startDate,
+                endDate    = _uiState.value.endDate,
+                guestEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty(),
+                imageUrl   = hotel.imageUrl
             )
 
             reservationRepo.saveReservation(reservation)
+
 
             Log.d("RESERVA", "Reserva guardada correctament a Room: ${reservation}")
 

@@ -10,6 +10,7 @@ import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.data.remote.model.ReserveRequest
 import com.example.waygo.data.remote.model.Room
+import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.repository.HotelRepository
 import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.utils.ErrorUtils
@@ -70,21 +71,21 @@ class HotelDetailViewModel @Inject constructor(
         try {
             val result = repo.reserveRoom(groupId, req)
             if (result) {
-                val reservationEntity = ReservationEntity(
-                    id = room.id + tripId,
-                    tripId = tripId,
-                    hotelId = uiState.value.hotel!!.id,
-                    hotelName = uiState.value.hotel!!.name,
-                    roomId = room.id,
-                    roomType = room.roomType,
-                    price = room.price,
-                    startDate = start,
-                    endDate = end,
+                val reservation = Reservation(
+                    id         = room.id + tripId,
+                    tripId     = tripId,
+                    hotelId    = uiState.value.hotel!!.id,
+                    hotelName  = uiState.value.hotel!!.name,
+                    roomId     = room.id,
+                    roomType   = room.roomType,
+                    price      = room.price,
+                    startDate  = start,
+                    endDate    = end,
                     guestEmail = req.guestEmail,
-                    imageUrl = room.images.firstOrNull() ?: ""
+                    imageUrl   = room.images.firstOrNull() ?: ""
                 )
 
-                reservationRepository.saveReservation(reservationEntity)
+                reservationRepository.saveReservation(reservation)
                 _successfulReservation.value = true
                 Log.d("reserveRoom", "Reserva guardada correctament a Room")
             }
