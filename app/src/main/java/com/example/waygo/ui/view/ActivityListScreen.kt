@@ -2,6 +2,7 @@ package com.example.waygo.ui.view
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -21,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.runtime.remember
+import com.example.waygo.BuildConfig
 import com.example.waygo.data.local.entity.ReservationEntity
 import kotlinx.coroutines.flow.StateFlow
 
@@ -135,10 +137,15 @@ fun ActivityListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clickable {
+                                navController.navigate(
+                                    "reservationDetail/${BuildConfig.GROUP_ID}/$tripId/${res.id}"
+                                )
+                            }
                     ) {
                         Row(modifier = Modifier.padding(8.dp)) {
                             Image(
-                                painter = rememberAsyncImagePainter(res.imageUrl),
+                                painter = rememberAsyncImagePainter(res.hotelImageUrl),
                                 contentDescription = "Imatge de l’hotel",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(80.dp)

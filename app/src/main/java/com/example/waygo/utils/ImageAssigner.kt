@@ -20,9 +20,9 @@ fun assignHotelImage(hotelName: String): String {
 
 fun assignRoomImage(roomType: String): String {
     return when (roomType.lowercase()) {
-        "single" -> "https://picsum.photos/id/1011/600/400"
-        "double" -> "https://picsum.photos/id/1012/600/400"
-        "suite" -> "https://picsum.photos/id/1013/600/400"
+        "single" -> "https://picsum.photos/id/78/1584/2376"
+        "double" -> "https://picsum.photos/id/208/2002/1280"
+        "suite" -> "https://picsum.photos/id/265/3264/2448"
         else -> "https://picsum.photos/600/400"
     }
 }

@@ -93,7 +93,8 @@ class SearchViewModel @Inject constructor(
                 startDate  = _uiState.value.startDate,
                 endDate    = _uiState.value.endDate,
                 guestEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty(),
-                imageUrl   = hotel.imageUrl
+                hotelImageUrl = hotel.imageUrl,
+                roomImageUrl = room.images.firstOrNull().toString()
             )
 
             reservationRepo.saveReservation(reservation)

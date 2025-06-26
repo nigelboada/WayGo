@@ -82,7 +82,8 @@ class HotelDetailViewModel @Inject constructor(
                     startDate  = start,
                     endDate    = end,
                     guestEmail = req.guestEmail,
-                    imageUrl   = room.images.firstOrNull() ?: ""
+                    hotelImageUrl = uiState.value.hotel!!.imageUrl,
+                    roomImageUrl = room.images.firstOrNull() ?: ""
                 )
 
                 reservationRepository.saveReservation(reservation)

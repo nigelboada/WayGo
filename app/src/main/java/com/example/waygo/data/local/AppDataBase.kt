@@ -20,7 +20,7 @@ import com.example.waygo.data.local.entity.TripEntity
     TripEntity::class,
     TaskEntity::class,
     SubTaskEntity::class,
-    ReservationEntity::class], version = 6)
+    ReservationEntity::class], version = 7)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun tripDao(): TripDao

@@ -1,5 +1,6 @@
 package com.example.waygo.ui.search
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,7 +52,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.domain.model.Reservation
 import com.google.firebase.auth.FirebaseAuth
 import java.util.UUID
@@ -84,10 +84,17 @@ fun HotelDetailScreen(
 
     LaunchedEffect(reservationSuccess) {
         if (reservationSuccess && selectedTrip != null) {
+            // 1) Mostrar missatge de confirmació
+            snackbarHostState.showSnackbar("Reserva afegida al viatge \"${selectedTrip!!.title}\"!")
+            // 2) Recàrrega les reserves del ViewModel
             tripViewModel.getReservationsForTrip(selectedTrip!!.id)
+            // 3) Reseteja la bandera
             vm.resetReservationSuccessFlag()
+            // 4) Torna enrere
+            navController.popBackStack()
         }
     }
+
 
 
 
@@ -259,21 +266,35 @@ fun HotelDetailScreen(
                         val email = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
                         val reservation = Reservation(
-                            id         = UUID.randomUUID().toString(),
-                            tripId     = trip.id,
-                            hotelId    = ui.value.hotel!!.id,
-                            hotelName  = ui.value.hotel!!.name,
-                            roomId     = selectedRoom!!.id,
-                            roomType   = selectedRoom.roomType,
-                            price      = selectedRoom.price * nights,
-                            startDate  = start,
-                            endDate    = end,
-                            guestEmail = email,              // ← aquí
-                            imageUrl   = ui.value.hotel!!.imageUrl ?: ""
-                        )
+                            id            = UUID.randomUUID().toString(),
+                            tripId        = trip.id,
+                            hotelId       = ui.value.hotel!!.id,
+                            hotelName     = ui.value.hotel!!.name,
+
+                            roomId        = selectedRoom!!.id,
+                            roomType      = selectedRoom!!.roomType,
+                            price         = selectedRoom!!.price * nights,
+
+
+                            startDate     = start,
+                            endDate       = end,
+                            guestEmail    = email,
+                            hotelImageUrl = ui.value.hotel!!.imageUrl ?: "",
+                            roomImageUrl = selectedRoom.images.firstOrNull()?.let { img ->
+                                if (img.startsWith("http")) {
+                                    // ja és una URL absoluta
+                                    img
+                                } else {
+                                    // és un path relatiu al teu servidor
+                                    base + img
+                                }
+                            } ?: ""                        )
+
+                        Log.d("RESERVE_DEBUG", "roomImageUrl = \"${reservation.roomImageUrl}\"")
+
                         tripViewModel.saveReservation(reservation)
+
                         showTripSelector = false
-                        navController.popBackStack()
                     }
                 }) {
                     Text("Afegir al viatge")

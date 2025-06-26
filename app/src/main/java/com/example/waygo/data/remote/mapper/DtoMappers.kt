@@ -41,7 +41,8 @@ fun ReservationDto.toReservation(tripId: String): Reservation = Reservation(
     startDate  = startDate,
     endDate    = endDate,
     guestEmail = guestEmail,
-    imageUrl   = hotel?.imageUrl ?: ""                     // agafem la imatge principal de l’hotel
+    hotelImageUrl = hotel?.imageUrl ?: "",                 // nova
+    roomImageUrl = room?.images?.firstOrNull() ?: ""      // nova
 )
 
 fun ReserveRequest.toDto(): ReserveRequestDto = ReserveRequestDto(

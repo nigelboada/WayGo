@@ -210,6 +210,22 @@ fun NavGraph(navController: NavHostController) {
         }
 
 
+        composable(
+            route = "reservationDetail/{groupId}/{tripId}/{reservationId}",
+            arguments = listOf(
+                navArgument("groupId"){ type = NavType.StringType },
+                navArgument("tripId"){ type = NavType.StringType },
+                navArgument("reservationId"){ type = NavType.StringType },
+            )
+        ) { backStack ->
+            val groupId       = backStack.arguments!!.getString("groupId")!!
+            val tripId        = backStack.arguments!!.getString("tripId")!!
+            val reservationId = backStack.arguments!!.getString("reservationId")!!
+            ReservationDetailScreen(groupId, tripId, reservationId, navController)
+        }
+
+
+
 
 
 

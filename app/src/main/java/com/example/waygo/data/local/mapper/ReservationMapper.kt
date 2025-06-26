@@ -6,33 +6,35 @@ import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.domain.model.Reservation
 import javax.inject.Inject
 
+// data/local/mapper/ReservationMapper.kt
 class ReservationMapper @Inject constructor() {
-
-    fun toEntity(r: Reservation): ReservationEntity = ReservationEntity(
-        id         = r.id,
-        tripId     = r.tripId,
-        hotelId    = r.hotelId,
-        hotelName  = r.hotelName,
-        roomId     = r.roomId,
-        roomType   = r.roomType,
-        price      = r.price,
-        startDate  = r.startDate,
-        endDate    = r.endDate,
-        guestEmail = r.guestEmail,
-        imageUrl   = r.imageUrl
+    fun toEntity(r: Reservation) = ReservationEntity(
+        id            = r.id,
+        tripId        = r.tripId,
+        hotelId       = r.hotelId,
+        hotelName     = r.hotelName,
+        roomId        = r.roomId,
+        roomType      = r.roomType,
+        price         = r.price,
+        startDate     = r.startDate,
+        endDate       = r.endDate,
+        guestEmail    = r.guestEmail,
+        hotelImageUrl = r.hotelImageUrl,
+        roomImageUrl  = r.roomImageUrl
     )
 
-    fun toDomain(e: ReservationEntity): Reservation = Reservation(
-        id         = e.id,
-        tripId     = e.tripId,
-        hotelId    = e.hotelId,
-        hotelName  = e.hotelName,
-        roomId     = e.roomId,
-        roomType   = e.roomType,
-        price      = e.price,
-        startDate  = e.startDate,
-        endDate    = e.endDate,
-        guestEmail = e.guestEmail,
-        imageUrl   = e.imageUrl
+    fun toDomain(e: ReservationEntity) = Reservation(
+        id            = e.id,
+        tripId        = e.tripId,
+        hotelId       = e.hotelId,
+        hotelName     = e.hotelName,
+        roomId        = e.roomId,
+        roomType      = e.roomType,
+        price         = e.price,
+        startDate     = e.startDate,
+        endDate       = e.endDate,
+        guestEmail    = e.guestEmail,
+        hotelImageUrl = e.hotelImageUrl,
+        roomImageUrl  = e.roomImageUrl
     )
 }

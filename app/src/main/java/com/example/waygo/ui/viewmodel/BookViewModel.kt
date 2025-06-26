@@ -113,7 +113,8 @@ class BookViewModel @Inject constructor(
                     startDate  = start,                   // String
                     endDate    = end,                     // String
                     guestEmail = email,
-                    imageUrl   = hotel.imageUrl
+                    hotelImageUrl = hotel.imageUrl,      // String
+                    roomImageUrl = room.images?.firstOrNull() ?: "" // String
                 )
 
                 reservationRepo.saveReservation(r)

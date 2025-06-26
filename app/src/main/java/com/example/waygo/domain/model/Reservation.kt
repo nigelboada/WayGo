@@ -5,15 +5,16 @@ import com.example.waygo.data.remote.model.Room
 
 data class Reservation(
     val id: String,
-    val tripId: String,      // <-- nou!
+    val tripId: String,
     val hotelId: String,
-    val hotelName: String,   // <-- nou!
+    val hotelName: String,
     val roomId: String,
-    val roomType: String,    // <-- nou!
-    val price: Float,        // <-- moure aquí
+    val roomType: String,
+    val price: Float,
     val startDate: String,
     val endDate: String,
-    val guestEmail: String,  // <-- ja hi és
-    val imageUrl: String     // <-- nou!
+    val guestEmail: String,
+    val hotelImageUrl: String,   // ← nova
+    val roomImageUrl: String     // ← nova
 )
 

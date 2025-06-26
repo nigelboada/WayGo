@@ -15,6 +15,6 @@ data class ReservationEntity(
     val startDate: String,
     val endDate: String,
     val guestEmail: String,
-
-    val imageUrl: String
+    val hotelImageUrl: String,   // ← nova
+    val roomImageUrl: String     // ← nova
 )
