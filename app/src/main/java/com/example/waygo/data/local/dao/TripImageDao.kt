@@ -11,6 +11,6 @@ interface TripImageDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(images: List<TripImageEntity>)
 
-    @Query("SELECT imageUri FROM trip_images WHERE tripId = :tripId")
-    suspend fun getImagesForTrip(tripId: String): List<String>
+    @Query("SELECT * FROM trip_images WHERE tripId = :tripId")
+    suspend fun getImagesForTrip(tripId: String): List<TripImageEntity>
 }

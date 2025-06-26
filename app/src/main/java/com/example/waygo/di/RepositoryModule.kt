@@ -21,8 +21,7 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
 
 
-    @Binds
-    @Singleton
+    @Binds  @Singleton
     abstract fun bindHotelRepository(
         impl: HotelRepositoryImpl
     ): HotelRepository
@@ -39,8 +38,7 @@ abstract class RepositoryModule {
         impl: TaskRepositoryImpl
     ): TaskRepository
 
-    @Binds
-    @Singleton
+    @Binds  @Singleton
     abstract fun bindTripRepository(
         impl: TripRepositoryImpl
     ): TripRepository

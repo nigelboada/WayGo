@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/waygo/data/repository/TripRepositoryImpl.kt
 package com.example.waygo.data.repository
 
 import com.example.waygo.data.local.dao.TripDao
@@ -15,7 +14,7 @@ class TripRepositoryImpl @Inject constructor(
     private val tripImageDao: TripImageDao
 ) : TripRepository {
 
-    override suspend fun getAllTripsForUser(userId: String) =
+    override suspend fun getAllTripsForUser(userId: String): List<Trip> =
         tripDao.getTripsByUser(userId).map { it.toTrip() }
 
     override suspend fun addTrip(trip: Trip, userId: String) {
@@ -33,12 +32,19 @@ class TripRepositoryImpl @Inject constructor(
     override suspend fun getTripById(tripId: String): Trip? =
         tripDao.getTripById(tripId)?.toTrip()
 
+    // Aquí resolgim la part de les imatges:
     override suspend fun addImagesToTrip(tripId: String, imageUris: List<String>) {
-        val entities = imageUris.map { uri -> TripImageEntity(tripId = tripId, imageUri = uri)
+        val entities = imageUris.map { uri ->
+            TripImageEntity(
+                tripId = tripId,
+                imageUri = uri
+            )
         }
         tripImageDao.insertAll(entities)
     }
 
     override suspend fun getImagesForTrip(tripId: String): List<String> =
-        tripImageDao.getImagesForTrip(tripId)
+        tripImageDao
+            .getImagesForTrip(tripId)
+            .map { it.imageUri }    // <-- aquí agafes la propietat correcta
 }

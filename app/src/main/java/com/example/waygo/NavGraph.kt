@@ -159,15 +159,16 @@ fun NavGraph(navController: NavHostController) {
             SettingsScreen(navController = navController, context = LocalContext.current)
         }
 
-        composable("activity_list/{tripId}") { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId") ?: ""
+        composable("activity_list/{tripId}") { back ->
+            val tripId = back.arguments!!.getString("tripId")!!
             ActivityListScreen(
                 tripId = tripId,
                 navController = navController,
-                tripViewModel = tripViewModel,
-                activityViewModel = itineraryViewModel
+                tripViewModel = hiltViewModel(),          // TripViewModel injectat
+                activityViewModel = hiltViewModel()
             )
         }
+
 
 
         composable("hotel_list") {
