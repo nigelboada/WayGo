@@ -58,6 +58,11 @@ fun HomeScreen(navController: NavController) {
                 Text("Cercar Hotels")
             }
 
+            Button(onClick = { navController.navigate("all_reservations") }) {
+                Text("Veure totes les reserves")
+            }
+
+
 
         }
     }

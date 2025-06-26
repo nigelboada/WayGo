@@ -225,10 +225,8 @@ fun NavGraph(navController: NavHostController) {
             ReservationDetailScreen(groupId, tripId, reservationId, navController)
         }
 
-
-
-
-
-
+        composable("all_reservations") {
+            AllReservationsScreen(navController)
+        }
     }
 }

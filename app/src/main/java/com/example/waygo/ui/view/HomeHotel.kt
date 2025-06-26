@@ -1,12 +1,8 @@
 package com.example.waygo.ui.view
 
 import android.app.DatePickerDialog
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
@@ -14,21 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
-import com.example.waygo.data.remote.model.Hotel
 import com.example.waygo.ui.search.SearchScreen
-import com.example.waygo.ui.viewmodel.ReservationsAllViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -89,13 +78,8 @@ fun HomeHotel(rootNav: NavController) {
         ) {
 
             composable(Screen.AllRes.route) {
-                val resVm: ReservationsAllViewModel = hiltViewModel()
-                val groups by resVm.uiState.collectAsState()
 
-                // carga/recarga cada vez que entramos en esta pestaña
-                LaunchedEffect(Unit) { resVm.load() }
-
-                AllReservationsScreen(groups)
+                AllReservationsScreen(navController = rootNav)
             }
 
             composable(Screen.Book.route) {

@@ -3,6 +3,7 @@
 package com.example.waygo.data.repository
 
 import com.example.waygo.data.local.dao.ReservationDao
+import com.example.waygo.data.local.entity.ReservationEntity
 import com.example.waygo.data.local.mapper.ReservationMapper
 import com.example.waygo.domain.model.Reservation
 import com.example.waygo.domain.repository.ReservationRepository
@@ -23,4 +24,9 @@ class ReservationRepositoryImpl @Inject constructor(
         return dao.getReservationsForTrip(tripId)
             .map { mapper.toDomain(it) }
     }
+
+    override suspend fun getAllReservationsForUser(userId: String): List<ReservationEntity> {
+        return dao.getAllReservations()
+    }
+
 }
