@@ -185,36 +185,48 @@ fun ActivityListScreen(
                     )
                 }
 
-                items(reservations) { res ->
+                items(reservations, key = { it.id }) { res ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable {
-                                navController.navigate(
-                                    "reservationDetail/${BuildConfig.GROUP_ID}/$tripId/${res.id}"
-                                )
-                            }
                     ) {
-                        Row(modifier = Modifier.padding(8.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate("reservationDetail/${BuildConfig.GROUP_ID}/$tripId/${res.id}")
+                                }
+                                .padding(8.dp)
+                        ) {
+                            // 1) Imatge
                             Image(
                                 painter = rememberAsyncImagePainter(res.hotelImageUrl),
-                                contentDescription = "Imatge de l’hotel",
+                                contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(80.dp)
                             )
+                            Spacer(Modifier.width(8.dp))
 
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Column {
+                            // 2) Dades de la reserva
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text("🏨 Hotel: ${res.hotelName}", fontWeight = FontWeight.Bold)
                                 Text("🛏 Habitació: ${res.roomType} (${res.roomId})")
                                 Text("💰 Preu: ${res.price}€")
                                 Text("📆 Del ${res.startDate} al ${res.endDate}")
                             }
 
-                            IconButton(onClick = { tripViewModel.deleteReservation(res.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Esborra reserva")
+                            // 3) Botó d’esborrar
+                            IconButton(
+                                onClick = {
+                                    tripViewModel.deleteReservation(res.id)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Esborra reserva",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
                             }
                         }
                     }
