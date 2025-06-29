@@ -211,12 +211,17 @@ class TripViewModel @Inject constructor(
 
     // ja tenim:
     fun deleteReservation(reservationId: String) = viewModelScope.launch {
+        // 1. Elimina de llista local immediatament
+        _reservations.value = _reservations.value.filterNot { it.id == reservationId }
+
+        // 2. Crida al repositori per eliminar-la de la DB
         val ok = reservationRepository.deleteReservation(reservationId)
-        if (ok) {
-            // recarreguem només les reserves d’aquest viatge
-            getReservationsForTrip(currentTripId)
-        } else {
-            Log.e("TripViewModel", "Error esborrant reserva $reservationId")        }
+
+        // 3. Si falla, pots tornar-la a afegir (opcional)
+        if (!ok) {
+            loadTrips() // o pots recarregar només les reserves del viatge
+            Log.e("TripViewModel", "Error esborrant reserva $reservationId")
+        }
     }
 
 

@@ -35,13 +35,17 @@ class AllReservationsViewModel @Inject constructor(
         _items.value = withTrips
     }
 
-    /**  Nou: esborra una reserva i recarrega la llista  */
     fun deleteReservation(reservationId: String) = viewModelScope.launch {
+        // 1) Filtra localment
+        _items.value = _items.value.filterNot { (res, _) -> res.id == reservationId }
+
+        // 2) Elimina a repositori
         val success = reservationRepo.deleteReservation(reservationId)
-        if (success) {
+
+        // 3) Mantenir consistència: si falla, recarrega
+        if (!success) {
             loadAll()
-        } else {
-            // aquí podries emetre un event de Snackbar si cal
+            // opcional: aquí pots emetre un event per mostrar Snackbar d’error
         }
     }
 }
