@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +20,7 @@ import androidx.navigation.NavController
 import com.example.waygo.ui.viewmodel.ActivityViewModel
 import com.example.waygo.ui.viewmodel.TripViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -82,17 +82,24 @@ fun ActivityListScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { pickImagesLauncher.launch(arrayOf("image/*")) }) {
-                        Icon(Icons.Default.Add, contentDescription = "Afegeix fotos")
-                    }
-                    IconButton(onClick = {
-                        navController.navigate("add_activity/$tripId")
-                    }) {
-                        Icon(Icons.Default.Add, contentDescription = "Afegir activitat")
+                    // Fem un Column dins d’accions, perquè es mostrin en vertical
+                    Column(
+                        modifier = Modifier
+                            .padding(end = 8.dp)               // una mica de marge amb el costat dret
+                            .wrapContentWidth(Alignment.End),  // alineat a la dreta
+                        verticalArrangement = Arrangement.spacedBy(4.dp)  // separació entre botons
+                    ) {
+                        TextButton(onClick = { pickImagesLauncher.launch(arrayOf("image/*")) }) {
+                            Text("Afegir foto")
+                        }
+                        TextButton(onClick = { navController.navigate("add_activity/$tripId") }) {
+                            Text("Afegir activitat")
+                        }
                     }
                 }
-
             )
+
+
         }
     ) { paddingValues ->
         LazyColumn(
