@@ -92,9 +92,9 @@ fun ActivityListScreen(
                         TextButton(onClick = { pickImagesLauncher.launch(arrayOf("image/*")) }) {
                             Text("Afegir foto")
                         }
-                        TextButton(onClick = { navController.navigate("add_activity/$tripId") }) {
-                            Text("Afegir activitat")
-                        }
+//                        TextButton(onClick = { navController.navigate("add_activity/$tripId") }) {
+//                            Text("Afegir activitat")
+//                        }
                     }
                 }
             )
