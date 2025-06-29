@@ -12,8 +12,8 @@ import com.example.waygo.domain.repository.ActivityRepository
 import com.example.waygo.domain.repository.ReservationRepository
 import com.example.waygo.domain.repository.TripRepository
 import com.example.waygo.utils.FileUtils
-import com.google.firebase.auth.FirebaseAuth
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.google.firebase.auth.FirebaseAuth                  // ← aquest
+import dagger.hilt.android.lifecycle.HiltViewModel           // ← i aquest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -35,6 +35,9 @@ class TripViewModel @Inject constructor(
 
     private val _tripImages = MutableStateFlow<List<String>>(emptyList())
     val tripImages: StateFlow<List<String>> = _tripImages
+
+
+    private var currentTripId: String = ""
 
 
     private val _trips = MutableStateFlow<List<Trip>>(emptyList())
@@ -203,5 +206,19 @@ class TripViewModel @Inject constructor(
             .getAllReservationsForUser(userId)    // retorna List<Reservation>
         _tripReservations.value = all.groupBy { it.tripId }
     }
+
+
+
+    // ja tenim:
+    fun deleteReservation(reservationId: String) = viewModelScope.launch {
+        val ok = reservationRepository.deleteReservation(reservationId)
+        if (ok) {
+            // recarreguem només les reserves d’aquest viatge
+            getReservationsForTrip(currentTripId)
+        } else {
+            Log.e("TripViewModel", "Error esborrant reserva $reservationId")        }
+    }
+
+
 }
 

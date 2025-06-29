@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import com.example.waygo.ui.viewmodel.ActivityViewModel
 import com.example.waygo.ui.viewmodel.TripViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -210,6 +211,10 @@ fun ActivityListScreen(
                                 Text("🛏 Habitació: ${res.roomType} (${res.roomId})")
                                 Text("💰 Preu: ${res.price}€")
                                 Text("📆 Del ${res.startDate} al ${res.endDate}")
+                            }
+
+                            IconButton(onClick = { tripViewModel.deleteReservation(res.id) }) {
+                                Icon(Icons.Default.Delete, contentDescription = "Esborra reserva")
                             }
                         }
                     }
