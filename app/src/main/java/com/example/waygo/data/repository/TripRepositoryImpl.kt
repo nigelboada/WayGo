@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 class TripRepositoryImpl @Inject constructor(
     private val tripDao: TripDao,
+    private val dao: TripImageDao,
     private val tripImageDao: TripImageDao
 ) : TripRepository {
 
@@ -47,4 +48,12 @@ class TripRepositoryImpl @Inject constructor(
         tripImageDao
             .getImagesForTrip(tripId)
             .map { it.imageUri }    // <-- aquí agafes la propietat correcta
+
+
+    override suspend fun deleteImageFromTrip(tripId: String, uri: String) {
+        dao.deleteImage(tripId, uri)
+    }
+
+
+
 }

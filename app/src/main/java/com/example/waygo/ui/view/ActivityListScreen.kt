@@ -100,7 +100,7 @@ fun ActivityListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Activitats del viatge") },
+                title = { Text("Informació del viatge") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tornar")
@@ -161,61 +161,81 @@ fun ActivityListScreen(
                     )
                 }
                 items(tripImages) { uriString ->
-                    Image(
-                        painter = rememberAsyncImagePainter(uriString),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .size(100.dp)
-                            .clip(MaterialTheme.shapes.medium),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-            // ACTIVITATS
-            if (filteredActivities.isEmpty()) {
-                item {
-                    Text(
-                        "No hi ha activitats afegides.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            } else {
-                items(filteredActivities, key = { it.id }) { activity ->
-                    Card(
-                        modifier = Modifier
+                    Row(
+                        Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(activity.title, style = MaterialTheme.typography.titleLarge)
-                            Text(activity.description)
-                            Text("📅 Dia: ${activity.day}")
-                            Text("🕒 Hora: ${activity.hour}")
+                        Image(
+                            painter = rememberAsyncImagePainter(uriString),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.Crop
+                        )
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(Modifier.width(8.dp))
 
-                            Button(
-                                onClick = {
-                                    activityViewModel.deleteActivity(activity.id)
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-                            ) {
-                                Text("Elimina")
-                            }
-
-                            Button(
-                                onClick = {
-                                    navController.navigate("edit_activity/${activity.id}/$tripId")
-                                }
-                            ) {
-                                Text("Editar")
-                            }
+                        IconButton(onClick = {
+                            // cridem al ViewModel per eliminar-la
+                            tripViewModel.deleteTripImage(tripId, uriString)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Esborra foto",
+                                tint = MaterialTheme.colorScheme.error
+                            )
                         }
                     }
                 }
+
             }
+            // ACTIVITATS
+//            if (filteredActivities.isEmpty()) {
+//                item {
+//                    Text(
+//                        "No hi ha activitats afegides.",
+//                        style = MaterialTheme.typography.bodyLarge,
+//                        modifier = Modifier.padding(16.dp)
+//                    )
+//                }
+//            } else {
+//                items(filteredActivities, key = { it.id }) { activity ->
+//                    Card(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(8.dp)
+//                    ) {
+//                        Column(modifier = Modifier.padding(16.dp)) {
+//                            Text(activity.title, style = MaterialTheme.typography.titleLarge)
+//                            Text(activity.description)
+//                            Text("📅 Dia: ${activity.day}")
+//                            Text("🕒 Hora: ${activity.hour}")
+//
+//                            Spacer(modifier = Modifier.height(8.dp))
+//
+//                            Button(
+//                                onClick = {
+//                                    activityViewModel.deleteActivity(activity.id)
+//                                },
+//                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+//                            ) {
+//                                Text("Elimina")
+//                            }
+//
+//                            Button(
+//                                onClick = {
+//                                    navController.navigate("edit_activity/${activity.id}/$tripId")
+//                                }
+//                            ) {
+//                                Text("Editar")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
 
 

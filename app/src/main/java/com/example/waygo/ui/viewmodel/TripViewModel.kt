@@ -237,5 +237,11 @@ class TripViewModel @Inject constructor(
     }
 
 
+    fun deleteTripImage(tripId: String, uri: String) = viewModelScope.launch {
+        tripRepository.deleteImageFromTrip(tripId, uri)
+        loadTripImages(tripId)
+    }
+
+
 }
 

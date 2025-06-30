@@ -13,4 +13,9 @@ interface TripImageDao {
 
     @Query("SELECT * FROM trip_images WHERE tripId = :tripId")
     suspend fun getImagesForTrip(tripId: String): List<TripImageEntity>
+
+    @Query("DELETE FROM trip_images WHERE tripId = :tripId AND imageUri = :uri")
+    suspend fun deleteImage(tripId: String, uri: String)
+
+
 }

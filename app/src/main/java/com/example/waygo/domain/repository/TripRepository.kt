@@ -11,4 +11,7 @@ interface TripRepository {
 
     suspend fun addImagesToTrip(tripId: String, imageUris: List<String>)
     suspend fun getImagesForTrip(tripId: String): List<String>
+
+    suspend fun deleteImageFromTrip(tripId: String, uri: String)
+
 }
