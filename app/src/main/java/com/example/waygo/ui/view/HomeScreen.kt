@@ -34,32 +34,32 @@ fun HomeScreen(navController: NavController) {
                 Text(stringResource(R.string.go_to_settings))
             }
 
-            Button(onClick = { navController.navigate("profile") }) {
-                Text(stringResource(R.string.go_to_profile))
-            }
+//            Button(onClick = { navController.navigate("profile") }) {
+//                Text(stringResource(R.string.go_to_profile))
+//            }
 
             Button(onClick = { navController.navigate("trip") }) {
                 Text(stringResource(R.string.go_to_trips))
             }
 
-            Button(onClick = { navController.navigate("about") }) {
-                Text(stringResource(R.string.go_to_about))
-            }
+//            Button(onClick = { navController.navigate("about") }) {
+//                Text(stringResource(R.string.go_to_about))
+//            }
 
             Button(onClick = { navController.navigate("terms") }) {
                 Text(stringResource(R.string.go_to_terms))
             }
 
             Button(onClick = { navController.navigate("hotel_list") }) {
-                Text("Llista d'hotels")
+                Text("Hotel List")
             }
 
             Button(onClick = { navController.navigate("book") }) {
-                Text("Cercar Hotels")
+                Text("Hotel Search")
             }
 
             Button(onClick = { navController.navigate("all_reservations") }) {
-                Text("Veure totes les reserves")
+                Text("All Reservations")
             }
 
 

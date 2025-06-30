@@ -9,7 +9,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -31,12 +33,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.window.Dialog
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
-import com.example.waygo.utils.FileUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +52,11 @@ fun ActivityListScreen(
     tripViewModel: TripViewModel,
     activityViewModel: ActivityViewModel
 ) {
+
+    var expandedImageUri by remember { mutableStateOf<String?>(null) }
+    var scale by remember { mutableStateOf(1f) }
+    var offsetX by remember { mutableStateOf(0f) }
+    var offsetY by remember { mutableStateOf(0f) }
 
 
     val context = LocalContext.current
@@ -72,7 +82,6 @@ fun ActivityListScreen(
             )
         }
     }
-
 
 
     // Carrega dades inicials
@@ -143,15 +152,13 @@ fun ActivityListScreen(
             )
 
 
-
-
         }
     ) { paddingValues ->
         LazyColumn(
             contentPadding = paddingValues,
             modifier = Modifier.fillMaxSize()
         ) {
-
+            // ────────── 1) LES MINIATURES ──────────
             if (tripImages.isNotEmpty()) {
                 item {
                     Text(
@@ -172,14 +179,15 @@ fun ActivityListScreen(
                             contentDescription = null,
                             modifier = Modifier
                                 .size(100.dp)
-                                .clip(MaterialTheme.shapes.medium),
+                                .clip(MaterialTheme.shapes.medium)
+                                .clickable {
+                                    // quan cliquem guardem l’URI a expandedImageUri
+                                    expandedImageUri = uriString
+                                },
                             contentScale = ContentScale.Crop
                         )
-
                         Spacer(Modifier.width(8.dp))
-
                         IconButton(onClick = {
-                            // cridem al ViewModel per eliminar-la
                             tripViewModel.deleteTripImage(tripId, uriString)
                         }) {
                             Icon(
@@ -190,7 +198,6 @@ fun ActivityListScreen(
                         }
                     }
                 }
-
             }
             // ACTIVITATS
 //            if (filteredActivities.isEmpty()) {
@@ -236,7 +243,6 @@ fun ActivityListScreen(
 //                    }
 //                }
 //            }
-
 
 
             // RESERVES
@@ -301,6 +307,42 @@ fun ActivityListScreen(
                         "No hi ha reserves d’habitació.",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+
+
+        }
+
+        if (expandedImageUri != null) {
+            Dialog(onDismissRequest = {
+                expandedImageUri = null
+                scale = 1f; offsetX = 0f; offsetY = 0f
+            }) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.8f))
+                        .pointerInput(Unit) {
+                            detectTransformGestures { _, pan, zoom, _ ->
+                                // actualitzem escala i offset
+                                scale = (scale * zoom).coerceIn(1f, 5f)
+                                offsetX += pan.x
+                                offsetY += pan.y
+                            }
+                        }
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(expandedImageUri),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                                translationX = offsetX
+                                translationY = offsetY
+                            }
                     )
                 }
             }

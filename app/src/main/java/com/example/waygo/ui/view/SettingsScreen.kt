@@ -14,6 +14,9 @@ import com.example.waygo.utils.UserPreferences
 import com.google.firebase.auth.FirebaseAuth
 
 import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,8 +28,20 @@ fun SettingsScreen(navController: NavController, context: Context) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Configuració de l'usuari") }
+                title = { Text(text = "Configuració de l'usuari") },
+
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Torna enrere"
+                        )
+                    }
+                }
+
+
             )
+
         }
     ) { paddingValues ->
         Column(
