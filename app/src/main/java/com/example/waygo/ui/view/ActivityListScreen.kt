@@ -1,5 +1,9 @@
 package com.example.waygo.ui.view
 
+import android.graphics.Bitmap
+import androidx.activity.result.contract.ActivityResultContracts.TakePicturePreview
+
+
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,6 +25,10 @@ import com.example.waygo.ui.viewmodel.ActivityViewModel
 import com.example.waygo.ui.viewmodel.TripViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -28,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
 import com.example.waygo.BuildConfig
+import com.example.waygo.utils.FileUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,12 +52,27 @@ fun ActivityListScreen(
     val context = LocalContext.current
 
 
+    // Galeria
     val pickImagesLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments()
     ) { uris: List<Uri> ->
-        // ara passem URIs i context directament
         tripViewModel.addTripImages(tripId, uris, context)
     }
+
+
+    // Càmera
+    val takePhotoLauncher = rememberLauncherForActivityResult(
+        TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        bitmap?.let {
+            tripViewModel.addTripImageFromBitmap(
+                tripId,
+                it,
+                context
+            )
+        }
+    }
+
 
 
     // Carrega dades inicials
@@ -83,22 +107,42 @@ fun ActivityListScreen(
                     }
                 },
                 actions = {
-                    // Fem un Column dins d’accions, perquè es mostrin en vertical
-                    Column(
-                        modifier = Modifier
-                            .padding(end = 8.dp)               // una mica de marge amb el costat dret
-                            .wrapContentWidth(Alignment.End),  // alineat a la dreta
-                        verticalArrangement = Arrangement.spacedBy(4.dp)  // separació entre botons
-                    ) {
-                        TextButton(onClick = { pickImagesLauncher.launch(arrayOf("image/*")) }) {
+                    var menuExpanded by remember { mutableStateOf(false) }
+
+                    Box {
+                        TextButton(onClick = { menuExpanded = true }) {
                             Text("Afegir foto")
                         }
-//                        TextButton(onClick = { navController.navigate("add_activity/$tripId") }) {
-//                            Text("Afegir activitat")
-//                        }
+                        DropdownMenu(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Triar de la galeria") },
+                                onClick = {
+                                    menuExpanded = false
+                                    pickImagesLauncher.launch(arrayOf("image/*"))
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Fer una foto") },
+                                onClick = {
+                                    menuExpanded = false
+                                    takePhotoLauncher.launch(null)
+                                }
+                            )
+                        }
                     }
+
+                    Spacer(Modifier.width(8.dp))
+
+//                    TextButton(onClick = { navController.navigate("add_activity/$tripId") }) {
+//                        Text("Afegir activitat")
+//                    }
                 }
             )
+
+
 
 
         }

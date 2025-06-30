@@ -1,6 +1,7 @@
 package com.example.waygo.ui.viewmodel
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -194,6 +195,17 @@ class TripViewModel @Inject constructor(
         // 3) recarrega
         loadTripImages(tripId)
     }
+
+
+    fun addTripImageFromBitmap(tripId: String, bitmap: Bitmap, context: Context) = viewModelScope.launch {
+        val path = FileUtils.saveBitmapToInternal(context, bitmap, tripId)
+        if (path != null) {
+            tripRepository.addImagesToTrip(tripId, listOf(path))
+            loadTripImages(tripId)
+        }
+    }
+
+
 
     // crida per recuperar-les
     fun loadTripImages(tripId: String) = viewModelScope.launch {
